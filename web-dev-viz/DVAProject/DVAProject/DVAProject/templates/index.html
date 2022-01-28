@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block ExtraNavigation %}
+<li class="nav-item">
+    <a class="nav-link" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+        Filters Pane
+    </a>
+</li>
+{% endblock %}
+
+{% block content %}
+
+<h1>
+    <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+        Filters Pane
+    </a>
+</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Keppler Object of Interest (KOI) Properties</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td>
+                        Identifier
+                    </td>
+                    <td>
+                        9999
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Size
+                    </td>
+                    <td>
+                        1.5 Earths
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Distance
+                    </td>
+                    <td>
+                        20 Million Light years
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Diameter
+                    </td>
+                    <td>
+                        20 Million Light years
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Terrain
+                    </td>
+                    <td>
+                        Rocky and Gasy
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="col-md-8">
+        <h2>Light Curve</h2>
+        <img class="img-fluid" src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Light_Curve_of_a_Planet_Transiting_Its_Star.jpg"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Planet Constellation</h2>
+        <p>
+            <img class="img-fluid" src="https://cf.ltkcdn.net/horoscopes/images/orig/248590-2057x1457-zoodiac.jpg" />
+        </p>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% include "sidebar.html" %}
