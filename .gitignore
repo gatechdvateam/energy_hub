@@ -6,6 +6,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Visual Studio Files
+.vs/
+
 # Distribution / packaging
 .Python
 build/
