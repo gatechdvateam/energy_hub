@@ -8,6 +8,7 @@ __pycache__/
 
 # Visual Studio Files
 .vs/
+.venv/
 
 # Distribution / packaging
 .Python
