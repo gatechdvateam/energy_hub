@@ -1,3 +1,5 @@
+#This file is a copy from the main file mert created.
+#Please keep it here because when we upload the app to azure this file gets uploaded with it.
 from io import StringIO
 from numpy import iterable, object_
 import pandas as pd

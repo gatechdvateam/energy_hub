@@ -1,38 +1,33 @@
-from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for
-from azure_utils import KeyVault, DataLake
-import pandas as pd
+#This is the main app module. You should define all your views here.
+#Please add all code that loads data 
 
+from flask import Flask, render_template, request, redirect, url_for
+
+#import the function that loads your data here.
+from loaddataset import LoadBasicVisualsData
+
+#Create the app
 app = Flask(__name__)
 
 
-
-
+#Home page
 @app.route('/')
+@app.route('/home')
+@app.route('/index')
 def index():
-   print('Request for index page received')
    return render_template('index.html')
 
+#Sample visuals page
+@app.route('/basicvisuals')
+def basicvisuals():
+    """Renders this page."""
+    return render_template(
+        'basicvisuals.html',
+        title='Home Page',
+        #pass the data to the template page
+        ChartData = LoadBasicVisualsData(),
+    )
 
-@app.route('/hello', methods=['POST'])
-def hello():
-   name = request.form.get('name')
-   try:
-      vault = KeyVault(keyVaultName = "keyvaultdva2022")
-      storage_credential = vault.get_secret(secretName = "storagePrimaryKey")
-      storage = DataLake(account_name = "storageaccountdva", credential = storage_credential)
-      df = storage.read(file_system = "energyhub", directory = "/", file_name = "HassanTest.csv", extension = "csv")
-      print(df)
-   except Exception as e:
-      name = e
-
-   if name:
-       print('Request for hello page received with name=%s' % name)
-       return render_template('hello.html', name = name)
-   else:
-       print('Request for hello page received with no name or blank name -- redirecting')
-       return redirect(url_for('index'))
-
-
+#Runs the app on your machine!
 if __name__ == '__main__':
    app.run(debug=True)
