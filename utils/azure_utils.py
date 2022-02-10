@@ -111,10 +111,13 @@ class DataLake:
         """
         Get the count of directory contents. Optionally, print out the contents
         """
-        file_system_client = self.get_file_system_client(file_system)
+        file_system_client = self.service_client.get_file_system_client(
+            file_system=file_system)
+        
         paths = file_system_client.get_paths(path=directory)
-        print(len(paths))
+        # print(len(paths))
 
         if print_paths:
             for path in paths:
                 print(path.name + '\n')
+        return paths
