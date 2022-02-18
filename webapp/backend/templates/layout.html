@@ -1,6 +1,3 @@
-<!-- This is the layout page used by all of the site pages. -->
-
-
 <!doctype html>
 
 <head>
@@ -26,6 +23,34 @@
     integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <style>
+        .navigation-bar {
+          width: 100%;  /* i'm assuming full width */
+          height: 80px; /* change it to desired width */
+          background-color: red; /* change to desired color */
+      }
+      .logo {
+
+        float: left;
+        position: relative;
+        margin: 10px 15px 15px 10px;
+          /* display: inline-block;
+          vertical-align: top;
+          width: 50px;
+          height: 50px;
+          margin-right: 20px;
+          margin-top: 15px;    //if you want it vertically middle of the navbar. */
+      }
+      .navigation-bar > a {
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 20px;
+          height: 80px;        /* if you want it to take the full height of the bar */
+          line-height: 80px;    /* if you want it vertically middle of the navbar */
+      }
+
+
+    </style>
 </head>
 <html>
 
@@ -33,7 +58,8 @@
   <!-- Creates a simple navigation bar! -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="#"></a>
+      <img class="logo", src="static\images\energy_hub_logo.png"> 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
