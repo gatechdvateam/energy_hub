@@ -176,7 +176,8 @@
             .attr("height", function (d) {
 
                 return height - y(d.Value);
-            });
+            })
+            .attr("fill", "blue");
 
         // add the x Axis
         svg.append("g")
