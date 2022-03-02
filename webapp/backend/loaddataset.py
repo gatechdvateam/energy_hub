@@ -1,4 +1,4 @@
-from azure_utils import KeyVault, DataLake
+from utils.azure_utils import KeyVault, DataLake
 import pandas as pd
 import json
 

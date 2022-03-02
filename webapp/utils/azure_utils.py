@@ -109,7 +109,7 @@ class DataLake:
         file_client.delete_file()
         print(f"{file_name} deleted")
 
-    def list_directory_contents(self, file_system: str, directory: str, print_paths=False):
+    def list_directory_contents(self, file_system: str, directory: str, print_paths = False) -> None:
         """
         Get the count of directory contents. Optionally, print out the contents
         """
