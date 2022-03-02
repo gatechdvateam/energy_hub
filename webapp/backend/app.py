@@ -30,4 +30,5 @@ def basicvisuals():
 
 #Runs the app on your machine!
 if __name__ == '__main__':
-   app.run(debug=True)
+    #Makes sure your app refreshes when you make changes
+    app.run(debug=True)
