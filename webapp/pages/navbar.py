@@ -15,7 +15,7 @@ layout = dbc.NavbarSimple(
             label="More",
         ),
     ],
-    brand="NavbarSimple",
+    # brand="NavbarSimple",
     brand_href="/",
     color="primary",
     dark=True,
