@@ -1,7 +1,5 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import navbar, home, page1, page2
-
 cdn_Style_Sheets = [dbc.themes.BOOTSTRAP]
 
 cdn_Scripts = []
@@ -9,6 +7,8 @@ cdn_Scripts = []
 #Create the app and request a reference external style sheets and scripts.
 app = Dash(__name__, suppress_callback_exceptions=True, \
     external_stylesheets=cdn_Style_Sheets,external_scripts=cdn_Scripts)
+
+from pages import navbar, home, page1, page2
 
 app.layout = html.Div([
     # represents the browser address bar and doesn't render anything
