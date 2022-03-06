@@ -1,6 +1,6 @@
-#This file is a copy from the main file mert created.
-#Please keep it here because when we upload the app to azure this file gets uploaded with it.
-from io import StringIO
+# This file is a copy from the main file mert created.
+# Please keep it here because when we upload the app to azure this file gets uploaded with it.
+from io import StringIO, BytesIO
 from numpy import iterable, object_
 import pandas as pd
 import os
@@ -78,6 +78,10 @@ class DataLake:
             s = str(downloaded_bytes, 'utf-8')
             data = StringIO(s)
             df = pd.read_csv(data)
+        elif extension == "parq":
+            data = BytesIO(downloaded_bytes)
+            df = pd.read_parquet(data)
+
         else:
             pass
             # TODO: Add support for other read operations
@@ -110,7 +114,7 @@ class DataLake:
         file_client.delete_file()
         print(f"{file_name} deleted")
 
-    def list_directory_contents(self, file_system: str, directory: str, print_paths = False) -> None:
+    def list_directory_contents(self, file_system: str, directory: str, print_paths=False) -> None:
         """
         Get the count of directory contents. Optionally, print out the contents
         """
@@ -123,10 +127,11 @@ class DataLake:
                 print(path.name + '\n')
 
     def csv_to_parquet_adls(self, file_system: str, file_name: str, origin_dir: str, dest_dir: str) -> None:
-        """Convert csv file to parquet on Azure Data Lake Storage""" 
-        df = self.read(file_system, origin_dir, f"{file_name}.csv", extension="csv")
+        """Convert csv file to parquet on Azure Data Lake Storage"""
+        df = self.read(file_system, origin_dir,
+                       f"{file_name}.csv", extension="csv")
         file = f"{file_name}.parq"
-        fastparquet.write(file, df, compression = "GZIP")
-        self.upload(file_system, dest_dir, file_name = file, file_path = file, overwrite = True)
+        fastparquet.write(file, df, compression="GZIP")
+        self.upload(file_system, dest_dir, file_name=file,
+                    file_path=file, overwrite=True)
         os.remove(file)
-
