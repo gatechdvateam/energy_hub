@@ -1,10 +1,8 @@
-import site
-from turtle import bgcolor
 from dash import Dash, dcc, html, Input, Output, callback
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
-from .dataSets import MetaData
+from dataSets import MetaData
 # Default Home Page
 
 def createLayout():
@@ -54,7 +52,7 @@ def Generate_Summary_List() -> html.Ul:
 
 def Add_Site_Filter() -> dcc.Dropdown:
     sites = list(MetaData['site_id'].unique())
-    return dcc.Dropdown(sites,sites[0:5],id='Site_Filter',placeholder='Select a site',multi=True,clearable=False)
+    return dcc.Dropdown(sites,sites[0:4],id='Site_Filter',placeholder='Select a site',multi=True)
 
 @callback(
     Output('Building_Site_Usage', 'figure'),
@@ -75,5 +73,5 @@ def Graph_Building_Site_Usage(selected_site):
     buildingsbySite = buildingsbySite[buildingsbySite['Number of Buildings'] > 15]
     fig = px.bar(buildingsbySite, x='Site Name', y='Number of Buildings', color='Space Usage')
     fig.update_layout(plot_bgcolor='#f9f9f9',paper_bgcolor='#f9f9f9')
-    fig.update_layout(legend=dict(yanchor="top", y=-0.2, orientation="h"))
+    fig.update_layout(legend=dict(y=-0.2, orientation="h"))
     return fig
