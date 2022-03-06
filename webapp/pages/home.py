@@ -8,6 +8,8 @@ from data import metadata, get_buidling_by_primary_usage, get_buidling_by_second
 def createLayout():
     layout = html.Div([Generate_header()])
 
+    # layout = html.Div()
+
     layout.children.append(html.Br())
 
     # col1 = html.Div([html.H3('Key Facts:'),
@@ -15,16 +17,16 @@ def createLayout():
     #                  ], className='col-md-2')
 
     col2 = html.Div([
-        html.H4('Sites by primary usage'),
+        # html.H4('sites by primary usage'),
         Add_Site_Filter(),
-        html.Br(),
+        # html.Br(),
         dcc.Graph(id='building_primary_usage',style={'height': '55vh'})
     ], className='col-md-6')
 
     col3 = html.Div([
-        html.H4('Sites by secondary space usage'),
+        # html.H4('sites by secondary space usage'),
         Add_Site_Filter(),
-        html.Br(),
+        # html.Br(),
         dcc.Graph(id='building_secondary_usage',style={'height': '55vh'})
     ], className='col-md-6')
 
@@ -35,18 +37,12 @@ def createLayout():
     return layout
 
 
+# do we need this function?
 def Generate_header() -> html.Div:
     # Region: Non Changing Elemnts
+
     header = html.Div([
-        html.Div([
-            html.Img(src='/assets/energy_hub_logo.png',
-                 style={
-                     'maxHeight': '90px'
-                 },
-                className='img-fluid float-start')
-            # html.H1('Energy Hub'),
-            # html.H2('A futuristic energy dashboard'),
-        ], className='col-md-6', style={'marginTop': '10px'},)
+        html.Div([], className='col-md-6', style={'marginTop': '10px'},)
     ], className='row')
     return header
 
@@ -70,9 +66,18 @@ def Add_Site_Filter() -> dcc.Dropdown:
     Input('Site_Filter', 'value'))
 def plot_primary_usage(selected_site):
     buildings = get_buidling_by_primary_usage(metadata, selected_site)
-    fig = px.bar(buildings, x='Site Name', y='Number of Buildings', color='Space Usage')
+    fig = px.bar(buildings, x='Sites', y='Number of Buildings', color='Space Usage')
     fig.update_layout(plot_bgcolor='#f9f9f9',paper_bgcolor='#f9f9f9')
     fig.update_layout(legend=dict(y=-0.2, orientation="h"))
+
+    # TO-DO anchor title to the center
+    fig.update_layout(
+        title={
+        'text': 'sites by primary usage',
+        'y':0.9,
+        'x':0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'})
     return fig
 
 
@@ -81,7 +86,14 @@ def plot_primary_usage(selected_site):
     Input('Site_Filter', 'value'))
 def plot_secondary_usage(selected_site):
     buildings = get_buidling_by_secondary_usage(metadata, selected_site)
-    fig = px.bar(buildings, x='Site Name', y='Number of Buildings', color='Space Usage')
+    fig = px.bar(buildings, x='Sites', y='Number of Buildings', color='Space Usage')
     fig.update_layout(plot_bgcolor='#f9f9f9',paper_bgcolor='#f9f9f9')
     fig.update_layout(legend=dict(y=-0.2, orientation="h"))
+    fig.update_layout(
+        title={
+        'text': 'sites by secondary usage',
+        'y':0.9,
+        'x':0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'})
     return fig

@@ -55,7 +55,7 @@ def get_buidling_by_primary_usage(metadata, selected_site):
     buildings = buildings.groupby(['site_id', 'primary_space_usage'], as_index=False).count()
 
     # rename the columns
-    buildings = buildings.rename(columns={'site_id': 'Site Name',
+    buildings = buildings.rename(columns={'site_id': 'Sites',
                                         'building_id': 'Number of Buildings',
                                         'primary_space_usage': 'Space Usage'})
     buildings = buildings.sort_values(by=['Number of Buildings', 'Space Usage'],ascending=False)
@@ -95,7 +95,7 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
     buildings = buildings.groupby(['site_id', 'sub_primary_space_usage'], as_index=False).count()
 
     # rename the columns
-    buildings = buildings.rename(columns={'site_id': 'Site Name',
+    buildings = buildings.rename(columns={'site_id': 'Sites',
                                         'building_id': 'Number of Buildings',
                                         'sub_primary_space_usage': 'Space Usage'})
     buildings = buildings.sort_values(by=['Number of Buildings', 'Space Usage'],ascending=False)
