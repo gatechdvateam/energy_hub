@@ -111,60 +111,6 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
 
 
 
-def plot_map(df):
-    """_summary_
 
-    Args:
-        df (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    site_lat = df.latitude
-    site_lon = df.longitude
-    locations_name = df.site_id
-
-    fig = go.Figure()
-
-    fig.add_trace(go.Scattermapbox(
-            lat=site_lat,
-            lon=site_lon,
-            mode='markers',
-            marker=go.scattermapbox.Marker(
-                size=17,
-                color='rgb(255, 0, 0)',
-                opacity=0.7
-            ),
-            text=locations_name,
-            hoverinfo='text'
-        ))
-
-    fig.add_trace(go.Scattermapbox(
-            lat=site_lat,
-            lon=site_lon,
-            mode='markers',
-            marker=go.scattermapbox.Marker(
-                size=8,
-                color='rgb(242, 177, 172)',
-                opacity=0.7
-            ),
-            hoverinfo='none'
-        ))
-
-    fig.update_layout(
-        title='Site location',
-        autosize=True,
-        hovermode='closest',
-        showlegend=False,
-        pitch=0,
-        zoom=3,
-        style='light'
-    )
-   
-    return fig
-
-
-# I still dont think this one should be here. Hassan will fight me over this  lol for sure 
-metadata = get_data("/data/metadata/", "metadata.csv", "csv")
 
 #TO-DO: we need to turn this to a class
