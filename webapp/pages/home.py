@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.graph_objects as go
 from data import *
+import numpy as np
 
 # Moved from Data. Since this is a small data load it can be here.
 metadata = get_data("/data/metadata/", "metadata.csv", "csv")
@@ -16,9 +17,9 @@ def createLayout():
     layout.children.append(html.Br())
 
     # To do (put more useful content)
-    introRow = html.Div([html.H3('Key Facts:'),
-                         Generate_Summary_List()
-                         ], className='col-md-2')
+    introRow = html.Div([html.H2('Data statistics'),
+                         compute_stats()
+                         ], className='col-md-12')
     layout.children.append(introRow)
     layout.children.append(html.Br())
 
@@ -48,11 +49,11 @@ def createLayout():
 
     # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
     MapRow = html.Div([
+        html.Br(),
         html.Div([
-            dcc.Graph(id='site_map', style={
-                      'height': '55vh'}, figure=plot_map(metadata))
-        ], className='col-md-12')
-    ], className='row')
+            dcc.Graph(id='site_map', style={'height': '55vh'}, figure=plot_map(metadata))
+        ],  className='row')
+    ], className='col-md-12')
 
     # Just SHOW IT!
     layout.children.append(MapRow)
@@ -80,13 +81,50 @@ def Generate_Summary_List() -> html.Ul:
     li2 = html.Li('Number of Sites: ' + str(metadata['site_id'].nunique()))
     return html.Ul([li1, li2])
 
+
+def compute_stats():
+    n_sites = metadata['site_id'].nunique()
+    n_buildings = metadata['building_id'].nunique()
+    n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
+    n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
+
+    # keep these (will need to use eventualy when we format)
+    # columns = ['Total number of sites', 'Total number of buildings']
+    # data = np.array([n_sites, n_buildings])
+
+    # table_header = [
+    #         html.Thead(html.Tr(html.Tr([html.Th(c) for c in columns])))
+    #         ]
+
+    table_header = [
+        html.Thead(html.Tr([html.Th("Total sites"), html.Th("Total buildings"),\
+                    html.Th("Buildings with electricity as a heating source"),\
+                    html.Th("Buildings with gas as a heating source")]))]
+
+    # row1 = html.Tr([html.Td(c) for c in data])
+
+    row1 = html.Tr([html.Td(n_sites), html.Td(n_buildings),\
+                 html.Td(n_buildings_elec), html.Td(n_buildings_gas)])
+
+    table_body = [html.Tbody(row1)]
+
+    table = dbc.Table(table_header + table_body,\
+                bordered=True,
+                dark = True,
+                hover=True,
+                responsive=True,
+                striped=True,)
+
+    return table
+
 # TO-DO: move to its own section
 # What a mess this thing ain't working!!!!
 
 
 def Add_Site_Filter() -> dcc.Dropdown:
     sites = list(metadata['site_id'].unique())
-    return dcc.Dropdown(sites, sites[0:4], id='Site_Filter', placeholder='Select a site', multi=True)
+    return dcc.Dropdown(sites, sites[0:3], id='Site_Filter',\
+                         placeholder='Select a site', multi=True, clearable=True)
 
 
 @callback(
@@ -114,9 +152,16 @@ def plot_primary_usage(selected_site):
     Output('building_secondary_usage', 'figure'),
     Input('Site_Filter', 'value'))
 def plot_secondary_usage(selected_site):
-    buildings = get_buidling_by_secondary_usage(metadata, selected_site)
-    fig = px.bar(buildings, x='Sites',
-                 y='Number of Buildings', color='Space Usage')
+    sec_buildings = get_buidling_by_secondary_usage(metadata, selected_site)
+
+    try:
+        fig = px.bar(sec_buildings, x='Sites',
+                    y='Number of Buildings', color='Space Usage')
+
+    except Exception:
+        fig = px.bar(sec_buildings, x='Sites',
+                    y='Number of Buildings', color='Space Usage')
+
     fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
     fig.update_layout(legend=dict(y=-0.2, orientation="h"))
     fig.update_layout(
@@ -126,7 +171,9 @@ def plot_secondary_usage(selected_site):
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'})
+
     return fig
+
 
 
 def plot_map(df):
@@ -138,48 +185,25 @@ def plot_map(df):
     Returns:
         _type_: _description_
     """
-    # To Do Play with Data here.
-    df['Size'] = 50.0
+    
 
-    fig = px.scatter_geo(df, lat='latitude', lon='longitude',
-                         locations='site_id', size='Size')
+    color = df['site_id'].nunique()
 
-    # fig.add_trace(go.Scattermapbox(
-    #         lat=site_lat,
-    #         lon=site_lon,
-    #         mode='markers',
-    #         marker=go.scattermapbox.Marker(
-    #             size=17,
-    #             color='rgb(255, 0, 0)',
-    #             opacity=0.7
-    #         ),
-    #         text=locations_name,
-    #         hoverinfo='text'
-    #     ))
+    fig = go.Figure(data=go.Scattergeo(
+            lon = df['longitude'],
+            lat = df['latitude'],
+            text = df['site_id'],
+            mode = 'markers',
+            # marker_color = df['site_id']
+            ))
 
-    # fig.add_trace(go.Scattermapbox(
-    #         lat=site_lat,
-    #         lon=site_lon,
-    #         mode='markers',
-    #         marker=go.scattermapbox.Marker(
-    #             size=8,
-    #             color='rgb(242, 177, 172)',
-    #             opacity=0.7
-    #         ),
-    #         hoverinfo='none'
-    #     ))
-
-    # fig.update_layout(
-    #     title='Site location',
-    #     autosize=True,
-    #     hovermode='closest',
-    #     showlegend=False,
-    #     mapbox=dict(
-    #     pitch=0,
-    #     zoom=3,
-    #     style='light'
-    # )
-
-    # )
+    fig.update_layout(
+        title={
+            'text': 'Location of all sites',
+            'y': 0.9,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'}
+        )
 
     return fig
