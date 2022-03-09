@@ -17,7 +17,7 @@ def createLayout():
     layout.children.append(html.Br())
 
     # To do (put more useful content)
-    introRow = html.Div([html.H2('Data statistics'),
+    introRow = html.Div([html.H2('Data statistics', style={'text-align': 'center'}),
                          compute_stats()
                          ], className='col-md-12')
     layout.children.append(introRow)
@@ -48,7 +48,7 @@ def createLayout():
     layout.children.append(html.Br())
 
     # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
-    MapRow = html.Div([
+    MapRow = html.Div([html.H2('Location of all sites', style={'text-align': 'center'}),
         html.Br(),
         html.Div([
             dcc.Graph(id='site_map', style={'height': '55vh'}, figure=plot_map(metadata))
@@ -87,23 +87,18 @@ def compute_stats():
     n_buildings = metadata['building_id'].nunique()
     n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
     n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
-
-    # keep these (will need to use eventualy when we format)
-    # columns = ['Total number of sites', 'Total number of buildings']
-    # data = np.array([n_sites, n_buildings])
-
-    # table_header = [
-    #         html.Thead(html.Tr(html.Tr([html.Th(c) for c in columns])))
-    #         ]
+    meters = pd.melt(metadata[["site_id","electricity",\
+                    "hotwater","chilledwater","steam","water",\
+                    "irrigation","gas","solar"]],id_vars = "site_id", var_name="meter")
+    n_meters = str(len(meters.dropna()))
 
     table_header = [
-        html.Thead(html.Tr([html.Th("Total sites"), html.Th("Total buildings"),\
+        html.Thead(html.Tr([html.Th("Number of Sites"), html.Th("Number of Buildings"),\
+                    html.Th("Number of meters"),\
                     html.Th("Buildings with electricity as a heating source"),\
                     html.Th("Buildings with gas as a heating source")]))]
 
-    # row1 = html.Tr([html.Td(c) for c in data])
-
-    row1 = html.Tr([html.Td(n_sites), html.Td(n_buildings),\
+    row1 = html.Tr([html.Td(n_sites), html.Td(n_buildings), html.Td(n_meters),\
                  html.Td(n_buildings_elec), html.Td(n_buildings_gas)])
 
     table_body = [html.Tbody(row1)]
@@ -117,9 +112,6 @@ def compute_stats():
 
     return table
 
-# TO-DO: move to its own section
-# What a mess this thing ain't working!!!!
-
 
 def Add_Site_Filter() -> dcc.Dropdown:
     sites = list(metadata['site_id'].unique())
@@ -132,12 +124,18 @@ def Add_Site_Filter() -> dcc.Dropdown:
     Input('Site_Filter', 'value'))
 def plot_primary_usage(selected_site):
     buildings = get_buidling_by_primary_usage(metadata, selected_site)
-    fig = px.bar(buildings, x='Sites',
-                 y='Number of Buildings', color='Space Usage')
-    fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
-    fig.update_layout(legend=dict(y=-0.2, orientation="h"))
+    # try/except block is needed as workaround. 
+    try:
+        fig = px.bar(buildings, x='Sites',
+                    y='Number of Buildings', color='Space Usage')
 
-    # TO-DO anchor title to the center
+    except Exception:
+        fig = px.bar(buildings, x='Sites',
+                    y='Number of Buildings', color='Space Usage')
+
+    fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+    fig.update_layout(legend=dict(y=-0.4, orientation="h"))
+
     fig.update_layout(
         title={
             'text': 'sites by primary usage',
@@ -163,7 +161,7 @@ def plot_secondary_usage(selected_site):
                     y='Number of Buildings', color='Space Usage')
 
     fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
-    fig.update_layout(legend=dict(y=-0.2, orientation="h"))
+    fig.update_layout(legend=dict(y=-0.4, orientation="h"))
     fig.update_layout(
         title={
             'text': 'sites by secondary usage',
@@ -185,25 +183,32 @@ def plot_map(df):
     Returns:
         _type_: _description_
     """
-    
 
-    color = df['site_id'].nunique()
+    df_sites = df.groupby('site_id')['building_id'].count()\
+                .reset_index()\
+                .rename(columns={'building_id':'n_buildings','site_id' : 'Site'})
 
-    fig = go.Figure(data=go.Scattergeo(
-            lon = df['longitude'],
-            lat = df['latitude'],
-            text = df['site_id'],
-            mode = 'markers',
-            # marker_color = df['site_id']
-            ))
+    displayed_text = list(df_sites["Site"]+ '<br>' + str(df_sites['n_buildings']))
+   
+    fig = px.scatter_geo(df,lon='longitude', lat='latitude',
+            color='site_id',
+            opacity=0.5,
+            projection="natural earth")
 
-    fig.update_layout(
-        title={
-            'text': 'Location of all sites',
-            'y': 0.9,
-            'x': 0.5,
-            'xanchor': 'center',
-            'yanchor': 'top'}
-        )
+    fig.update_layout(uniformtext_minsize=7, uniformtext_mode='hide')
+    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
+    fig.update_layout(height=350, margin={"r":0,"t":0,"l":0,"b":0})
+
+    fig.add_trace(go.Scattergeo(
+            text= displayed_text,
+            textposition="top center",
+            mode='text'))
+
+    fig.update_layout(legend = dict(bordercolor='rgb(100,100,100)',
+                                borderwidth=2,
+                                x=.9,
+                                y=0.9))
 
     return fig
+
+
