@@ -7,14 +7,14 @@ cdn_Style_Sheets = [dbc.themes.BOOTSTRAP]
 
 cdn_Scripts = []
 
-#Create the app and request a reference external style sheets and scripts.
-app = Dash(__name__, suppress_callback_exceptions=True, \
+#Create the Dash_App and request a reference external style sheets and scripts.
+Dash_App = Dash(__name__, suppress_callback_exceptions=True, \
     external_stylesheets=cdn_Style_Sheets,external_scripts=cdn_Scripts)
 
 #Required for Azure Deployment
-server = app.server
+server = Dash_App.server
 
-app.layout = html.Div([
+Dash_App.layout = html.Div([
     # represents the browser address bar and doesn't render anything
     dcc.Location(id='url', refresh=False),
     #This Navbar should show on all pages
@@ -36,4 +36,4 @@ def display_page(pathname):
 
 #Runs a server for development
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    Dash_App.run_server(debug=True,host='127.0.0.1', port=80)
