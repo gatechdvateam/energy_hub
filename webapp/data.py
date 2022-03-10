@@ -1,5 +1,4 @@
 from utils.azure_utils import KeyVault, DataLake
-import plotly.graph_objects as go
 
 #This is our Color palette for all charts. Change it or define your own here.
 ColorPalette = ["#b30000", "#7c1158", "#4421af", "#1a53ff", "#0d88e6", "#00b7c7", "#5ad45a", "#8be04e", "#ebdc78"]
@@ -105,14 +104,8 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
                                         'sub_primary_space_usage': 'Space Usage'})
     buildings = buildings.sort_values(by=['Number of Buildings', 'Space Usage'],ascending=False)
 
-    # get builings that have more than 15 sub buildings
-    buildings = buildings[buildings['Number of Buildings'] > 15]
+    # get builings that have at least 10 sub buildings
+    buildings = buildings[buildings['Number of Buildings'] >= 10]
 
 
     return buildings
-
-
-
-
-
-#TO-DO: we need to turn this to a class

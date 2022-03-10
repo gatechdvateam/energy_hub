@@ -1,7 +1,7 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import AboutDataSet, navbar, home, page2
-import os
+from pages import data_overview, navbar, home, page2
+
 
 cdn_Style_Sheets = ['https://bootswatch.com/5/simplex/bootstrap.min.css']
 
@@ -27,8 +27,8 @@ Dash_App.layout = html.Div([
 @callback(Output('page-content', 'children'),
               Input('url', 'pathname'))
 def display_page(pathname):
-    if pathname == '/AboutDataSet':
-        return AboutDataSet.createLayout()
+    if pathname == '/data_overview':
+        return data_overview.createLayout()
     elif pathname == '/page2':
         return page2.layout
     else:
