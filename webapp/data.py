@@ -1,6 +1,8 @@
 from utils.azure_utils import KeyVault, DataLake
 import plotly.graph_objects as go
 
+#This is our Color palette for all charts. Change it or define your own here.
+ColorPalette = ["#b30000", "#7c1158", "#4421af", "#1a53ff", "#0d88e6", "#00b7c7", "#5ad45a", "#8be04e", "#ebdc78"]
 
 
 def get_data(path, filename, ext):
