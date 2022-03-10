@@ -1,3 +1,4 @@
+from turtle import color
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
@@ -16,7 +17,9 @@ layout = dbc.Navbar(
                     className="g-0",
                 ),
                 style={"textDecoration": "none"},
+                href='/home'
             ),
+            dbc.NavItem(dbc.NavLink("About Data Set", href="/AboutDataSet",class_name='')),
             dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
             dbc.Collapse(
                 id="navbar-collapse",
@@ -25,6 +28,6 @@ layout = dbc.Navbar(
             ),
         ]
     ),
-    color="dark",
-    dark=True,
+    color="light",
+    dark=False,
 )
