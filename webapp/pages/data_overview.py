@@ -12,21 +12,22 @@ metadata = get_data("/data/metadata/", "metadata.csv", "csv")
 
 def createLayout():
     # Put the header.
-    layout = html.Div([Generate_header()])
+    layout = html.Div([generate_header()])
     # Line break (Space Please)
     layout.children.append(html.Br())
 
     # To do (put more useful content)
-    introRow = html.Div([html.H2('Data statistics', style={'text-align': 'center'}),
-                         compute_stats()
+    introRow = html.Div([html.H2('Dataset Overview', style={'text-align': 'center'}),
+                        html.Br(),
+                        compute_stats()
                          ], className='col-md-12')
     layout.children.append(introRow)
     layout.children.append(html.Br())
 
     # Add Site for once Heavn's Sake
-    layout.children.append(
-        html.Div([
-            Add_Site_Filter(),
+    layout.children.append(html.Div([html.H2('Sites by usage distribution', style={'text-align': 'center'}),
+            html.Br(),
+            site_id_filter(),
             html.Br()
         ], className='col-md-12')
     )
@@ -67,7 +68,7 @@ def createLayout():
 
 # do we need this function?
 # YEAH We need some page intro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-def Generate_header() -> html.Div:
+def generate_header() -> html.Div:
     # Region: Non Changing Elemnts
 
     header = html.Div([
@@ -76,6 +77,11 @@ def Generate_header() -> html.Div:
     return header
 
 def compute_stats():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     n_sites = metadata['site_id'].nunique()
     n_buildings = metadata['building_id'].nunique()
     n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
@@ -106,8 +112,19 @@ def compute_stats():
     return table
 
 
-def Add_Site_Filter() -> dcc.Dropdown:
-    sites = list(metadata['site_id'].unique())
+def site_id_filter() -> dcc.Dropdown:
+    """_summary_
+
+    Returns:
+        dcc.Dropdown: _description_
+    """
+    # get sites that have at least 10 buildings
+    buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
+    buildings_grouping.sort_values(by=['building_id'],ascending=False)
+
+    buildings_grouping = buildings_grouping[buildings_grouping['building_id'] >= 10]
+    
+    sites = list(buildings_grouping['site_id'])
     return dcc.Dropdown(sites, sites[0:3], id='Site_Filter',\
                          placeholder='Select a site', multi=True, clearable=True)
 
@@ -116,6 +133,14 @@ def Add_Site_Filter() -> dcc.Dropdown:
     Output('building_primary_usage', 'figure'),
     Input('Site_Filter', 'value'))
 def plot_primary_usage(selected_site):
+    """_summary_
+
+    Args:
+        selected_site (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     buildings = get_buidling_by_primary_usage(metadata, selected_site)
     # try/except block is needed as workaround. 
     fig = px.bar(buildings, x='Sites',
@@ -139,6 +164,14 @@ def plot_primary_usage(selected_site):
     Output('building_secondary_usage', 'figure'),
     Input('Site_Filter', 'value'))
 def plot_secondary_usage(selected_site):
+    """_summary_
+
+    Args:
+        selected_site (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     sec_buildings = get_buidling_by_secondary_usage(metadata, selected_site)
 
     fig = px.bar(sec_buildings, x='Sites',
@@ -194,9 +227,10 @@ def plot_map(df):
     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
-    # fig.update_layout(legend = dict(bordercolor='rgb(100,100,100)',
-    #                             borderwidth=2,
-    #                             x=.9,
-    #                             y=0.9))
+    # please dont remove (it looks nice)
+    fig.update_layout(legend = dict(bordercolor='rgb(100,100,100)',
+                                borderwidth=2,
+                                x=.9,
+                                y=0))
 
     return fig
