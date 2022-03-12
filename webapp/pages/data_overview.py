@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from data import *
 import numpy as np
-import time
+
 # Moved from Data. Since this is a small data load it can be here.
 metadata = get_data("/data/metadata/", "metadata.csv", "csv")
 
@@ -54,7 +54,7 @@ def createLayout():
         html.H2('Location of all sites', style={'text-align': 'center'}),
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
         html.Br(),
-        dcc.Loading(dcc.Graph(id='site_map', style={'height': '55vh'}))
+        dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
     ], className='col-md-12'
     ), className='row')
 
@@ -223,14 +223,14 @@ def plot_map(df):
             center=dict(lat=40.0, lon=-58.0), #Center Point
         ))
 
-    fig.update_layout(uniformtext_minsize=7, uniformtext_mode='hide')
+    # fig.update_layout(uniformtext_minsize=7, uniformtext_mode='hide')
     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     # please dont remove (it looks nice)
-    fig.update_layout(legend = dict(bordercolor='rgb(100,100,100)',
-                                borderwidth=2,
-                                x=.9,
-                                y=0))
+    # fig.update_layout(legend = dict(bordercolor='rgb(100,100,100)',
+    #                             borderwidth=2,
+    #                             x=.9,
+    #                             y=0))
 
     return fig
