@@ -1,5 +1,3 @@
-from pydoc import classname
-from turtle import color
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 

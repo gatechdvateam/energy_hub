@@ -20,7 +20,7 @@ Dash_App.layout = html.Div([
     #This Navbar should show on all pages
     navbar.layout,
     # This is a container that will contain content from pages in other files.
-    html.Div(id='page-content',className='container')
+    html.Div(id='page-content',className='container-fluid')
 ])
 
 #Route to different pages
