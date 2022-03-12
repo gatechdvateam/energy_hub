@@ -3,13 +3,14 @@ import dash_bootstrap_components as dbc
 from pages import data_overview, navbar, home, page2
 
 
-cdn_Style_Sheets = ['https://bootswatch.com/5/simplex/bootstrap.min.css']
+# cdn_Style_Sheets = ['assets/css/bootstrap.css']
+bootstrap_sheet = ['https://bootswatch.com/5/flatly/bootstrap.min.css']
 
 cdn_Scripts = []
 
 #Create the Dash_App and request a reference external style sheets and scripts.
 Dash_App = Dash(__name__, suppress_callback_exceptions=True, \
-    external_stylesheets=cdn_Style_Sheets,external_scripts=cdn_Scripts)
+    external_stylesheets=bootstrap_sheet,external_scripts=cdn_Scripts)
 
 #Required for Azure Deployment
 server = Dash_App.server
@@ -31,8 +32,8 @@ def display_page(pathname):
         return data_overview.createLayout()
     elif pathname == '/page2':
         return page2.layout
-    else:
-        return home.createLayout()
+    elif pathname == '/home':
+        return home.carousel
 
 #Runs a server for development
 if __name__ == '__main__':
