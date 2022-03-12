@@ -2,13 +2,8 @@ from dash import Dash, dcc, html, Input, Output, callback
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
-import plotly.graph_objects as go
 from data import *
-import numpy as np
-import time
-# Moved from Data. Since this is a small data load it can be here.
-metadata = get_data("/data/metadata/", "metadata.csv", "csv")
-
+from content import *
 
 def createLayout():
     # Put the header.
@@ -24,29 +19,37 @@ def createLayout():
     layout.children.append(introRow)
     layout.children.append(html.Br())
 
-    # Add Site for once Heavn's Sake
-    layout.children.append(html.Div([html.H2('Sites by usage distribution', style={'text-align': 'center'}),
-            html.Br(),
-            site_id_filter(),
-            html.Br()
-        ], className='col-md-12')
-    )
+    # Section title
+    layout.children.append(html.H2('Sites by usage distribution', style={'text-align': 'center'}))
 
-    # Make out Lovely useless Charts.
-    chart1 = html.Div([
+    R2C1 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
+    R2C2 = html.Div([
+        html.Br(),
+        site_id_filter('Prim_Use_Filter'),
         html.Br(),
         dcc.Loading(dcc.Graph(id='building_primary_usage', style={'height': '55vh'}))
     ], className='col-md-6')
 
-    chart2 = html.Div([
+    # Make out Lovely useless Charts.
+    Row2 = html.Div([R2C1,R2C2], className='row')
+
+    R3C1 = html.Div([
+        html.Br(),
+        site_id_filter('Sec_Use_Filter'),
         html.Br(),
         dcc.Loading(dcc.Graph(id='building_secondary_usage', style={'height': '55vh'}),type='default')
     ], className='col-md-6')
+    R3C2 = R2C2 = html.Div("Put something here", className='col-md-6')
 
-    # Add em bad boys.
-    chartsRow = html.Div(className='row', children=[chart1, chart2])
-    layout.children.append(chartsRow)
-    layout.children.append(html.Br())
+    # Make out Lovely useless Charts.
+    Row3 = html.Div([R3C1,R3C2], className='row')
+    
+
+    chart2 = html.Div([
+        html.Br(),
+    ], className='col-md-6')
+
+
 
     # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
     MapRow = html.Div(html.Div(
@@ -59,6 +62,11 @@ def createLayout():
     ), className='row')
 
     # Just SHOW IT!
+        # Add em bad boys.
+    layout.children.append(Row2)
+    layout.children.append(html.Br())
+    layout.children.append(Row3)
+    layout.children.append(html.Br())
     layout.children.append(MapRow)
     layout.children.append(html.Br())
 
@@ -112,7 +120,7 @@ def compute_stats():
     return table
 
 
-def site_id_filter() -> dcc.Dropdown:
+def site_id_filter(ElementID) -> dcc.Dropdown:
     """_summary_
 
     Returns:
@@ -125,13 +133,13 @@ def site_id_filter() -> dcc.Dropdown:
     buildings_grouping = buildings_grouping[buildings_grouping['building_id'] >= 10]
     
     sites = list(buildings_grouping['site_id'])
-    return dcc.Dropdown(sites, sites[0:3], id='Site_Filter',\
+    return dcc.Dropdown(sites, sites[0:3], id=ElementID,\
                          placeholder='Select a site', multi=True, clearable=True)
 
 
 @callback(
     Output('building_primary_usage', 'figure'),
-    Input('Site_Filter', 'value'))
+    Input('Prim_Use_Filter', 'value'))
 def plot_primary_usage(selected_site):
     """_summary_
 
@@ -162,7 +170,7 @@ def plot_primary_usage(selected_site):
 
 @callback(
     Output('building_secondary_usage', 'figure'),
-    Input('Site_Filter', 'value'))
+    Input('Sec_Use_Filter', 'value'))
 def plot_secondary_usage(selected_site):
     """_summary_
 
