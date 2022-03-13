@@ -89,13 +89,19 @@ class DataLake:
         return df
 
     def write(self, file_system: str, directory: str, file: pd.DataFrame, file_name: str, extension="csv", overwrite=True) -> None:
-        """ Write csv file to ADLS"""
+        """ Write csv, parq file to ADLS"""
         directory_client = self._directory_client(file_system, directory)
         file_client = directory_client.get_file_client(file=file_name)
         if extension == "csv":
             file_contents = file.to_csv(index=False)
             file_client.upload_data(file_contents, overwrite=overwrite)
             print(f"{file_name} write complete")
+        if extension == "parq":
+            file = f"{file_name}.parq"
+            fastparquet.write(file_name, file, compression="GZIP")
+            self.upload(file_system, directory, file_name=file,
+                        file_path=file, overwrite=True)
+            os.remove(file)
         else:
             pass
             # TODO: Add support for other write operations
