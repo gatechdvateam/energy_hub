@@ -96,6 +96,10 @@ class DataLake:
             file_contents = file.to_csv(index=False)
             file_client.upload_data(file_contents, overwrite=overwrite)
             print(f"{file_name} write complete")
+        if extension == "parq":
+            fastparquet.write(file_name, file, compression="GZIP")
+            file_client.upload_data(file_name, overwrite=overwrite)
+            os.remove(file)
         else:
             pass
             # TODO: Add support for other write operations
