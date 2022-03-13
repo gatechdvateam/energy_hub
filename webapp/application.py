@@ -33,7 +33,7 @@ def display_page(pathname):
     elif pathname == '/page2':
         return page2.layout
     elif pathname == '/home':
-        return home.carousel
+        return home.layout
 
 #Runs a server for development
 if __name__ == '__main__':
