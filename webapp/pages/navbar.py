@@ -42,4 +42,5 @@ layout = dbc.Navbar(
     ),
     color="light",
     dark=False,
+    className='navbar sticky-top'
 )

@@ -20,7 +20,7 @@ TEXT_STYLE = {
 TEAM_TEXT_STYLE = {
     'color': 'black',
     'font-family': 'serif',
-    'font-size': '40px'
+    'font-size': '25px'
 }
 
 CARD_TEXT_STYLE = {
@@ -70,6 +70,7 @@ card_content_Siham = [
                         src="assets/images/team/siham_cropped.jpg",
                         className="img-fluid rounded-start",
                     ),
+            html.P(),
             html.P(
                 "Siham is a data scientist working at a major semiconductor company in the San Francisco Bay Area.\
                  Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
@@ -90,6 +91,7 @@ card_content_mai = [
                         src="assets/images/team/mai_cropped.jpg",
                         className="img-fluid rounded-start",
                     ),
+            html.P(),
             html.P(
                 "Mai is a senior data analyst working for a major company in Atlanta.\
                  She is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
@@ -110,6 +112,7 @@ card_content_mert = [
                         src="assets/images/team/mert_cropped.jpg",
                         className="img-fluid rounded-start",
                     ),
+            html.P(),
             html.P(
                 "Mert is a Marine Engineer working for a major cruise line as Energy Optimization & Analytics Manager in Miami.\
                 He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
@@ -130,6 +133,7 @@ card_content_hassan = [
                         src="assets/images/team/hassan_cropped.png",
                         className="img-fluid rounded-start",
                     ),
+            html.P(),
             html.P(
                 "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi.\
                  He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
@@ -152,7 +156,9 @@ cards_row = dbc.Row(
 )
 
 footer = html.Footer([
-        html.Div("Created by Energy Hub Team", id='footer-text', style={'textAlign': 'center', 'font-size':'30px'})])
+        html.Div("© 2022 Copyright: Energy Hub Team", id='footer-text', 
+                style={'textAlign': 'center', 'font-size':'25px', 'font-family': 'serif'},
+                className="bg-light text-inverse text-center py-4")])
 
 # adding the cards to the layout
 cards = html.Div([cards_row])
@@ -165,5 +171,6 @@ layout.children.append(html.Br())
 layout.children.append(html.H2("About the team", style=TEAM_TEXT_STYLE))
 layout.children.append(html.Hr())
 layout.children.append(cards)
+layout.children.append(html.Br())
 layout.children.append(html.Hr())
 layout.children.append(footer)
