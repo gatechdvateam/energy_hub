@@ -11,9 +11,16 @@ CONTENT_STYLE = {
 }
 
 TEXT_STYLE = {
-    'textAlign': 'center',
+    # 'textAlign': 'center',
     'color': '#191970',
-    'font-family': 'serif'
+    'font-family': 'serif',
+    'font-size': '15px'
+}
+
+TEAM_TEXT_STYLE = {
+    'color': 'black',
+    'font-family': 'serif',
+    'font-size': '40px'
 }
 
 CARD_TEXT_STYLE = {
@@ -49,6 +56,11 @@ carousel = html.Div([dbc.Row(dbc.Carousel(
     
     
 # making info cards
+Siham_linkedInURL = 'https://www.linkedin.com/in/siham-elmali'
+Mai_linkedInURL = 'https://www.linkedin.com/in/phuongnguyen93'
+Mert_linkedInURL = 'https://www.linkedin.com/in/ersozmert'
+Hassan_linkedInURL = 'https://www.linkedin.com/in/hassan-abdel-sabour-52362987'
+
 card_content_Siham = [
     dbc.CardHeader("Siham Elmali", style=CARD_TEXT_STYLE),
     dbc.CardBody(
@@ -59,16 +71,18 @@ card_content_Siham = [
                     ),
             html.P(
                 "Siham is a data scientist working at a major semiconductor company in the San Francisco Bay Area.\
-                 Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis.\
-                 She is also a space/astronomy enthusiast.",
+                 Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
                 className="card-text", style=TEXT_STYLE,
             ),
+            # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
+            html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
+                   href=Siham_linkedInURL),
         ]
     ),
 ]
 
 card_content_mai = [
-    dbc.CardHeader("Mai Colman", style=CARD_TEXT_STYLE),
+    dbc.CardHeader("Mai Nguyen", style=CARD_TEXT_STYLE),
     dbc.CardBody(
         [
             dbc.CardImg(
@@ -76,9 +90,13 @@ card_content_mai = [
                         className="img-fluid rounded-start",
                     ),
             html.P(
-                "Mai is a senior data analyst working for a major company in Atlanta",
-                className="card-text",
+                "Mai is a senior data analyst working for a major company in Atlanta.\
+                 She is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                className="card-text", style=TEXT_STYLE,
             ),
+            # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
+            html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
+                   href=Mai_linkedInURL),
         ]
     ),
 ]
@@ -92,15 +110,19 @@ card_content_mert = [
                         className="img-fluid rounded-start",
                     ),
             html.P(
-                "Mert is a Marine Engineer, working for a major cruise line as Energy Optimization & Analytics Manager in Miami.",
-                className="card-text",
+                "Mert is a Marine Engineer working for a major cruise line as Energy Optimization & Analytics Manager in Miami.\
+                He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                className="card-text", style=TEXT_STYLE,
             ),
+            # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
+            html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
+                   href=Mert_linkedInURL),
         ]
     ),
 ]
 
 card_content_hassan = [
-    dbc.CardHeader("Hassan Mousa", style=CARD_TEXT_STYLE),
+    dbc.CardHeader("Hassan Abdel Sabour", style=CARD_TEXT_STYLE),
     dbc.CardBody(
         [
             dbc.CardImg(
@@ -108,9 +130,13 @@ card_content_hassan = [
                         className="img-fluid rounded-start",
                     ),
             html.P(
-                "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi",
-                className="card-text",
+                "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi.\
+                 He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                className="card-text", style=TEXT_STYLE,
             ),
+            # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
+            html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
+                   href=Hassan_linkedInURL),
         ]
     ),
 ]
@@ -124,6 +150,9 @@ cards_row = dbc.Row(
     className="mb-4",
 )
 
+footer = html.Footer([
+        html.Div("Created by Energy Hub Team", id='footer-text', style={'textAlign': 'center', 'font-size':'30px'})])
+
 # adding the cards to the layout
 cards = html.Div([cards_row])
 layout = html.Div([html.Div([
@@ -132,8 +161,8 @@ layout = html.Div([html.Div([
 
 layout.children.append(carousel)
 layout.children.append(html.Br())
-
-layout.children.append(html.H2("About the team", style={'font-family': 'serif'}))
-# layout.children.append(html.Br())
+layout.children.append(html.H2("About the team", style=TEAM_TEXT_STYLE))
 layout.children.append(html.Hr())
 layout.children.append(cards)
+layout.children.append(html.Hr())
+layout.children.append(footer)
