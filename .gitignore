@@ -61,6 +61,8 @@ coverage.xml
 *.mo
 *.pot
 
+Dockerfile
+
 # Django stuff:
 *.log
 local_settings.py
