@@ -14,7 +14,7 @@ TEXT_STYLE = {
     # 'textAlign': 'center',
     'color': '#191970',
     'font-family': 'serif',
-    'font-size': '15px'
+    'font-size': '18px'
 }
 
 TEAM_TEXT_STYLE = {
@@ -25,7 +25,8 @@ TEAM_TEXT_STYLE = {
 
 CARD_TEXT_STYLE = {
     'textAlign': 'center',
-    'color': '#0074D9'
+    'color': 'black',
+    'font-size':'20px'
 }
 
 carousel = html.Div([dbc.Row(dbc.Carousel(
@@ -93,7 +94,7 @@ card_content_mai = [
                 "Mai is a senior data analyst working for a major company in Atlanta.\
                  She is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
                 className="card-text", style=TEXT_STYLE,
-            ),
+            ),html.Br(),
             # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
             html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
                    href=Mai_linkedInURL),
