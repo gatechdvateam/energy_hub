@@ -3,7 +3,7 @@ from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 
 # logo
-ENERGYHUB_LOGO = '/assets/images/Energy Hub-logos_black_cropped.png'
+ENERGYHUB_LOGO = '/assets/images/logo/Energy Hub-logos_black_cropped.png'
 
 NAVLINKS_STYLE = {
         'display': 'block',

@@ -49,138 +49,91 @@ carousel = html.Div([dbc.Row(dbc.Carousel(
     
     
 # making info cards
-card_siham = html.Div([
-        dbc.Card([dbc.Col(
-                    dbc.CardImg(
-                        src="assets/images/siham.png",
+card_content_Siham = [
+    dbc.CardHeader("Siham Elmali", style=CARD_TEXT_STYLE),
+    dbc.CardBody(
+        [
+            dbc.CardImg(
+                        src="assets/images/team/siham_cropped.jpg",
                         className="img-fluid rounded-start",
                     ),
-                    className="col-md-8",
-                ),
-                dbc.Col(
-                    dbc.CardBody(
-                        [
-                            html.H4("Siham Elmali", className="card-title", style=CARD_TEXT_STYLE),
-                            html.P(
-                                "Siham Elmali is a data scientist working at Intel.\
-                                She has a BS/MS in ECE from Johns Hopkins University.\
-                                She is currently pursuing a masters in Analytics at Georgia Tech.",
-                                className="card-text",
-                            ),
-                            ]
+            html.P(
+                "Siham is a data scientist working at a major semiconductor company in the San Francisco Bay Area.\
+                 Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis.\
+                 She is also a space/astronomy enthusiast.",
+                className="card-text", style=TEXT_STYLE,
+            ),
+        ]
+    ),
+]
+
+card_content_mai = [
+    dbc.CardHeader("Mai Colman", style=CARD_TEXT_STYLE),
+    dbc.CardBody(
+        [
+            dbc.CardImg(
+                        src="assets/images/team/mai_cropped.jpg",
+                        className="img-fluid rounded-start",
                     ),
-                    className="col-md-8",
-                ),
-            ]
-        )
+            html.P(
+                "Mai is a senior data analyst working for a major company in Atlanta",
+                className="card-text",
+            ),
+        ]
+    ),
+]
+
+card_content_mert = [
+    dbc.CardHeader("Mert Ersoz", style=CARD_TEXT_STYLE),
+    dbc.CardBody(
+        [
+            dbc.CardImg(
+                        src="assets/images/team/mert_cropped.jpg",
+                        className="img-fluid rounded-start",
+                    ),
+            html.P(
+                "Mert is a Marine Engineer, working for a major cruise line as Energy Optimization & Analytics Manager in Miami.",
+                className="card-text",
+            ),
+        ]
+    ),
+]
+
+card_content_hassan = [
+    dbc.CardHeader("Hassan Mousa", style=CARD_TEXT_STYLE),
+    dbc.CardBody(
+        [
+            dbc.CardImg(
+                        src="assets/images/team/hassan_cropped.png",
+                        className="img-fluid rounded-start",
+                    ),
+            html.P(
+                "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi",
+                className="card-text",
+            ),
+        ]
+    ),
+]
+cards_row = dbc.Row(
+    [
+        dbc.Col(dbc.Card(card_content_Siham, color="info", outline=True)),
+        dbc.Col(dbc.Card(card_content_mai, color="info", outline=True)),
+        dbc.Col(dbc.Card(card_content_mert, color="info", outline=True)),
+        dbc.Col(dbc.Card(card_content_hassan, color="info", outline=True)),
     ],
-    className="mb-4 border-0",
-    style={"maxWidth": "540px"},
-    )
-    
-
-card_hassan = html.Div([
-        dbc.Card([
-                dbc.Col(
-                    dbc.CardImg(
-                        src="assets/images/random.jpg",
-                        className="img-fluid rounded-start",
-                    ),
-                    className="col-md-8",
-                ),
-                dbc.Col(
-                    dbc.CardBody(
-                        [
-                            html.H4("Hassan Mousa", className="card-title", style=CARD_TEXT_STYLE),
-                            html.P(
-                                "Hassan is a data scientist working at NYU.\
-                                He has a BS/MS in ECE from Johns Hopkins University. He is currently\
-                                pursuing a masters in Analytics at Georgia Tech.",
-                                className="card-text",
-                            ),
-                            ]
-                    ),
-                    className="col-md-8",
-                ),
-            ]
-        ),
-        ],
-    className="mb-4 border-0",
-    style={"maxWidth": "540px"},
+    className="mb-4",
 )
 
-card_mai = html.Div([
-        dbc.Card([
-                dbc.Col(
-                    dbc.CardImg(
-                        src="assets/images/random.jpg",
-                        className="img-fluid rounded-start",
-                    ),
-                    className="col-md-8",
-                ),
-                dbc.Col(
-                    dbc.CardBody(
-                        [
-                            html.H4("Mai Colman", className="card-title", style=CARD_TEXT_STYLE),
-                            html.P(
-                                "Mai is a data scientist working at NYU.\
-                                She has a BS/MS in ECE from Johns Hopkins University. He is currently\
-                                pursuing a masters in Analytics at Georgia Tech.",
-                                className="card-text",
-                            ),
-                            ]
-                    ),
-                    className="col-md-8",
-                ),
-            ]
-        )
-        ],
-    className="mb-4 border-0",
-    style={"maxWidth": "540px"},
-)
-
-card_mert = html.Div([
-        dbc.Card([
-                dbc.Col(
-                    dbc.CardImg(
-                        src="assets/images/mert-real.jpg",
-                        className="img-fluid rounded-start",
-                    ),
-                    className="col-md-8",
-                ),
-                dbc.Col(
-                    dbc.CardBody(
-                        [
-                            html.H4("Mert", className="card-title", style=CARD_TEXT_STYLE),
-                            html.P(
-                                "Mert is a data scientist working at NYU.\
-                                He has a BS/MS in ECE from Johns Hopkins University. He is currently\
-                                pursuing a masters in Analytics at Georgia Tech.",
-                                className="card-text",
-                            ),
-                            ]
-                    ),
-                    className="col-md-8",
-                ),
-            ]
-        )
-        ],
-    className="mb-4 border-0",
-    style={"maxWidth": "540px", "border": "none", "outline":"none"},
-)
-
-
-siham_hassan = html.Div(children=[card_siham, card_hassan], className="row")
-mai_mert = html.Div(children=[card_mai, card_mert], className="row")
-
+# adding the cards to the layout
+cards = html.Div([cards_row])
 layout = html.Div([html.Div([
         html.Div([], className='col-md-6', style={'marginTop': '10px'},)
     ], className='row')])
+
 layout.children.append(carousel)
 layout.children.append(html.Br())
 
-layout.children.append(html.H2("About the team"))
-layout.children.append(html.Br())
-layout.children.append(siham_hassan)
-layout.children.append(html.Br())
-layout.children.append(mai_mert)
+layout.children.append(html.H2("About the team", style={'font-family': 'serif'}))
+# layout.children.append(html.Br())
+layout.children.append(html.Hr())
+layout.children.append(cards)
