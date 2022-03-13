@@ -55,7 +55,7 @@ def get_buidling_by_primary_usage(metadata, selected_site):
     buildings = buildings.groupby(['site_id', 'primary_space_usage'], as_index=False).count()
 
     # rename the columns
-    buildings = buildings.rename(columns={'site_id': 'Site Name',
+    buildings = buildings.rename(columns={'site_id': 'Sites',
                                         'building_id': 'Number of Buildings',
                                         'primary_space_usage': 'Space Usage'})
     buildings = buildings.sort_values(by=['Number of Buildings', 'Space Usage'],ascending=False)
@@ -95,19 +95,16 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
     buildings = buildings.groupby(['site_id', 'sub_primary_space_usage'], as_index=False).count()
 
     # rename the columns
-    buildings = buildings.rename(columns={'site_id': 'Site Name',
+    buildings = buildings.rename(columns={'site_id': 'Sites',
                                         'building_id': 'Number of Buildings',
                                         'sub_primary_space_usage': 'Space Usage'})
     buildings = buildings.sort_values(by=['Number of Buildings', 'Space Usage'],ascending=False)
 
-    # get builings that have more than 15 sub buildings
-    buildings = buildings[buildings['Number of Buildings'] > 15]
+    # get builings that have at least 10 sub buildings
+    buildings = buildings[buildings['Number of Buildings'] >= 10]
 
 
     return buildings
 
-
-# I still dont think this one should be here. Hassan will fight me over this  lol for sure 
+# Preload All Datasets here.
 metadata = get_data("/data/metadata/", "metadata.csv", "csv")
-
-#TO-DO: we need to turn this to a class
