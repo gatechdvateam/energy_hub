@@ -32,7 +32,7 @@ def display_page(pathname):
         return data_overview.createLayout()
     elif pathname == '/page2':
         return page2.layout
-    elif pathname == '/home':
+    else:
         return home.layout
 
 #Runs a server for development
