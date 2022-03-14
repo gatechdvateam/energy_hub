@@ -61,10 +61,6 @@ coverage.xml
 *.mo
 *.pot
 
-#Ignore docker Stuff
-Dockerfile
-.dockerignore
-
 # Django stuff:
 *.log
 local_settings.py
