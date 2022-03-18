@@ -5,6 +5,89 @@ import pandas as pd
 from data import *
 from content import *
 
+
+# Define stats cards
+card1 = dbc.Card([
+    dbc.CardBody([
+        html.H4("Total number of buildings", className="card-title",id="card_num1"),
+        html.P("Output('card_text6','children'),", className="card-text",id="card_text1")
+    ])
+],
+    style={'display': 'inline-block',
+           'width': '30%',
+           'text-align': 'center',
+           'color':'white',
+           'background-color': 'green'},
+    outline=True)
+
+card2 = dbc.Card([
+    dbc.CardBody([
+        html.H4("Total number of meters", className="card-title",id="card_num2"),
+        html.P("This is some card text", className="card-text",id="card_text2")
+        ]
+     )],
+    style={'display': 'inline-block',
+           'width': '33.3%',
+           'text-align': 'center',
+           'color':'white',
+           'background-color': 'rgba(37, 150, 190)'},
+    outline=True)
+
+card3 = dbc.Card([
+    dbc.CardBody([
+        html.H4("The total square footage", className="card-title",id="card_num3"),
+        html.P("This is some card text", className="card-text",id="card_text3")
+        ]
+     )],
+    style={'display': 'inline-block',
+           'width': '33.3%',
+           'text-align': 'center',
+           'color':'white',
+           'background-color': 'rgba(37, 150, 190)'},
+    outline=True)
+	
+card4 = dbc.Card([
+    dbc.CardBody([
+        html.H4("the oldest building was built in: ", className="card-title",id="card_num4"),
+        html.P("This is some card text", className="card-text",id="card_text4")
+        ]
+     )],
+    style={'display': 'inline-block',
+           'width': '33.3%',
+           'text-align': 'center',
+           'color':'white',
+           'background-color': 'rgba(37, 150, 190)'},
+    outline=True)
+	
+	
+card5 = dbc.Card([
+    dbc.CardBody([
+        html.H4("The newest building was built in", className="card-title",id="card_num5"),
+        html.P("This is some card text", className="card-text",id="card_text5")
+        ]
+     )],
+    style={'display': 'inline-block',
+           'width': '33.3%',
+           'text-align': 'center',
+           'color':'white',
+           'background-color': 'rgba(37, 150, 190)'},
+    outline=True)
+	
+card6 = dbc.Card([
+    dbc.CardBody([
+        html.H4("The max number of floors", className="card-title",id="card_num6"),
+        html.P("This is some card text", className="card-text",id="card_text6")
+        ]
+     )],
+    style={'display': 'inline-block',
+           'width': '33.3%',
+           'text-align': 'center',
+           'color':'white',
+           'background-color': 'rgba(37, 150, 190)'},
+    outline=True)
+	
+
+
 def createLayout():
     # Put the header.
     layout = html.Div([generate_header()])
@@ -14,7 +97,8 @@ def createLayout():
     # To do (put more useful content)
     introRow = html.Div([html.H2('Dataset Overview', style={'text-align': 'center'}),
                         html.Br(),
-                        compute_stats()
+                        # compute_stats()
+                        card1, card2, card3, card4, card5, card6
                          ], className='col-md-12')
     layout.children.append(introRow)
     layout.children.append(html.Br())
@@ -84,6 +168,17 @@ def generate_header() -> html.Div:
     ], className='row')
     return header
 
+@callback(
+   [
+    Output('card_text1','children'),
+    Output('card_text2','children'),
+    Output('card_text3','children'),
+    Output('card_text4','children'),
+    Output('card_text5','children'),
+    Output('card_text6','children'),
+   ],
+    Input('card_site','value')
+)
 def compute_stats(siteID):
     """_summary_
 
