@@ -8,3 +8,35 @@ PrimaryUsageMarkDown = '''
 Explore more about these buildings by interacting with the graph on the left. You can change the filter to add more sites or clear it
 to remove all sites.
 '''
+
+TEAM_TEXT_STYLE = {
+    'color': 'black',
+    'font-family': 'serif',
+    'font-size': '25px'
+}
+
+CARD_TEXT_STYLE = {
+    'textAlign': 'center',
+    'color': 'black',
+    'font-size':'20px'
+}
+
+TEXT_STYLE = {
+    # 'textAlign': 'center',
+    'color': '#191970',
+    'font-family': 'serif',
+    'font-size': '18px'
+}
+
+CONTENT_STYLE = {
+    'margin-left': '25%',
+    'margin-right': '5%',
+    'top': 0,
+    'padding': '20px 10px'
+}
+
+HomePageIntro = '''
+# Energy Hub
+## A futuristic energy consumption dashboard
+### To-do: add more tex.
+'''
