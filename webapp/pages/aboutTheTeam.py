@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 from content import *
 
 
-def createLayout():
+def team_layout():
     # making info cards
     Siham_linkedInURL = 'https://www.linkedin.com/in/siham-elmali'
     Mai_linkedInURL = 'https://www.linkedin.com/in/phuongnguyen93'

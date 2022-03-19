@@ -1,6 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import data_overview, navbar, home, page2,aboutTheTeam
+from pages import data_overview, navbar, home, page2
 
 
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
@@ -36,10 +36,12 @@ def display_page(pathname):
         return data_overview.createLayout()
     elif pathname == '/page2':
         return page2.layout
-    elif pathname=='/aboutTheTeam':
-        return aboutTheTeam.createLayout()
+    elif pathname=='/team':
+        return home.team_layout()
+    elif pathname == '/home':
+        return home.carousel_layout()
     else:
-        return home.createLayout()
+        home.home_layout()
 
 #Runs a server for development
 if __name__ == '__main__':

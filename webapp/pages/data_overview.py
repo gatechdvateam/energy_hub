@@ -5,77 +5,70 @@ import pandas as pd
 from data import *
 from content import *
 
-# CARD_TEXT_STYLE = {
-#     'textAlign': 'center',
-#     'color': 'black',
-#     'font-size':'20px'
-# }
-
-
-STATS_CARD =  {
-            'display': 'inline-block',
-        #    'width': '50%',
-           'text-align': 'center',
-           'color':'black',
-        #    'background-color': 'lightblue'
-        'font-size':'25px'
-           }
 
 # Define stats cards
-card1 = dbc.Card([
-    dbc.CardBody([
-        html.H4("Total number of buildings"),
-        html.P("700", className="card-title",id="card_text1")
-    ])
-],
-    # style=CARD_TEXT_STYLE,
+card1 = dbc.CardBody([
+        html.H4("Total number of sites"),
+        html.P("19", className="card-title")
+    ],
     style=STATS_CARD,
-    # outline=True
     )
 
-card2 = dbc.Card([
-    dbc.CardBody([
-        html.H4("Total number of meters"),
-        html.P("1290", className="card-text",id="card_text2")
-        ]
-     )],
+card2 = dbc.CardBody([
+        html.H4("Total number of buildings for all sites"),
+        html.P("1636", className="card-text")
+        ],
     style=STATS_CARD,
-    # outline=True
     )
 
 card3 = dbc.CardBody([
-        html.H4("The total square footage"),
-        html.P("400", className="card-text",id="card_text3")
+        html.H4("Total number of meters"),
+        html.P("3053", className="card-text")
         ],
     style=STATS_CARD,
-    # outline=True
     )
 	
 card4 = dbc.CardBody([
-        html.H4("The oldest building was built in"),
-        html.P("1912", className="card-text",id="card_text4")
+        html.H4("Total number of buildings"),
+        html.P("700", className="card-title",id="card_text4")
+    ],
+    style=STATS_CARD,
+    )
+
+card5 = dbc.CardBody([
+        html.H4("Total number of meters"),
+        html.P("1290", className="card-text",id="card_text5")
         ],
     style=STATS_CARD,
-    # outline=True
     )
-	
-	
-card5 = dbc.CardBody([
-        html.H4("The newest building was built in"),
-        html.P("2016", className="card-text",id="card_text5")
-        ]
-     ,
-    style=STATS_CARD,
-    # outline=True
-    )
-	
+
 card6 = dbc.CardBody([
-        html.H4("The max number of floors"),
-        html.P("15", className="card-text",id="card_text6")
-        ]
-     ,
+        html.H4("Total square footage"),
+        html.P("400", className="card-text",id="card_text6")
+        ],
     style=STATS_CARD,
-    # outline=True
+    )
+	
+card7 = dbc.CardBody([
+        html.H4("The oldest building was built in"),
+        html.P("1912", className="card-text",id="card_text7")
+        ],
+    style=STATS_CARD,
+    )
+	
+	
+card8 = dbc.CardBody([
+        html.H4("The newest building was built in"),
+        html.P("2016", className="card-text",id="card_text8")
+        ],
+    style=STATS_CARD,
+    )
+	
+card9 = dbc.CardBody([
+        html.H4("The max number of floors"),
+        html.P("15", className="card-text",id="card_text9")
+        ],
+    style=STATS_CARD,
     )
 
 
@@ -89,30 +82,40 @@ def createLayout():
     # To do (put more useful content)
     introRow = html.Div([html.H3('Site statistics',  style={'text-align': 'center'}),
                         html.Br(),
-                        # compute_stats(
-                        card_site_selector('card_site'),
+                        dbc.Row(
+                            [
+                                dbc.Col(dbc.Card(card1, color="info", outline=True), md=4),
+                                dbc.Col(dbc.Card(card2, color="info", outline=True), md=4),
+                                dbc.Col(dbc.Card(card3, color="info", outline=True), md=4),
+                            ],
+                            style={'marginTop': '10px'}, className='row'
+                        ),
                         html.Br(),
+                        card_site_selector('card_site'),
+                        html.Hr(),
                          ], className='mb-12')
 
-    row_1 = dbc.Row(
-        [
-            dbc.Col(dbc.Card(card1, color="info", outline=True)),
-            dbc.Col(dbc.Card(card2, color="info", outline=True)),
-            dbc.Col(dbc.Card(card3, color="info", outline=True)),
-        ],
-        className="mb-4",
-    )
+
 
     row_2 = dbc.Row(
         [
-            dbc.Col(dbc.Card(card4, color="info", outline=True)),
-            dbc.Col(dbc.Card(card5, color="info", outline=True)),
-            dbc.Col(dbc.Card(card6, color="info", outline=True)),
+            dbc.Col(dbc.Card(card4, color="info", outline=True), md=4),
+            dbc.Col(dbc.Card(card5, color="info", outline=True), md=4),
+            dbc.Col(dbc.Card(card6, color="info", outline=True), md=4),
         ],
-        className="mb-4",
+        style={'marginTop': '10px'}, className='row'
     )
 
-    cards = html.Div([row_1, row_2])
+    row_3 = dbc.Row(
+        [
+            dbc.Col(dbc.Card(card7, color="info", outline=True), md=4),
+            dbc.Col(dbc.Card(card8, color="info", outline=True), md=4),
+            dbc.Col(dbc.Card(card9, color="info", outline=True), md=4),
+        ],
+        style={'marginTop': '10px'}, className='row'
+    )
+
+    cards = html.Div([row_2, row_3])
   
     layout.children.append(introRow)
     layout.children.append(html.Br())
@@ -150,7 +153,6 @@ def createLayout():
     ], className='col-md-6')
 
 
-
     # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
     MapRow = html.Div(html.Div(
         [
@@ -167,15 +169,9 @@ def createLayout():
     layout.children.append(html.Br())
     layout.children.append(MapRow)
 
-
-    # Hofff Done!
     return layout
 
 
-
-
-# do we need this function?
-# YEAH We need some page intro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def generate_header() -> html.Div:
     # Region: Non Changing Elemnts
 
@@ -186,12 +182,12 @@ def generate_header() -> html.Div:
 
 @callback(
    [
-    Output('card_text1','children'),
-    Output('card_text2','children'),
-    Output('card_text3','children'),
     Output('card_text4','children'),
     Output('card_text5','children'),
     Output('card_text6','children'),
+    Output('card_text7','children'),
+    Output('card_text8','children'),
+    Output('card_text9','children'),
    ],
     Input('card_site','value')
 )
@@ -203,6 +199,10 @@ def compute_stats(siteID):
     """
     # get total number of sites
     n_sites = metadata['site_id'].nunique()
+
+    # get other stats
+    n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
+    n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
 
     # count of buildings per site
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
@@ -235,42 +235,19 @@ def compute_stats(siteID):
     max_num_floors_per_site = max_num_floors_per_site_grp[max_num_floors_per_site_grp['site_id']==siteID]['number_of_floors'].values[0]
 
 
-    # get other stats
-    n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
-    n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
-
-    # table_header = [
-    #     html.Thead(html.Tr([html.Th("Number of Sites"), html.Th("Number of Buildings"),\
-    #                 html.Th("Number of meters"),\
-    #                 html.Th("Buildings with electricity as a heating source"),\
-    #                 html.Th("Buildings with gas as a heating source")]))]
-
-    # row1 = html.Tr([html.Td(n_sites), html.Td(n_buildings), html.Td(n_meters),\
-    #              html.Td(n_buildings_elec), html.Td(n_buildings_gas)])
-
-    # table_body = [html.Tbody(row1)]
-
-    # table = dbc.Table(table_header + table_body,\
-    #             bordered=True,
-    #             dark = False,
-    #             hover=True,
-    #             responsive=True,
-    #             striped=True,)
-
     return n_buildings, n_meters, size_per_site, oldest_building_per_site, newest_building_per_site, max_num_floors_per_site
 
-# print(compute_stats('Lamb'))
+
 def card_site_selector(siteID):
     """_summary_
 
     Returns:
         dcc.Dropdown: _description_
     """
-    # get sites that have at least 10 buildings
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
     
     sites = list(buildings_grouping['site_id'])
-    return dcc.Dropdown(sites, id=siteID, placeholder='Select a site')
+    return dcc.Dropdown(sites, id=siteID, placeholder='select a site')
 
 
 
@@ -288,7 +265,7 @@ def site_id_filter(ElementID) -> dcc.Dropdown:
     
     sites = list(buildings_grouping['site_id'])
     return dcc.Dropdown(sites, sites[0:3], id=ElementID,\
-                         placeholder='Select a site', multi=True, clearable=True)
+                         placeholder='select a site', multi=True, clearable=True)
 
 
 @callback(
@@ -385,14 +362,8 @@ def plot_map(df):
             center=dict(lat=40.0, lon=-58.0), #Center Point
         ))
 
-    # fig.update_layout(uniformtext_minsize=7, uniformtext_mode='hide')
+
     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-    # please dont remove (it looks nice)
-    # fig.update_layout(legend = dict(bordercolor='rgb(100,100,100)',
-    #                             borderwidth=2,
-    #                             x=.9,
-    #                             y=0))
 
     return fig

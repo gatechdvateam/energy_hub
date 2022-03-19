@@ -35,6 +35,14 @@ CONTENT_STYLE = {
     'padding': '20px 10px'
 }
 
+
+STATS_CARD =  {
+            'display': 'inline-block',
+            'text-align': 'center',
+            'color':'black',
+            'font-size':'25px'
+           }
+           
 HomePageIntro = '''
 # Energy Hub
 ## A futuristic energy consumption dashboard
