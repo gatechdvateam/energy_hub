@@ -18,6 +18,7 @@ STATS_CARD =  {
            'text-align': 'center',
            'color':'black',
         #    'background-color': 'lightblue'
+        'font-size':'25px'
            }
 
 # Define stats cards
@@ -95,8 +96,8 @@ def createLayout():
 
     row_1 = dbc.Row(
         [
-            dbc.Col(dbc.Card(card1, color="primary", outline=True)),
-            dbc.Col(dbc.Card(card2, color="secondary", outline=True)),
+            dbc.Col(dbc.Card(card1, color="info", outline=True)),
+            dbc.Col(dbc.Card(card2, color="info", outline=True)),
             dbc.Col(dbc.Card(card3, color="info", outline=True)),
         ],
         className="mb-4",
@@ -104,8 +105,8 @@ def createLayout():
 
     row_2 = dbc.Row(
         [
-            dbc.Col(dbc.Card(card4, color="primary", outline=True)),
-            dbc.Col(dbc.Card(card5, color="secondary", outline=True)),
+            dbc.Col(dbc.Card(card4, color="info", outline=True)),
+            dbc.Col(dbc.Card(card5, color="info", outline=True)),
             dbc.Col(dbc.Card(card6, color="info", outline=True)),
         ],
         className="mb-4",
