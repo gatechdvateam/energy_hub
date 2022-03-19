@@ -5,11 +5,15 @@
 
 # Use the below command to build the image. The format is docker username/repoName:Tags
 # docker build -t mousahassan/dvawebapp:latest .
-# Use the below command to run the image or run it from docker.
-# docker run -p 8080:80 mousahassan/dvawebapp:latest
+# Use the below command to run the image or run it from docker (Read notes first)
+# Don't put the value of (-e) which is environement variable in command line. Docker pulls it from current environment.
+# https://stackoverflow.com/questions/30494050/how-do-i-pass-environment-variables-to-docker-containers
+# Also container name must come at the end
+# https://stackoverflow.com/questions/27158840/docker-executable-file-not-found-in-path
+# docker run -e AZURE_CLIENT_ID -e AZURE_CLIENT_SECRET -e AZURE_TENANT_ID -p 8080:80 mousahassan/dvawebapp:latest
 
-#This is a ready made container image for python 3.7. 
-FROM python:3.7-slim
+#This is a ready made container image for python 3.9. 
+FROM python:3.9-slim
 #Copy the requiremnts file
 COPY requirements.txt ./requirements.txt
 #Install the requirements file.
