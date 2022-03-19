@@ -161,21 +161,12 @@ def createLayout():
     ], className='col-md-6'
     ), className='row')
 
-
-    footer = html.Footer([
-        html.Div("© 2022 Copyright: Energy Hub Team", id='footer-text', 
-                style={'textAlign': 'center', 'font-size':'25px', 'font-family': 'serif'},
-                className="bg-light text-inverse text-center py-4")])
-
-    # Just SHOW IT!
-        # Add em bad boys.
     layout.children.append(Row2)
     layout.children.append(html.Br())
     layout.children.append(Row3)
     layout.children.append(html.Br())
     layout.children.append(MapRow)
-    layout.children.append(html.Br())
-    layout.children.append(footer)
+
 
     # Hofff Done!
     return layout

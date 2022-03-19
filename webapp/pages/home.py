@@ -9,17 +9,22 @@ def createLayout():
                     items=[
                             {
                                 "key": "1",
-                                "src": "/assets/images/background/image0.jpeg",
+                                "src": "/assets/images/background/image0_resized.jpeg",
                                 "header": "Welcome to Energy Hub",
                                 "img_style":{"width":"100%"}
                             },
                             {
                                 "key": "2",
-                                "src": "/assets/images/background/image1.jpeg",
+                                "src": "/assets/images/background/image1_resized.jpeg",
                             },
                             {
                                 "key": "3",
-                                "src": "/assets/images/background/image2.jpeg",
+                                "src": "/assets/images/background/image2_resized.jpeg",
+                            },
+                            
+                            {
+                                "key": "4",
+                                "src": "/assets/images/background/image3_resized.jpeg",
                             },
                         ],
         

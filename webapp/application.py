@@ -22,10 +22,10 @@ Dash_App.layout = html.Div([
     navbar.layout,
     # This is a container that will contain content from pages in other files.
     html.Div(id='page-content',className='container-fluid'),
-    html.Footer(
+    html.Footer([html.Br(),
         html.Div("© 2022 Copyright: Energy Hub Team", id='footer-text', 
                 style={'textAlign': 'center', 'font-size':'25px', 'font-family': 'serif'},
-                className="bg-light text-inverse text-center"))
+                className="bg-light text-inverse text-center")])
 ])
 
 #Route to different pages
