@@ -30,7 +30,7 @@ layout = dbc.Navbar(
             ),
             dbc.NavItem(dbc.NavLink("Home", href="/home",active=True,class_name='', style=NAVLINKS_STYLE)),
             dbc.NavItem(dbc.NavLink("Data Overview", active=True,href="/data_overview", style=NAVLINKS_STYLE)),
-            dbc.NavItem(dbc.NavLink("Buildings", href="/building", style=NAVLINKS_STYLE)),
+            dbc.NavItem(dbc.NavLink("Buildings", href="/buildings", style=NAVLINKS_STYLE)),
             dbc.NavItem(dbc.NavLink("Sites", href="/site", style=NAVLINKS_STYLE)),
             dbc.NavItem(dbc.NavLink("Team", href="/aboutTheTeam", style=NAVLINKS_STYLE)),
             dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),

@@ -1,6 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import data_overview, navbar, home, page2,aboutTheTeam
+from pages import data_overview, navbar, home, page2, aboutTheTeam,buildings
 
 
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
@@ -34,6 +34,8 @@ Dash_App.layout = html.Div([
 def display_page(pathname):
     if pathname == '/data_overview':
         return data_overview.createLayout()
+    elif pathname == '/buildings':
+        return buildings.createLayout()
     elif pathname == '/page2':
         return page2.layout
     elif pathname=='/aboutTheTeam':
