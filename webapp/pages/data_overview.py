@@ -124,6 +124,7 @@ def createLayout():
 
     # Section title
     layout.children.append(html.H3('Sites by usage distribution', style={'text-align': 'center'}))
+    layout.children.append(html.Hr())
 
     R2C1 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
     R2C2 = html.Div([
@@ -142,7 +143,7 @@ def createLayout():
         html.Br(),
         dcc.Loading(dcc.Graph(id='building_secondary_usage', style={'height': '55vh'}),type='default')
     ], className='col-md-6')
-    R3C2 = R2C2 = html.Div("Put something here", className='col-md-6')
+    R3C2 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
 
     # Make out Lovely useless Charts.
     Row3 = html.Div([R3C1,R3C2], className='row')
@@ -197,41 +198,47 @@ def compute_stats(siteID):
     Returns:
         _type_: _description_
     """
-    # get total number of sites
-    n_sites = metadata['site_id'].nunique()
+    # select numeric columns
+    numeric_columns = metadata.select_dtypes(include=['number']).columns
 
-    # get other stats
-    n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
-    n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
+    # fill -1 to all NaN 
+    metadata[numeric_columns] = metadata[numeric_columns].fillna(-1)
+
+    # get total number of sites
+    # n_sites = metadata['site_id'].nunique()
+
+    # # get other stats
+    # n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
+    # n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
 
     # count of buildings per site
-    buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
-    n_buildings = buildings_grouping[buildings_grouping['site_id']==siteID]['building_id'].values[0]
+    buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count().reset_index()
+    n_buildings = buildings_grouping[buildings_grouping['site_id'] == siteID]['building_id'].values[0]
 
     # get number of meters per site
     meters = pd.melt(metadata[["site_id","electricity",\
                     "hotwater","chilledwater","steam","water",\
                     "irrigation","gas","solar"]],id_vars = "site_id", var_name="meter")
 
-    n_meters_bysite = meters[meters.value == "True"].groupby(["site_id","meter"]).count().groupby("site_id").sum()
-    n_meters = n_meters_bysite[n_meters_bysite['site_id']==siteID]['value'].values[0]
+    n_meters_bysite = meters[meters.value != None].groupby(["site_id","meter"]).count().groupby("site_id").sum().reset_index()
+    n_meters = n_meters_bysite[n_meters_bysite['site_id'] == siteID]['value'].values[0]
 
 
     # get total square footage per site
     size_per_site_grp = metadata.groupby('site_id',as_index=False)['sq_feet'].sum()
-    size_per_site = size_per_site_grp[size_per_site_grp['site_id']==siteID]['sq_feet'].values[0]
+    size_per_site = int(size_per_site_grp[size_per_site_grp['site_id'] == siteID]['sq_feet'].values[0])
 
     # get oldest buildings year-built
-    oldest_building_per_site_grp = metadata.groupby('site_id',as_index=False)['year_built'].min()
-    oldest_building_per_site = oldest_building_per_site_grp[oldest_building_per_site_grp['site_id']==siteID]['year_built'].values[0]
+    oldest_building_per_site_grp = metadata[metadata.year_built != None].groupby('site_id',as_index=False)['year_built'].min()
+    oldest_building_per_site = int(oldest_building_per_site_grp[oldest_building_per_site_grp['site_id']==siteID]['year_built'].values[0])
 
     # get newest buildings year-built
     newest_building_per_site_grp = metadata.groupby('site_id',as_index=False)['year_built'].max()
-    newest_building_per_site = newest_building_per_site_grp[newest_building_per_site_grp['site_id']==siteID]['year_built'].values[0]
+    newest_building_per_site = int(newest_building_per_site_grp[newest_building_per_site_grp['site_id']==siteID]['year_built'].values[0])
 
 
     # get max floors per site
-    max_num_floors_per_site_grp = metadata.groupby('site_id',as_index=False)['number_of_floors'].max()
+    max_num_floors_per_site_grp = metadata[metadata.number_of_floors != None].groupby('site_id',as_index=False)['number_of_floors'].max()
     max_num_floors_per_site = max_num_floors_per_site_grp[max_num_floors_per_site_grp['site_id']==siteID]['number_of_floors'].values[0]
 
 
@@ -247,7 +254,7 @@ def card_site_selector(siteID):
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
     
     sites = list(buildings_grouping['site_id'])
-    return dcc.Dropdown(sites, id=siteID, placeholder='select a site')
+    return dcc.Dropdown(sites, sites[1], id=siteID, placeholder='select a site')
 
 
 
