@@ -1,6 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import data_overview, navbar, home, page2
+from pages import data_overview, navbar, home, page2, aboutTheTeam,buildings
 
 
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
@@ -21,7 +21,11 @@ Dash_App.layout = html.Div([
     #This Navbar should show on all pages
     navbar.layout,
     # This is a container that will contain content from pages in other files.
-    html.Div(id='page-content',className='container-fluid')
+    html.Div(id='page-content',className='container-fluid'),
+    html.Footer([html.Br(),
+        html.Div("© 2022 Copyright: Energy Hub Team", id='footer-text', 
+                style={'textAlign': 'center', 'font-size':'25px', 'font-family': 'serif'},
+                className="bg-light text-inverse text-center")])
 ])
 
 #Route to different pages
@@ -30,10 +34,16 @@ Dash_App.layout = html.Div([
 def display_page(pathname):
     if pathname == '/data_overview':
         return data_overview.createLayout()
+    elif pathname == '/buildings':
+        return buildings.createLayout()
     elif pathname == '/page2':
         return page2.layout
+    elif pathname=='/team':
+        return home.team_layout()
     elif pathname == '/home':
-        return home.layout
+        return home.carousel_layout()
+    else:
+        home.home_layout()
 
 #Runs a server for development
 if __name__ == '__main__':

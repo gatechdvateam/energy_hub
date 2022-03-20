@@ -4,43 +4,6 @@ import dash_bootstrap_components as dbc
 from content import *
 
 
-def carousel_layout():
-    carousel = dbc.Carousel(
-                    items=[
-                            {
-                                "key": "1",
-                                "src": "/assets/images/background/image0_resized.jpeg",
-                                "header": "Welcome to Energy Hub",
-                                "img_style":{"width":"100%"}
-                            },
-                            {
-                                "key": "2",
-                                "src": "/assets/images/background/image1_resized.jpeg",
-                            },
-                            {
-                                "key": "3",
-                                "src": "/assets/images/background/image2_resized.jpeg",
-                            },
-                            
-                            {
-                                "key": "4",
-                                "src": "/assets/images/background/image3_resized.jpeg",
-                            },
-                        ],
-        
-                    variant="dark",
-                    style=TEXT_STYLE,
-                    interval=2000,
-                    )
-    # adding the carousel to the layout
-    layout = dbc.Row([
-        dbc.Col([carousel,html.Br()],md=12,
-        style={'marginTop': '10px'}, className='row')])
-
-    return layout
-
-
-
 def team_layout():
     # making info cards
     Siham_linkedInURL = 'https://www.linkedin.com/in/siham-elmali'
@@ -141,22 +104,4 @@ def team_layout():
             dbc.Col(dbc.Card(card_content_mert, color="info", outline=True), md=3),
             dbc.Col(dbc.Card(card_content_hassan, color="info", outline=True), md=3)
         ],style={'marginTop': '10px'}, className='row')
-    return layout
-
-
-def home_layout():
-
-    carousel = carousel_layout()
-    team = team_layout()
-
-    layout = html.Div([
-        html.Div([], className='col-md-6', style={'marginTop': '10px'},)
-    ], className='row')
-
-    layout.children.append(carousel)
-    layout.children.append(html.Br())
-    layout.children.append(html.H3("About the team", style=TEXT_STYLE))
-    layout.children.append(team)
-
-
     return layout
