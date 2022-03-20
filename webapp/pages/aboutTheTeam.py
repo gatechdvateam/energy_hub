@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 from content import *
 
 
-def createLayout():
+def team_layout():
     # making info cards
     Siham_linkedInURL = 'https://www.linkedin.com/in/siham-elmali'
     Mai_linkedInURL = 'https://www.linkedin.com/in/phuongnguyen93'
@@ -97,11 +97,11 @@ def createLayout():
 
 
 
-    # adding the carousel to the layout
+    # adding the cards to the layout
     layout = dbc.Row([
-            dbc.Col(dbc.Card(card_content_Siham, color="info", outline=True)    ,md=3),
-            dbc.Col(dbc.Card(card_content_mai, color="info", outline=True),md=3),
-            dbc.Col(dbc.Card(card_content_mert, color="info", outline=True),md=3),
-            dbc.Col(dbc.Card(card_content_hassan, color="info", outline=True),md=3)
+            dbc.Col(dbc.Card(card_content_Siham, color="info", outline=True), md=3),
+            dbc.Col(dbc.Card(card_content_mai, color="info", outline=True), md=3),
+            dbc.Col(dbc.Card(card_content_mert, color="info", outline=True), md=3),
+            dbc.Col(dbc.Card(card_content_hassan, color="info", outline=True), md=3)
         ],style={'marginTop': '10px'}, className='row')
     return layout
