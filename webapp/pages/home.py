@@ -140,7 +140,7 @@ def team_layout():
             dbc.Col(dbc.Card(card_content_mai, color="info", outline=True), md=3),
             dbc.Col(dbc.Card(card_content_mert, color="info", outline=True), md=3),
             dbc.Col(dbc.Card(card_content_hassan, color="info", outline=True), md=3)
-        ],style={'marginTop': '10px'}, className='row')
+        ],style={'marginTop': '10px'})
     return layout
 
 
@@ -148,15 +148,7 @@ def home_layout():
 
     carousel = carousel_layout()
     team = team_layout()
-
-    layout = html.Div([
-        html.Div([], className='col-md-6', style={'marginTop': '10px'},)
-    ], className='row')
-
-    layout.children.append(carousel)
-    layout.children.append(html.Br())
-    layout.children.append(html.H3("About the team", style=TEXT_STYLE))
-    layout.children.append(team)
+    title=html.H1("About the team", style=TEAM_HEADING_STYLE,id='TeamCards')
 
 
-    return layout
+    return [carousel,html.Br(),title,team]
