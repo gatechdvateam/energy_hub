@@ -82,18 +82,18 @@ def createLayout():
     # To do (put more useful content)
     introRow = html.Div([html.H3('Site statistics',  style={'text-align': 'center'}),
                         html.Br(),
-                        dbc.Row(
-                            [
-                                dbc.Col(dbc.Card(card1, color="info", outline=True), md=4),
-                                dbc.Col(dbc.Card(card2, color="info", outline=True), md=4),
-                                dbc.Col(dbc.Card(card3, color="info", outline=True), md=4),
-                            ],
-                            style={'marginTop': '10px'}, className='row'
-                        ),
-                        html.Br(),
+                        # dbc.Row(
+                        #     [
+                        #         dbc.Col(dbc.Card(card1, color="info", outline=True), md=4),
+                        #         dbc.Col(dbc.Card(card2, color="info", outline=True), md=4),
+                        #         dbc.Col(dbc.Card(card3, color="info", outline=True), md=4),
+                        #     ],
+                        #     style={'marginTop': '10px'}, className='row'
+                        # ),
+                        # html.Br(),
                         card_site_selector('card_site'),
                         html.Hr(),
-                         ], className='mb-12')
+                         ], className='mb-12', style={'backgroundColor': '#E5ECF6'})
 
 
 
@@ -116,7 +116,6 @@ def createLayout():
     )
 
     cards = html.Div([row_2, row_3])
-  
     layout.children.append(introRow)
     layout.children.append(html.Br())
     layout.children.append(cards)
@@ -132,10 +131,10 @@ def createLayout():
         site_id_filter('Prim_Use_Filter'),
         html.Br(),
         dcc.Loading(dcc.Graph(id='building_primary_usage', style={'height': '55vh'}))
-    ], className='col-md-6')
+    ], className='col-md-6', style={'backgroundColor': '#E5ECF6'})
 
     # Make out Lovely useless Charts.
-    Row2 = html.Div([R2C1,R2C2], className='row')
+    Row2 = html.Div([R2C1,R2C2], className='row', style={'backgroundColor': '#E5ECF6'})
 
     R3C1 = html.Div([
         html.Br(),
@@ -146,7 +145,7 @@ def createLayout():
     R3C2 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
 
     # Make out Lovely useless Charts.
-    Row3 = html.Div([R3C1,R3C2], className='row')
+    Row3 = html.Div([R3C1,R3C2], className='row', style={'backgroundColor': '#E5ECF6'})
     
 
     chart2 = html.Div([
@@ -161,14 +160,50 @@ def createLayout():
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
         html.Br(),
         dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
-    ], className='col-md-6'
+    ], style={'backgroundColor': '#E5ECF6'}, className='col-md-6'
     ), className='row')
+
+    # adding key facts tabs at the end of the page
+    key_facts = html.Div(html.Div([
+        dbc.Tabs([
+            dbc.Tab([
+                html.Ul([
+                    html.Br(),
+                    html.Li('Number of Sites: 170'),
+                    html.Li('Number of Buildings: 1636'),
+                    html.Li('Number of Meters: 3053'),
+                    html.Li('Temporal Coverage: 2016 - 2017'),
+                    html.Li('Last Updated: March 20, 2022'),
+                    html.Li('Updated By: Siham Elmali'),
+                    html.Li([
+                        'Source: ',
+                        html.A('https://github.com/buds-lab/building-data-genome-project-2/wiki',
+                                href='https://github.com/buds-lab/building-data-genome-project-2/wiki')
+                    ])
+                ])
+
+                ], label='Key Facts'),
+        dbc.Tab([
+            html.Ul([
+                html.Br(),
+                html.Li('CSE 6242 Final Project: Energy Hub Team'),
+                html.Li(['GitHub repo: ',
+                         html.A('https://github.com/gatechdvateam/project',
+                                href='https://github.com/gatechdvateam/project')
+                         ])
+                ])
+            ], label='Project Info')
+        ]),
+
+], style={'backgroundColor': '#E5ECF6'}))
 
     layout.children.append(Row2)
     layout.children.append(html.Br())
     layout.children.append(Row3)
     layout.children.append(html.Br())
     layout.children.append(MapRow)
+    layout.children.append(html.Br())
+    layout.children.append(key_facts)
 
     return layout
 
