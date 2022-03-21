@@ -1,6 +1,6 @@
 from utils.azure_utils import KeyVault, DataLake
 
-def get_data(path, filename, ext):
+def get_data(path, filename):
 
     """_loads the data from Azure Data lake_
     Args:
@@ -22,7 +22,7 @@ def get_data(path, filename, ext):
     storage = DataLake(account_name="storageaccountdva", credential=storage_credential)
     
     # read the file
-    dataset = storage.read(file_system = "energyhub", directory=path, file_name=filename, extension=ext)
+    dataset = storage.pandas_read(file_system = "energyhub", directory=path, file_name=filename)
 
     return dataset
 
@@ -107,4 +107,5 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
     return buildings
 
 # Preload All Datasets here.
-metadata = get_data("/data_parq/metadata/", "metadata.parq", "parq")
+metadata = get_data("/data_parq/metadata/", "metadata.parq")
+metadata = metadata.reset_index()
