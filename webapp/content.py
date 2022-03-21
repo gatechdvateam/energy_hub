@@ -42,6 +42,12 @@ TEXT_STYLE = {
     'font-size': '18px'
 }
 
+TEAM_HEADING_STYLE = {
+    # 'textAlign': 'center',
+    'color': '#191970',
+    'font-family': 'serif',
+}
+
 CONTENT_STYLE = {
     'margin-left': '25%',
     'margin-right': '5%',

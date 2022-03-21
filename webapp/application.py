@@ -1,6 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import data_overview, navbar, home, page2, aboutTheTeam,buildings
+from pages import data_overview, navbar, home, buildings
 
 
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
@@ -19,31 +19,30 @@ Dash_App.layout = html.Div([
     # represents the browser address bar and doesn't render anything
     dcc.Location(id='url', refresh=False),
     #This Navbar should show on all pages
-    navbar.layout,
+    html.Div(id='page-header'),
     # This is a container that will contain content from pages in other files.
     html.Div(id='page-content',className='container-fluid'),
     html.Footer([html.Br(),
         html.Div("© 2022 Copyright: Energy Hub Team", id='footer-text', 
                 style={'textAlign': 'center', 'font-size':'25px', 'font-family': 'serif'},
-                className="bg-light text-inverse text-center")])
+                className="bg-light text-inverse text-center")]),
+    html.Div(id='EmptyDiv')
 ])
 
 #Route to different pages
 @callback(Output('page-content', 'children'),
+          Output('page-header', 'children'),
               Input('url', 'pathname'))
 def display_page(pathname):
+
     if pathname == '/data_overview':
-        return data_overview.createLayout()
+        return data_overview.createLayout(),navbar.CreateLayout()
     elif pathname == '/buildings':
-        return buildings.createLayout()
-    elif pathname == '/page2':
-        return page2.layout
-    elif pathname=='/team':
-        return home.team_layout()
+        return buildings.createLayout(),navbar.CreateLayout()
     elif pathname == '/home':
-        return home.carousel_layout()
+        return home.home_layout(),navbar.CreateLayout(AboutTeam=True)
     else:
-        home.home_layout()
+        return home.home_layout(),navbar.CreateLayout(AboutTeam=True)
 
 #Runs a server for development
 if __name__ == '__main__':
