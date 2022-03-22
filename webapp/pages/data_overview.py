@@ -233,6 +233,8 @@ def compute_stats(siteID):
     Returns:
         _type_: _description_
     """
+    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    metadata = BuildingMetadata.copy()
     # select numeric columns
     numeric_columns = metadata.select_dtypes(include=['number']).columns
 
@@ -286,6 +288,8 @@ def card_site_selector(siteID):
     Returns:
         dcc.Dropdown: _description_
     """
+    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    metadata = BuildingMetadata.copy()
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
     
     sites = list(buildings_grouping['site_id'])
@@ -299,6 +303,8 @@ def site_id_filter(ElementID) -> dcc.Dropdown:
     Returns:
         dcc.Dropdown: _description_
     """
+    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    metadata = BuildingMetadata.copy()
     # get sites that have at least 10 buildings
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
     buildings_grouping.sort_values(by=['building_id'],ascending=False)
@@ -322,7 +328,7 @@ def plot_primary_usage(selected_site):
     Returns:
         _type_: _description_
     """
-    buildings = get_buidling_by_primary_usage(metadata, selected_site)
+    buildings = get_buidling_by_primary_usage(BuildingMetadata.copy(), selected_site)
     # try/except block is needed as workaround. 
     fig = px.bar(buildings, x='Sites',
                     y='Number of Buildings', color='Space Usage',
@@ -353,7 +359,7 @@ def plot_secondary_usage(selected_site):
     Returns:
         _type_: _description_
     """
-    sec_buildings = get_buidling_by_secondary_usage(metadata, selected_site)
+    sec_buildings = get_buidling_by_secondary_usage(BuildingMetadata.copy(), selected_site)
 
     fig = px.bar(sec_buildings, x='Sites',
                     y='Number of Buildings', color='Space Usage',
@@ -384,6 +390,8 @@ def plot_map(df):
     Returns:
         _type_: _description_
     """
+    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    metadata = BuildingMetadata.copy()
     df = metadata[['site_id','longitude','latitude','building_id']]
     df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
