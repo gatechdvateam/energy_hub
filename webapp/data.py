@@ -1,5 +1,31 @@
 from utils.azure_utils import KeyVault, DataLake
 
+def get_dask_data(path, filename):
+
+    """_loads the data from Azure Data lake_
+    Args:
+        path (_string_): _path in Azure storage_
+        filename (_string_): _Name of the file_
+        ext (_string_): _extention of the file_
+
+    Returns:
+        _dataset_: _a file.ext_
+    """
+  
+    # Specify the key vault we need to connect to
+    vault = KeyVault(keyVaultName="keyvaultdva2022")
+    
+    # Get the secret to access the storage
+    storage_credential = vault.get_secret(secretName="storagePrimaryKey")
+    
+    # Specify the storage we need to connect to
+    storage = DataLake(account_name="storageaccountdva", credential=storage_credential)
+    
+    # read the file
+    dataset = storage.dask_read(file_system = "energyhub", directory=path, file_name=filename)
+
+    return dataset
+
 def get_data(path, filename):
 
     """_loads the data from Azure Data lake_
@@ -107,5 +133,4 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
     return buildings
 
 # Preload All Datasets here.
-metadata = get_data("/data_parq/metadata/", "metadata.parq")
-metadata = metadata.reset_index()
+metadata = get_data("/data_parq/metadata/", "metadata.parq").reset_index()
