@@ -133,4 +133,4 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
     return buildings
 
 # Preload All Datasets here.
-metadata = get_data("/data_parq/metadata/", "metadata.parq").reset_index()
+BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq").reset_index().copy()
