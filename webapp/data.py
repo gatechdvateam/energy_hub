@@ -54,7 +54,7 @@ def get_data(path, filename):
 
 
 def get_buidling_by_primary_usage(metadata, selected_site):
-    """_takes metadata and a selcted site, then return dadaset for sites,
+    """_takes metadata and a selected site, then return dadaset for sites,
         count of building it has and spage usage_
 
     Args:
