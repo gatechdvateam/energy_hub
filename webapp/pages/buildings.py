@@ -94,7 +94,10 @@ def plot_electricity(Year,Building):
     data = data.rename(columns={'timestamp':'Month','electricity':'Electricity Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Electricity Consumption', markers=True,  template="plotly_white")
+                    y='Electricity Consumption', markers=True,  template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 
@@ -110,7 +113,10 @@ def plot_water(Year,Building):
     data = data.rename(columns={'timestamp':'Month','water':'Water Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Water Consumption', markers=True,  template="plotly_white")
+                    y='Water Consumption', markers=True,  template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 
@@ -126,7 +132,10 @@ def plot_solar(Year,Building):
     data = data.rename(columns={'timestamp':'Month','solar':'Solar Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Solar Consumption', markers=True,  template="plotly_white")
+                    y='Solar Consumption', markers=True,  template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 
@@ -142,7 +151,10 @@ def plot_gas(Year,Building):
     data = data.rename(columns={'timestamp':'Month','gas':'Gas Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Gas Consumption', markers=True,  template="plotly_white")
+                    y='Gas Consumption', markers=True,  template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 
@@ -158,7 +170,10 @@ def plot_irrigation(Year,Building):
     data = data.rename(columns={'timestamp':'Month','irrigation':'Irrigation Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Irrigation Consumption', markers=True, template="plotly_white")
+                    y='Irrigation Consumption', markers=True, template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 @callback(
@@ -173,7 +188,10 @@ def plot_steam(Year,Building):
     data = data.rename(columns={'timestamp':'Month','steam':'Steam Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Steam Consumption', markers=True,  template="plotly_white")
+                    y='Steam Consumption', markers=True,  template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 
@@ -189,7 +207,10 @@ def plot_hotwater(Year,Building):
     data = data.rename(columns={'timestamp':'Month','hotwater':'Hot Water Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Hot Water Consumption', markers=True,  template="plotly_white")
+                    y='Hot Water Consumption', markers=True,  template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
 
 
@@ -205,5 +226,8 @@ def plot_chilledwater(Year,Building):
     data = data.rename(columns={'timestamp':'Month','chilledwater':'Chilled Water Consumption'})
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
-                    y='Chilled Water Consumption', markers=True, template="plotly_white")
+                    y='Chilled Water Consumption', markers=True, template="seaborn")
+    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
