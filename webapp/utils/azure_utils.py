@@ -12,7 +12,7 @@ from azure.storage.filedatalake._file_system_client import FileSystemClient
 from azure.storage.filedatalake._data_lake_directory_client import DataLakeDirectoryClient
 from pandas.core.frame import DataFrame as DataFrame_pandas
 from dask.dataframe.core import DataFrame as DataFrame_dask
-from _io import BytesIO
+
 
 class _AzureCredential:
     """
@@ -158,9 +158,7 @@ class DataLake:
         extension = file_name.split(".")[1]
         if extension == "csv":
             ddf = dd.read_csv(f'abfs://{file_system}/{directory}/{file_name}', storage_options=storage_options)
-        elif extension == "parq":
-            ddf = dd.read_parquet(f'abfs://{file_system}/{directory}/{file_name}', storage_options=storage_options)
-        elif extension == "parquet":
+        elif extension == "parq" or extension == "parquet":
             ddf = dd.read_parquet(f'abfs://{file_system}/{directory}/{file_name}', storage_options=storage_options)
         else:
             pass
@@ -174,7 +172,7 @@ class DataLake:
 
         if extension == "csv":
             df = pd.read_csv(data)
-        elif extension == "parq":
+        elif extension == "parq" or extension == "parquet":
             df = pd.read_parquet(data)
         else:
             pass
