@@ -132,5 +132,10 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
 
     return buildings
 
-# Preload All Datasets here.
+def get_meter_data_for_building(MeterName,BuildingName):
+    location = "PartitionedParqs/"+MeterName+'.parq/building_id='+BuildingName
+    meterdata = get_dask_data(location, "*.parquet")
+    return meterdata
+
+# Preload Small Datasets here.
 BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq").reset_index().copy()

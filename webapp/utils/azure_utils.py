@@ -156,15 +156,15 @@ class DataLake:
         """ Read from ADLS using Dask"""
         storage_options = {'account_name': self.account_name, 'account_key': self.credential}
         extension = file_name.split(".")[1]
-
         if extension == "csv":
             ddf = dd.read_csv(f'abfs://{file_system}/{directory}/{file_name}', storage_options=storage_options)
         elif extension == "parq":
             ddf = dd.read_parquet(f'abfs://{file_system}/{directory}/{file_name}', storage_options=storage_options)
+        elif extension == "parquet":
+            ddf = dd.read_parquet(f'abfs://{file_system}/{directory}/{file_name}', storage_options=storage_options)
         else:
             pass
             # TODO: Add support for other read operations.
-
         return ddf
 
     def pandas_read(self, file_system: str, directory: str, file_name: str) -> DataFrame_pandas:

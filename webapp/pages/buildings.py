@@ -1,4 +1,5 @@
 # import packages
+import calendar
 from dash import Dash, dcc, html, Input, Output, callback
 import plotly.express as px
 import dash_bootstrap_components as dbc
@@ -11,7 +12,8 @@ from content import *
 
 def createLayout():
     title = html.H2('Building Overview & Energy Forecast')
-    row = dbc.Row([CreateFilters(),CreateVisuals()])
+    col1,col2 = CreateVisuals()
+    row = dbc.Row([CreateFilters(),col1,col2])
     return [title,row]
 
 def CreateFilters():
@@ -27,8 +29,8 @@ def CreateFilters():
     timezone = CreateSelect(list(building_meta['timezone'].unique()),'LocationFilter','US.Eastern')
     primary_usage= CreateSelect(list(building_meta['primary_space_usage'].unique()),'UsageFilter','Office')
     building_size = CreateSelect(list(building_meta['size'].unique()),'BuildingSizeFilter','Small')
-    buildings = CreateSelect(list(building_meta['building_id'].unique()),'BuildingFilter','Panther_lodging_Shelia')
-    year = CreateSelect([2016,2017],'YearFilter',2016)
+    buildings = CreateSelect(list(building_meta['building_id'].unique()),'BuildingFilter','Wolf_education_Ursula')
+    year = CreateSelect([2016,2017],'YearFilter',2017)
     
     
     column=dbc.Col([],md=2,style={'background-color':'#e8e8e8'})
@@ -36,44 +38,67 @@ def CreateFilters():
     column.children.append(html.H3('Filters'))
 
     # select Timezone/location
-    column.children.append(dbc.Label("Select Time Zone:"))
-    column.children.append(html.Br())
-    column.children.append(dbc.Label(timezone))
-    column.children.append(html.Br())
+    column.children.extend([dbc.Label("Select Time Zone:"),html.Br(),dbc.Label(timezone),html.Br()])
 
     # select primary usage
-    column.children.append(dbc.Label("Select Primary Usage:"))
-    column.children.append(html.Br())
-    column.children.append(dbc.Label(primary_usage))
-    column.children.append(html.Br())
+    column.children.extend([dbc.Label("Select Primary Usage:"),html.Br(),dbc.Label(primary_usage),html.Br()])
 
     # select building size
     # TO-DO (make size buckets)
-    column.children.append(dbc.Label("Select Building Size:"))
-    column.children.append(html.Br())
-    column.children.append(dbc.Label(building_size))
-    column.children.append(html.Br())
+    column.children.extend([dbc.Label("Select Building Size:"),html.Br(),dbc.Label(building_size),html.Br()])
 
     # select a building
-    column.children.append(dbc.Label("Select Building:"))
-    column.children.append(html.Br())
-    column.children.append(dbc.Label(buildings))
-    column.children.append(html.Br())
+    column.children.extend([dbc.Label("Select Building:"),html.Br(),dbc.Label(buildings),html.Br()])
 
     # select year
-    column.children.append(dbc.Label("Select Year:"))
-    column.children.append(html.Br())
-    column.children.append(dbc.Label(year))
+    column.children.extend([dbc.Label("Select Year:"),html.Br(),dbc.Label(year),html.Br()])
 
     return column
     
 def CreateVisuals():
-    column=dbc.Col([],md=10)
-    column.children.append(html.H3('Visuals'))
-    return column
+
+    #Create Charts
+    electricity = dcc.Loading(dcc.Graph(id='electricity'),type='default')
+    water = dcc.Loading(dcc.Graph(id='water'),type='default')
+    #Create 2 columns.
+    #We will split our visual into sets of 2 columns.
+    left=dbc.Col([electricity],md=5)
+    right=dbc.Col([water],md=5)
+    return [left,right]
 
 def CreateSelect(ItemsList,Name,DefaultValue):
     optionsList = list()
     for item in ItemsList:
         optionsList.append({'label':str(item),'value':str(item)})
-    return dbc.Select(id=Name,options=optionsList,value=str(DefaultValue))
+    return dbc.Select(id=Name,options=optionsList,value=str(DefaultValue),required=True)
+
+
+@callback(
+    Output('electricity', 'figure'),
+    Input('YearFilter', 'value'),
+    Input('BuildingFilter', 'value'))
+def plot_electricity(Year,Building):
+    data = get_meter_data_for_building('electricity',Building)
+    data['Year'] = data.timestamp.dt.year
+    data = data[data['Year']==int(Year)]
+    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
+    data = data.rename(columns={'timestamp':'Month','electricity':'Electricity Consumption'})
+    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
+    fig = px.bar(data, x='Month',
+                    y='Electricity Consumption')
+    return fig
+
+@callback(
+    Output('water', 'figure'),
+    Input('YearFilter', 'value'),
+    Input('BuildingFilter', 'value'))
+def plot_water(Year,Building):
+    data = get_meter_data_for_building('water',Building)
+    data['Year'] = data.timestamp.dt.year
+    data = data[data['Year']==int(Year)]
+    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
+    data = data.rename(columns={'timestamp':'Month','water':'Water Consumption'})
+    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
+    fig = px.bar(data, x='Month',
+                    y='Water Consumption')
+    return fig
