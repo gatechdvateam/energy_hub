@@ -169,7 +169,7 @@ def createLayout():
             dbc.Tab([
                 html.Ul([
                     html.Br(),
-                    html.Li('Number of Sites: 170'),
+                    html.Li('Number of Sites: 19'),
                     html.Li('Number of Buildings: 1636'),
                     html.Li('Number of Meters: 3053'),
                     html.Li('Temporal Coverage: 2016 - 2017'),
@@ -233,8 +233,12 @@ def compute_stats(siteID):
     Returns:
         _type_: _description_
     """
-    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    # Make a copy of the data
     metadata = BuildingMetadata.copy()
+
+    # get data where sq feet is not null
+    metadata = metadata.loc[metadata['sq_feet'].notnull()]
+
     # select numeric columns
     numeric_columns = metadata.select_dtypes(include=['number']).columns
 
