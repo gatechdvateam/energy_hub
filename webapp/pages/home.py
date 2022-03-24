@@ -18,15 +18,18 @@ def carousel_layout():
                             {
                                 "key": "2",
                                 "src": "/assets/images/background/image1_resized.jpeg",
+                                "img_style":{"width":"100%"}
                             },
                             {
                                 "key": "3",
                                 "src": "/assets/images/background/image2_resized.jpeg",
+                                "img_style":{"width":"100%"}
                             },
                             
                             {
                                 "key": "4",
                                 "src": "/assets/images/background/image3_resized.jpeg",
+                                "img_style":{"width":"100%"}
                             },
                         ],
         
@@ -210,7 +213,8 @@ def plot_map(df):
             size='Buildings',
             size_max=50,
             #Changed Map type
-            projection="equirectangular",
+            # projection="equirectangular",
+            projection="natural earth",
             #Changed Palette
             color_discrete_sequence=ColorPalette)
 

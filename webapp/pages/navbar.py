@@ -35,6 +35,8 @@ def CreateLayout(AboutTeam=False):
                     href="/data_overview", style=NAVLINKS_STYLE)),
         dbc.NavItem(dbc.NavLink(
             "Buildings", href="/buildings", style=NAVLINKS_STYLE)),
+        dbc.NavItem(dbc.NavLink(
+            "Electricity Forecast", href="/forecast", style=NAVLINKS_STYLE)),
     ])
 
     if AboutTeam:

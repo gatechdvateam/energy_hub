@@ -1,6 +1,6 @@
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
-from pages import data_overview, navbar, home, buildings
+from pages import data_overview, navbar, home, buildings, elec_forecast
 
 
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
@@ -39,6 +39,8 @@ def display_page(pathname):
         return data_overview.createLayout(),navbar.CreateLayout()
     elif pathname == '/buildings':
         return buildings.createLayout(),navbar.CreateLayout()
+    elif pathname == '/forecast':
+        return elec_forecast.createLayout(),navbar.CreateLayout()
     elif pathname == '/home':
         return home.home_layout(),navbar.CreateLayout(AboutTeam=True)
     else:
