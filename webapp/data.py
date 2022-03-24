@@ -133,6 +133,9 @@ def get_buidling_by_secondary_usage(metadata, selected_site):
     return buildings
 
 def get_meter_data_for_building(MeterName,BuildingName):
+    """
+    Returns a dask dataframe from the folder of the partitioned parqs on Azure Storage.
+    """
     location = "PartitionedParqs/"+MeterName+'.parq/building_id='+BuildingName
     meterdata = get_dask_data(location, "*.parquet")
     return meterdata
