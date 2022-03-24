@@ -1,6 +1,6 @@
 # import packages
 import calendar
-from dash import Dash, dcc, html, Input, Output, callback
+from dash import Dash, dcc, html, Input, Output, callback, no_update
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
@@ -8,7 +8,7 @@ import dask.dataframe as dd
 from torch import div
 from data import *
 from content import *
-
+import plotly.graph_objects as go
 
 def createLayout():
     title = html.H2('Building Overview & Energy Forecast', style={"text-align":"center"})
@@ -75,159 +75,96 @@ def CreateVisuals():
 
     return [left, right]
 
-def CreateSelect(ItemsList,Name,DefaultValue):
-    optionsList = list()
-    for item in ItemsList:
-        optionsList.append({'label':str(item),'value':str(item)})
-    return dbc.Select(id=Name,options=optionsList,value=str(DefaultValue),required=True)
-
-
+#Output order is important.
 @callback(
     Output('electricity', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
 def plot_electricity(Year,Building):
-    data = get_meter_data_for_building('electricity',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','electricity':'Electricity Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Electricity Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
-
+    return CreateTimeChart(Year,Building,'electricity','Electricity')
 
 @callback(
     Output('water', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
 def plot_water(Year,Building):
-    data = get_meter_data_for_building('water',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','water':'Water Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Water Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
-
-
-@callback(
-    Output('solar', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_solar(Year,Building):
-    data = get_meter_data_for_building('solar',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','solar':'Solar Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Solar Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
-
+    return CreateTimeChart(Year,Building,'water','Water')
 
 @callback(
     Output('gas', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_gas(Year,Building):
-    data = get_meter_data_for_building('gas',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','gas':'Gas Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Gas Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
-
+def plot_water(Year,Building):
+    return CreateTimeChart(Year,Building,'gas','Gas')
 
 @callback(
     Output('irrigation', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_irrigation(Year,Building):
-    data = get_meter_data_for_building('irrigation',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','irrigation':'Irrigation Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Irrigation Consumption', markers=True, template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
+def plot_water(Year,Building):
+    return CreateTimeChart(Year,Building,'irrigation','Irrigation')
+
+@callback(
+    Output('solar', 'figure'),
+    Input('YearFilter', 'value'),
+    Input('BuildingFilter', 'value'))
+def plot_water(Year,Building):
+    return CreateTimeChart(Year,Building,'solar','Solar')
 
 @callback(
     Output('steam', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_steam(Year,Building):
-    data = get_meter_data_for_building('steam',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','steam':'Steam Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Steam Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
-
+def plot_water(Year,Building):
+    return CreateTimeChart(Year,Building,'steam','Steam')
 
 @callback(
     Output('hotwater', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_hotwater(Year,Building):
-    data = get_meter_data_for_building('hotwater',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','hotwater':'Hot Water Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Hot Water Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
-
+def plot_water(Year,Building):
+    return CreateTimeChart(Year,Building,'hotwater','Hot Water')
 
 @callback(
     Output('chilledwater', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_chilledwater(Year,Building):
-    data = get_meter_data_for_building('chilledwater',Building)
-    data['Year'] = data.timestamp.dt.year
-    data = data[data['Year']==int(Year)]
-    data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-    data = data.rename(columns={'timestamp':'Month','chilledwater':'Chilled Water Consumption'})
-    data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-    fig = px.line(data, x='Month',
-                    y='Chilled Water Consumption', markers=True, template="seaborn")
-    fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-    return fig
+def plot_water(Year,Building):
+    return CreateTimeChart(Year,Building,'chilledwater','Chille Water')
+
+def CreateSelect(ItemsList,Name,DefaultValue):
+    """
+    Function to create select lists.
+    """
+    optionsList = list()
+    for item in ItemsList:
+        optionsList.append({'label':str(item),'value':str(item)})
+    return dbc.Select(id=Name,options=optionsList,value=str(DefaultValue),required=True)
+
+def CreateTimeChart(Year:str,BuildingName:str,MeterName:str,ValuesColumnName:str):
+    """
+    Function that checks if the meter data is available for a given building and
+    creates a chart for that.
+    """
+    building_data = BuildingMetadata[BuildingMetadata['building_id']==BuildingName].iloc[0]
+    if str(building_data[MeterName])=='True':
+        data = get_meter_data_for_building(MeterName,BuildingName)
+        data['Year'] = data.timestamp.dt.year
+        data = data[data['Year']==int(Year)]
+        data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
+        data = data.rename(columns={'timestamp':'Month', MeterName: (ValuesColumnName + ' Consumption')})
+        data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
+        fig = px.line(data, x='Month',
+                        y=ValuesColumnName + ' Consumption', markers=True,  template="seaborn")
+        fig.update_yaxes(ticksuffix =" kW")
+        fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+        fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
+        return fig
+    else:
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },yaxis = { "visible": False },
+            annotations = [{ "text": "No Data for Meter: "+ValuesColumnName,
+                    "xref": "paper","yref": "paper","showarrow": False,
+                    "font": {"size": 28}}])
+        return fig
