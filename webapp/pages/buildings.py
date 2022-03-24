@@ -96,8 +96,8 @@ def plot_electricity(Year,Building):
     fig = px.line(data, x='Month',
                     y='Electricity Consumption', markers=True,  template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 
@@ -115,8 +115,8 @@ def plot_water(Year,Building):
     fig = px.line(data, x='Month',
                     y='Water Consumption', markers=True,  template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 
@@ -134,8 +134,8 @@ def plot_solar(Year,Building):
     fig = px.line(data, x='Month',
                     y='Solar Consumption', markers=True,  template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 
@@ -153,8 +153,8 @@ def plot_gas(Year,Building):
     fig = px.line(data, x='Month',
                     y='Gas Consumption', markers=True,  template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 
@@ -172,8 +172,8 @@ def plot_irrigation(Year,Building):
     fig = px.line(data, x='Month',
                     y='Irrigation Consumption', markers=True, template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 @callback(
@@ -190,8 +190,8 @@ def plot_steam(Year,Building):
     fig = px.line(data, x='Month',
                     y='Steam Consumption', markers=True,  template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 
@@ -209,8 +209,8 @@ def plot_hotwater(Year,Building):
     fig = px.line(data, x='Month',
                     y='Hot Water Consumption', markers=True,  template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
 
 
@@ -228,6 +228,6 @@ def plot_chilledwater(Year,Building):
     fig = px.line(data, x='Month',
                     y='Chilled Water Consumption', markers=True, template="seaborn")
     fig.update_yaxes(ticksuffix =" kW")
-    fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
-    fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
     return fig
