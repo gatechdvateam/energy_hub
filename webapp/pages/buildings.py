@@ -95,7 +95,7 @@ def plot_electricity(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Electricity Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -114,7 +114,7 @@ def plot_water(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Water Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -133,7 +133,7 @@ def plot_solar(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Solar Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -152,7 +152,7 @@ def plot_gas(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Gas Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -171,7 +171,7 @@ def plot_irrigation(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Irrigation Consumption', markers=True, template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -189,7 +189,7 @@ def plot_steam(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Steam Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -208,7 +208,7 @@ def plot_hotwater(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Hot Water Consumption', markers=True,  template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
@@ -227,7 +227,7 @@ def plot_chilledwater(Year,Building):
     data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
     fig = px.line(data, x='Month',
                     y='Chilled Water Consumption', markers=True, template="seaborn")
-    fig.update_yaxes(ticksuffix =" kWh")
+    fig.update_yaxes(ticksuffix =" kW")
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black', mirror=True)
     return fig
