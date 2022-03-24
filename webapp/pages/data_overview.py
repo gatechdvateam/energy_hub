@@ -93,7 +93,7 @@ def createLayout():
                         # html.Br(),
                         card_site_selector('card_site'),
                         html.Hr(),
-                         ], className='mb-12', style={'backgroundColor': '#E5ECF6'})
+                         ], className='mb-12')
 
 
 
@@ -134,7 +134,7 @@ def createLayout():
     ], className='col-md-6', style={'backgroundColor': '#E5ECF6'})
 
     # Make out Lovely useless Charts.
-    Row2 = html.Div([R2C1,R2C2], className='row', style={'backgroundColor': '#E5ECF6'})
+    Row2 = html.Div([R2C1,R2C2], className='row')
 
     R3C1 = html.Div([
         html.Br(),
@@ -145,7 +145,7 @@ def createLayout():
     R3C2 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
 
     # Make out Lovely useless Charts.
-    Row3 = html.Div([R3C1,R3C2], className='row', style={'backgroundColor': '#E5ECF6'})
+    Row3 = html.Div([R3C1,R3C2], className='row')
     
 
     chart2 = html.Div([
@@ -153,15 +153,15 @@ def createLayout():
     ], className='col-md-6')
 
 
-    # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
-    MapRow = html.Div(html.Div(
-        [
-        html.H3('Location of all sites', style={'text-align': 'center'}),
-        html.Div(id='MapInput',children=[],style={'display': 'none'}),
-        html.Br(),
-        dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
-    ], style={'backgroundColor': '#E5ECF6'}, className='col-md-6'
-    ), className='row')
+    # # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
+    # MapRow = html.Div(html.Div(
+    #     [
+    #     html.H3('Location of all sites', style={'text-align': 'center'}),
+    #     html.Div(id='MapInput',children=[],style={'display': 'none'}),
+    #     html.Br(),
+    #     dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
+    # ], style={'backgroundColor': '#E5ECF6'}, className='col-md-6'
+    # ), className='row')
 
     # adding key facts tabs at the end of the page
     key_facts = html.Div(html.Div([
@@ -173,10 +173,8 @@ def createLayout():
                     html.Li('Number of Buildings: 1636'),
                     html.Li('Number of Meters: 3053'),
                     html.Li('Temporal Coverage: 2016 - 2017'),
-                    html.Li('Last Updated: March 20, 2022'),
-                    html.Li('Updated By: Siham Elmali'),
                     html.Li([
-                        'Source: ',
+                        'Data Source: ',
                         html.A('https://github.com/buds-lab/building-data-genome-project-2/wiki',
                                 href='https://github.com/buds-lab/building-data-genome-project-2/wiki')
                     ])
@@ -201,8 +199,8 @@ def createLayout():
     layout.children.append(html.Br())
     layout.children.append(Row3)
     layout.children.append(html.Br())
-    layout.children.append(MapRow)
-    layout.children.append(html.Br())
+    # layout.children.append(MapRow)
+    # layout.children.append(html.Br())
     layout.children.append(key_facts)
 
     return layout
@@ -382,42 +380,42 @@ def plot_secondary_usage(selected_site):
     return fig
 
 
-@callback(
-    Output('site_map', 'figure'),
-    Input('MapInput', 'children'))
-def plot_map(df):
-    """_summary_
+# @callback(
+#     Output('site_map', 'figure'),
+#     Input('MapInput', 'children'))
+# def plot_map(df):
+#     """_summary_
 
-    Args:
-        df (_type_): _description_
+#     Args:
+#         df (_type_): _description_
 
-    Returns:
-        _type_: _description_
-    """
-    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
-    metadata = BuildingMetadata.copy()
-    df = metadata[['site_id','longitude','latitude','building_id']]
-    df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
-    df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
-    fig = px.scatter_geo(df,lon='longitude', lat='latitude',
-            color='Site',
-            opacity=0.8,
-            size='Buildings',
-            size_max=50,
-            #Changed Map type
-            projection="equirectangular",
-            #Changed Palette
-            color_discrete_sequence=ColorPalette)
+#     Returns:
+#         _type_: _description_
+#     """
+#     #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+#     metadata = BuildingMetadata.copy()
+#     df = metadata[['site_id','longitude','latitude','building_id']]
+#     df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
+#     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
+#     fig = px.scatter_geo(df,lon='longitude', lat='latitude',
+#             color='Site',
+#             opacity=0.8,
+#             size='Buildings',
+#             size_max=50,
+#             #Changed Map type
+#             projection="equirectangular",
+#             #Changed Palette
+#             color_discrete_sequence=ColorPalette)
 
-    #Added a zoom projection_scale
-    fig.update_layout(
-        geo = dict(
-            projection_scale=2.7, #Zoom
-            center=dict(lat=40.0, lon=-58.0), #Center Point
-        ))
+#     #Added a zoom projection_scale
+#     fig.update_layout(
+#         geo = dict(
+#             projection_scale=2.7, #Zoom
+#             center=dict(lat=40.0, lon=-58.0), #Center Point
+#         ))
 
 
-    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+#     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
+#     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
-    return fig
+#     return fig

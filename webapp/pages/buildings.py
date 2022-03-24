@@ -11,7 +11,7 @@ from content import *
 import plotly.graph_objects as go
 
 def createLayout():
-    title = html.H2('Building Overview & Energy Forecast', style={"text-align":"center"})
+    title = html.H2('Energy consumption: building view', style={"text-align":"center"})
     col1,col2 = CreateVisuals()
     row = dbc.Row([CreateFilters(),col1,col2])
     return [title,row]
@@ -32,10 +32,10 @@ def CreateFilters():
     buildings = CreateSelect(list(building_meta['building_id'].unique()),'BuildingFilter','Bobcat_education_Alissa')
     year = CreateSelect([2016,2017],'YearFilter',2017)
     
+    # ,style={'background-color':'#e8e8e8'}
+    column=dbc.Col([],md=2)
     
-    column=dbc.Col([],md=2,style={'background-color':'#e8e8e8'})
-    
-    column.children.append(html.H3('Filters'))
+    column.children.append(html.H3(''))
 
     # select Timezone/location
     column.children.extend([dbc.Label("Select Time Zone:"),html.Br(),dbc.Label(timezone),html.Br()])
@@ -94,43 +94,43 @@ def plot_water(Year,Building):
     Output('gas', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
+def plot_gas(Year,Building):
     return CreateTimeChart(Year,Building,'gas','Gas')
 
 @callback(
     Output('irrigation', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
+def plot_irrigation(Year,Building):
     return CreateTimeChart(Year,Building,'irrigation','Irrigation')
 
 @callback(
     Output('solar', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
+def plot_solar(Year,Building):
     return CreateTimeChart(Year,Building,'solar','Solar')
 
 @callback(
     Output('steam', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
+def plot_steam(Year,Building):
     return CreateTimeChart(Year,Building,'steam','Steam')
 
 @callback(
     Output('hotwater', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
+def plot_hotwater(Year,Building):
     return CreateTimeChart(Year,Building,'hotwater','Hot Water')
 
 @callback(
     Output('chilledwater', 'figure'),
     Input('YearFilter', 'value'),
     Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
-    return CreateTimeChart(Year,Building,'chilledwater','Chille Water')
+def plot_chilledwater(Year,Building):
+    return CreateTimeChart(Year,Building,'chilledwater','Chilled Water')
 
 def CreateSelect(ItemsList,Name,DefaultValue):
     """
@@ -141,7 +141,7 @@ def CreateSelect(ItemsList,Name,DefaultValue):
         optionsList.append({'label':str(item),'value':str(item)})
     return dbc.Select(id=Name,options=optionsList,value=str(DefaultValue),required=True)
 
-def CreateTimeChart(Year:str,BuildingName:str,MeterName:str,ValuesColumnName:str):
+def CreateTimeChart(Year:str, BuildingName:str, MeterName:str, ValuesColumnName:str):
     """
     Function that checks if the meter data is available for a given building and
     creates a chart for that.
@@ -155,7 +155,7 @@ def CreateTimeChart(Year:str,BuildingName:str,MeterName:str,ValuesColumnName:str
         data = data.rename(columns={'timestamp':'Month', MeterName: (ValuesColumnName + ' Consumption')})
         data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
         fig = px.line(data, x='Month',
-                        y=ValuesColumnName + ' Consumption', markers=True,  template="seaborn")
+                        y=ValuesColumnName + ' Consumption', markers=True,  template="plotly")
         fig.update_yaxes(ticksuffix =" kW")
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
@@ -164,7 +164,7 @@ def CreateTimeChart(Year:str,BuildingName:str,MeterName:str,ValuesColumnName:str
         fig = go.Figure()
         fig.update_layout(
             xaxis =  { "visible": False },yaxis = { "visible": False },
-            annotations = [{ "text": "No Data for Meter: "+ValuesColumnName,
+            annotations = [{ "text": "No data available for: "+ValuesColumnName,
                     "xref": "paper","yref": "paper","showarrow": False,
                     "font": {"size": 28}}])
         return fig

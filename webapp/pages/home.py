@@ -1,6 +1,8 @@
 # import packages
 from dash import Dash, dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
+import plotly.express as px
+from data import *
 from content import *
 
 
@@ -143,12 +145,84 @@ def team_layout():
         ],style={'marginTop': '10px'})
     return layout
 
+def about_us_layout():
+    """ This will return a column with text along a map of all sites
+        - Talk about the project as a whole
+        - Talk about the data
+        - Add the map
+
+    """
+    general_info =html.Div(dcc.Markdown(random_text), className='col-md-6')
+
+    # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
+    site_map = html.Div(html.Div(
+        [
+        html.H3('Location of all sites', style={'text-align':'center'}),
+        html.Div(id='MapInput',children=[],style={'display': 'none'}),
+        # html.Br(),
+        dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
+    ], className='col-md-12'
+    ), className='row')
+
+
+    # adding the map and general info to the layout
+    layout = dbc.Row([
+            dbc.Col([general_info,html.Br()], md=6),
+            dbc.Col([site_map,html.Br()], md=6),
+        ],style={'marginTop': '10px'})
+    return layout
+
+
+
 
 def home_layout():
 
     carousel = carousel_layout()
     team = team_layout()
+    about_us = about_us_layout()
     title=html.H1("About the team", style=TEAM_HEADING_STYLE,id='TeamCards')
+    title_aboutus=html.H1("About the project", style=TEAM_HEADING_STYLE)
 
 
-    return [carousel,html.Br(),title,team]
+    return [carousel,html.Br(), html.Hr(), title_aboutus, about_us, html.Hr(), title,team]
+
+
+@callback(
+    Output('site_map', 'figure'),
+    Input('MapInput', 'children'))
+def plot_map(df):
+    """_summary_
+
+    Args:
+        df (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    metadata = BuildingMetadata.copy()
+    df = metadata[['site_id','longitude','latitude','building_id']]
+    df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
+    df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
+    fig = px.scatter_geo(df,lon='longitude', lat='latitude',
+            color='Site',
+            opacity=0.8,
+            size='Buildings',
+            size_max=50,
+            #Changed Map type
+            projection="equirectangular",
+            #Changed Palette
+            color_discrete_sequence=ColorPalette)
+
+    #Added a zoom projection_scale
+    fig.update_layout(
+        geo = dict(
+            projection_scale=2.7, #Zoom
+            center=dict(lat=40.0, lon=-58.0), #Center Point
+        ))
+
+
+    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+
+    return fig
