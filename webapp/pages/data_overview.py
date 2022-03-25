@@ -116,7 +116,7 @@ def createLayout():
     layout.children.append(html.H3('Sites by usage distribution', style={'text-align': 'center'}))
     layout.children.append(html.Hr())
 
-    R2C1 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
+    R2C1 = R2C2 = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-6')
     R2C2 = html.Div([
         html.Br(),
         site_id_filter('Prim_Use_Filter'),
@@ -133,7 +133,7 @@ def createLayout():
         html.Br(),
         dcc.Loading(dcc.Graph(id='building_secondary_usage', style={'height': '55vh'}),type='default')
     ], className='col-md-6')
-    R3C2 = R2C2 = html.Div(dcc.Markdown(PrimaryUsageMarkDown), className='col-md-6')
+    R3C2 = R2C2 = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-6')
 
     # Make out Lovely useless Charts.
     Row3 = html.Div([R3C1,R3C2], className='row')

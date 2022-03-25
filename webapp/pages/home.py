@@ -155,22 +155,22 @@ def about_us_layout():
         - Add the map
 
     """
-    general_info =html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-12')
+    general_info = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-12')
 
     site_map = html.Div(html.Div(
         [
-        html.H3('Location of all sites', style={'text-align':'center'}),
+        html.H3('Location of all sites', style={'text-align':'center','font-family': 'serif','font-size': '35px'}),
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
         html.Br(),
-        dcc.Loading(dcc.Graph(id='site_map', style={'height': '55vh'}))
+        dcc.Loading(dcc.Graph(id='site_map', style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}))
     ], className='col-md-12'
     ), className='row')
 
 
     # adding the map and general info to the layout
     layout = dbc.Row([
-            dbc.Col([general_info,html.Br()], md=6),
-            dbc.Col([site_map,html.Br()], md=6),
+            dbc.Col([general_info], md=6),
+            dbc.Col([site_map], md=6),
         ],style={'marginTop': '10px'})
     return layout
 
