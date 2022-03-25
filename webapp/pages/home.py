@@ -18,15 +18,18 @@ def carousel_layout():
                             {
                                 "key": "2",
                                 "src": "/assets/images/background/image1_resized.jpeg",
+                                "img_style":{"width":"100%"}
                             },
                             {
                                 "key": "3",
                                 "src": "/assets/images/background/image2_resized.jpeg",
+                                "img_style":{"width":"100%"}
                             },
                             
                             {
                                 "key": "4",
                                 "src": "/assets/images/background/image3_resized.jpeg",
+                                "img_style":{"width":"100%"}
                             },
                         ],
         
@@ -152,15 +155,14 @@ def about_us_layout():
         - Add the map
 
     """
-    general_info =html.Div(dcc.Markdown(random_text), className='col-md-6')
+    general_info =html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-12')
 
-    # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
     site_map = html.Div(html.Div(
         [
         html.H3('Location of all sites', style={'text-align':'center'}),
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
-        # html.Br(),
-        dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
+        html.Br(),
+        dcc.Loading(dcc.Graph(id='site_map', style={'height': '55vh'}))
     ], className='col-md-12'
     ), className='row')
 
@@ -180,11 +182,11 @@ def home_layout():
     carousel = carousel_layout()
     team = team_layout()
     about_us = about_us_layout()
-    title=html.H1("About the team", style=TEAM_HEADING_STYLE,id='TeamCards')
-    title_aboutus=html.H1("About the project", style=TEAM_HEADING_STYLE)
+    title=html.H2("About the team", style=TEAM_HEADING_STYLE,id='TeamCards')
+    title_aboutus=html.H2("What is Energy Hub", style=TEAM_HEADING_STYLE)
 
-
-    return [carousel,html.Br(), html.Hr(), title_aboutus, about_us, html.Hr(), title,team]
+    return [carousel,html.Br(), html.Hr(), title_aboutus, about_us,
+            html.Hr(), title,html.Br(),team]
 
 
 @callback(
@@ -209,8 +211,8 @@ def plot_map(df):
             opacity=0.8,
             size='Buildings',
             size_max=50,
-            #Changed Map type
-            projection="equirectangular",
+            # projection="equirectangular", # Changed Map type
+            projection="natural earth",
             #Changed Palette
             color_discrete_sequence=ColorPalette)
 

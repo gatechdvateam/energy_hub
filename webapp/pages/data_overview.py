@@ -82,15 +82,6 @@ def createLayout():
     # To do (put more useful content)
     introRow = html.Div([html.H3('Site statistics',  style={'text-align': 'center'}),
                         html.Br(),
-                        # dbc.Row(
-                        #     [
-                        #         dbc.Col(dbc.Card(card1, color="info", outline=True), md=4),
-                        #         dbc.Col(dbc.Card(card2, color="info", outline=True), md=4),
-                        #         dbc.Col(dbc.Card(card3, color="info", outline=True), md=4),
-                        #     ],
-                        #     style={'marginTop': '10px'}, className='row'
-                        # ),
-                        # html.Br(),
                         card_site_selector('card_site'),
                         html.Hr(),
                          ], className='mb-12')
@@ -146,22 +137,7 @@ def createLayout():
 
     # Make out Lovely useless Charts.
     Row3 = html.Div([R3C1,R3C2], className='row')
-    
 
-    chart2 = html.Div([
-        html.Br(),
-    ], className='col-md-6')
-
-
-    # # Show Me Some Map or I am shooting someone head spilling their  brain on keyboard.
-    # MapRow = html.Div(html.Div(
-    #     [
-    #     html.H3('Location of all sites', style={'text-align': 'center'}),
-    #     html.Div(id='MapInput',children=[],style={'display': 'none'}),
-    #     html.Br(),
-    #     dcc.Loading(dcc.Graph(id='site_map', style={'height': '45vh'}))
-    # ], style={'backgroundColor': '#E5ECF6'}, className='col-md-6'
-    # ), className='row')
 
     # adding key facts tabs at the end of the page
     key_facts = html.Div(html.Div([
@@ -184,7 +160,7 @@ def createLayout():
         dbc.Tab([
             html.Ul([
                 html.Br(),
-                html.Li('CSE 6242 Final Project: Energy Hub Team'),
+                html.Li('CSE 6242 Project: Energy Hub Team'),
                 html.Li(['GitHub repo: ',
                          html.A('https://github.com/gatechdvateam/project',
                                 href='https://github.com/gatechdvateam/project')
@@ -199,8 +175,6 @@ def createLayout():
     layout.children.append(html.Br())
     layout.children.append(Row3)
     layout.children.append(html.Br())
-    # layout.children.append(MapRow)
-    # layout.children.append(html.Br())
     layout.children.append(key_facts)
 
     return layout
@@ -243,13 +217,6 @@ def compute_stats(siteID):
     # fill -1 to all NaN 
     metadata[numeric_columns] = metadata[numeric_columns].fillna(-1)
 
-    # get total number of sites
-    # n_sites = metadata['site_id'].nunique()
-
-    # # get other stats
-    # n_buildings_elec = metadata['building_id'].where(metadata['heating_type'].str.contains("Elect")).nunique()
-    # n_buildings_gas = metadata['building_id'].where(metadata['heating_type'].str.contains("Gas")).nunique()
-
     # count of buildings per site
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count().reset_index()
     n_buildings = buildings_grouping[buildings_grouping['site_id'] == siteID]['building_id'].values[0]
@@ -290,7 +257,7 @@ def card_site_selector(siteID):
     Returns:
         dcc.Dropdown: _description_
     """
-    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    # Make a copy of the data
     metadata = BuildingMetadata.copy()
     buildings_grouping = metadata.groupby('site_id',as_index=False)['building_id'].count()
     
@@ -330,9 +297,9 @@ def plot_primary_usage(selected_site):
     Returns:
         _type_: _description_
     """
-    buildings = get_buidling_by_primary_usage(BuildingMetadata.copy(), selected_site)
-    # try/except block is needed as workaround. 
-    fig = px.bar(buildings, x='Sites',
+    primary_usage = get_buidling_by_space_usage(BuildingMetadata.copy(), 'primary_space_usage', selected_site)
+   
+    fig = px.bar(primary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
                     color_discrete_sequence=ColorPalette)
 
@@ -361,9 +328,9 @@ def plot_secondary_usage(selected_site):
     Returns:
         _type_: _description_
     """
-    sec_buildings = get_buidling_by_secondary_usage(BuildingMetadata.copy(), selected_site)
+    secondary_usage = get_buidling_by_space_usage(BuildingMetadata.copy(), 'sub_primary_space_usage', selected_site)
 
-    fig = px.bar(sec_buildings, x='Sites',
+    fig = px.bar(secondary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
                     color_discrete_sequence=ColorPalette)
 
@@ -378,44 +345,3 @@ def plot_secondary_usage(selected_site):
             'yanchor': 'top'})
 
     return fig
-
-
-# @callback(
-#     Output('site_map', 'figure'),
-#     Input('MapInput', 'children'))
-# def plot_map(df):
-#     """_summary_
-
-#     Args:
-#         df (_type_): _description_
-
-#     Returns:
-#         _type_: _description_
-#     """
-#     #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
-#     metadata = BuildingMetadata.copy()
-#     df = metadata[['site_id','longitude','latitude','building_id']]
-#     df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
-#     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
-#     fig = px.scatter_geo(df,lon='longitude', lat='latitude',
-#             color='Site',
-#             opacity=0.8,
-#             size='Buildings',
-#             size_max=50,
-#             #Changed Map type
-#             projection="equirectangular",
-#             #Changed Palette
-#             color_discrete_sequence=ColorPalette)
-
-#     #Added a zoom projection_scale
-#     fig.update_layout(
-#         geo = dict(
-#             projection_scale=2.7, #Zoom
-#             center=dict(lat=40.0, lon=-58.0), #Center Point
-#         ))
-
-
-#     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
-#     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-#     return fig
