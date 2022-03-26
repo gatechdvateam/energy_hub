@@ -38,7 +38,7 @@ class MeterDataSet:
     def return_data(self) -> DataFrame_dask:
         return self.df
 
-    def filter_sites(self, site_ids: list) -> DataFrame_dask:
+    def select_sites(self, site_ids: list) -> DataFrame_dask:
         return self.df[self.df.site_id.isin(site_ids)]
 
     def filter_buildings(self, building_ids: list) -> DataFrame_dask:
