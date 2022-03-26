@@ -39,10 +39,20 @@ class MeterDataSet:
         return self.df
 
     def select_sites(self, site_ids: list) -> DataFrame_dask:
+        """Select list of sites"""
         return self.df[self.df.site_id.isin(site_ids)]
+    
+    def filter_sites(self, site_ids: list) -> DataFrame_dask:
+        """Remove list of sites"""
+        return self.df[~self.df.site_id.isin(site_ids)]
 
-    def filter_buildings(self, building_ids: list) -> DataFrame_dask:
+    def select_buildings(self, building_ids: list) -> DataFrame_dask:
+        """Select list of buildings"""
         return self.df[self.df.building_id.isin(building_ids)]
+    
+    def filter_buildings(self, building_ids: list) -> DataFrame_dask:
+        """Remove list of buildings"""
+        return self.df[~self.df.building_id.isin(building_ids)]
 
     def fill_weather_na(self, w_cols: list, fill_method: str) -> DataFrame_dask:
         """
@@ -56,7 +66,7 @@ class MeterDataSet:
             df = df.set_index("timestamp")
             for col in w_cols:
                 if col == "cloud_coverage":
-                    df.loc[:, col] = df.loc[:, col].fillna(method="bfill")
+                    df.loc[:, col] = df.loc[:, col].fillna(method="bfill") # Back fill this categorical
                 else:
                     df.loc[:, col] = df.loc[:, col].interpolate(
                         method=fill_method)
