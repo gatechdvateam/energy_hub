@@ -96,8 +96,10 @@ class MeterDataSet:
         return self.meter
 
     def drop_na(self) -> DataFrame_dask:
+        """Drop nans"""
         self.meter = self.meter.dropna()
+        self.weather = self.weather.dropna()
 
     def merge(self):
         self.df = self.meter.merge(self.metadata, how="left", left_on="building_id", right_on="building_id").merge(
-            self.weather, how="right", left_on=["site_id", "timestamp"], right_on=["site_id", "timestamp"])
+            self.weather, how="left", left_on=["site_id", "timestamp"], right_on=["site_id", "timestamp"])
