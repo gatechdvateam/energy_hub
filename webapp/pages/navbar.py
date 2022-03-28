@@ -1,5 +1,5 @@
 # import packages
-from dash import Dash, dcc, html, Input, Output, callback
+from dash import Dash, dcc, html, Input, Output, callback, State
 import dash_bootstrap_components as dbc
 
 # logo
@@ -17,7 +17,7 @@ NAVLINKS_STYLE = {
 }
 
 
-def CreateLayout(AboutTeam=False):
+def CreateContainer(AboutTeam=False):
     conatinerItems = list()
     conatinerItems.extend([
         html.A(
@@ -48,14 +48,31 @@ def CreateLayout(AboutTeam=False):
         id="navbar-collapse",
         is_open=False,
         navbar=True,
-    ), ])
-    # set up the nav layout
+    ), 
+    ])
+
+
+    return conatinerItems
+
+def CreateLayout(AboutTeam):
+    conatinerItems = CreateContainer(AboutTeam)
     layout = dbc.Navbar(
-        dbc.Container(
-            conatinerItems
-        ),
-        color="light",
-        dark=False,
-        className='navbar sticky-top'
+    dbc.Container(
+        conatinerItems
+    ),
+    color="light",
+    dark=False,
+    className='navbar sticky-top',
     )
+
     return layout
+
+# add callback for toggling the collapse on small screens
+@callback(
+        Output("navbar-collapse", "is_open"),
+        [Input("navbar-toggler", "n_clicks")],
+        [State("navbar-collapse", "is_open")],)
+def toggle_navbar_collapse(n, is_open):
+        if n:
+            return not is_open
+        return is_open

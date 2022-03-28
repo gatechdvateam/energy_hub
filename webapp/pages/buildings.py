@@ -64,7 +64,7 @@ def CreateFilters():
         [dbc.Label("Select Year:"), html.Br(), year, html.Br()])
 
     # Apply Filter
-    column.children.extend([html.Button('Apply Filters', id='ApplyFilters',
+    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color":"yellowgreen","color":"black", "width":"150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
     return column
 
