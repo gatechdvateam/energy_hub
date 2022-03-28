@@ -1,4 +1,5 @@
 from utils.azure_utils import KeyVault, DataLake
+import pandas as pd
 
 def get_dask_data(path, filename):
 
@@ -103,5 +104,18 @@ def get_meter_data_for_building(MeterName,BuildingName):
 
 
 # Preload Small Datasets here.
-BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq").reset_index().copy()
-weatherDate = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
+
+#region BuildingMetadata 
+BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq")
+#Filter on bad data.
+BadBuildings = list(get_data("/bad_buildings/", "bad_buildings.csv")['building_id'])
+BuildingMetadata = BuildingMetadata[~BuildingMetadata['building_id'].isin(BadBuildings)]
+#Filter out buildings with no size.
+BuildingMetadata = BuildingMetadata.loc[BuildingMetadata['sq_feet'].notnull()]
+# create a bucket for building size
+BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_feet'], 3, labels=['Small', 'Medium', 'Large'])
+#endregion BuildingMetadata
+
+#region Weather Data
+weatherData = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
+#endregion Weather Data
