@@ -325,19 +325,28 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
         else:
             data = data.sum()
 
-        # Create the label
-        #data['Date'] = data[AggLevel].astype(str) + '-' + data['Year'].astype(str)
-
         # Rename the agg column
         data = data.rename(columns={MeterName: (
             ValuesColumnName + ' Consumption')})
 
         # generate the
         fig = px.line(data, x='Date',
-                      y=ValuesColumnName + ' Consumption', markers=True,  template="plotly")
+                      y=ValuesColumnName + ' Consumption',markers=True,
+                      template="plotly", line_shape="spline", render_mode="svg")
+
+        fig['data'][0]['showlegend']=True
+        fig['data'][0]['name']= 'Building: ' + str(BuildingName).replace("_", " ")
+
+        fig.update_layout(legend=dict(
+                    yanchor="top",
+                    y=0.99,
+                    xanchor="left",
+                    x=0.01
+                    ))
         fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
+        
         return [fig, {'display': 'block'}]
     else:
         return [no_update, {'display': 'none'}]
