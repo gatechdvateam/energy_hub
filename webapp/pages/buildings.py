@@ -11,7 +11,7 @@ from data import *
 from content import *
 import plotly.graph_objects as go
 
-# region Layout Functions
+#region Layout Functions
 def createLayout():
     title = html.H2('Energy consumption: building view',
                     style={"text-align": "center"})
@@ -20,6 +20,7 @@ def createLayout():
 
 
 def CreateFilters():
+    
     # make a copy of the data
     building_meta = BuildingMetadata.copy()
 
@@ -64,7 +65,7 @@ def CreateFilters():
         [dbc.Label("Select Year:"), html.Br(), year, html.Br()])
 
     # Apply Filter
-    column.children.extend([html.Button('Apply Filters', id='ApplyFilters',
+    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color":"yellowgreen","color":"black", "width":"150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
     return column
 
@@ -82,14 +83,13 @@ def CreateVisuals():
     irrigation = dcc.Loading(dcc.Graph(id='irrigation'), type='default')
     hotwater = dcc.Loading(dcc.Graph(id='hotwater'), type='default')
     chilledwater = dcc.Loading(dcc.Graph(id='chilledwater'), type='default')
-    # Create 2 columns.
-    # We will split our visual into sets of 2 columns.
+
     column = dbc.Col([electricity, solar, steam, hotwater,
                      water, gas, irrigation, chilledwater], md=10)
     return column
-# endregion
+#endregion
 
-# region Callbacks for chart updates
+#region Callbacks for chart updates
 @callback(
     output=[Output('electricity', 'figure'),
             Output('electricity', 'style'), ],
@@ -168,9 +168,9 @@ def plot_hotwater(Year, Building, NC):
             Input('ApplyFilters', 'n_clicks')])
 def plot_chilledwater(Year, Building, NC):
     return CreateTimeChart(Year, Building, 'chilledwater', 'Chilled Water')
-# endregion
+#endregion
 
-# region Callbacks to update other filters
+#region Callbacks to update other filters
 @callback(
     output=[Output('BuildingFilter', 'options'),
             Output('BuildingFilter', 'value'),
@@ -185,7 +185,7 @@ def plot_chilledwater(Year, Building, NC):
             Input('BuildingSizeFilter', 'value')], prevent_initial_call=True)
 def FiltersUpdate(TimeZone, Usage, Size):
     ctx = dash.callback_context
-    buildings = BuildingMetadata
+    buildings = BuildingMetadata.copy()
     FilterID = ctx.triggered[0]['prop_id'].split('.')[0]
 
     if (TimeZone != None) and (len(TimeZone) != 0):
@@ -219,9 +219,9 @@ def FiltersUpdate(TimeZone, Usage, Size):
         outputs.extend([no_update, no_update])
 
     return outputs
-# endregion
+#endregion
 
-# region support functions to create charts and filters
+#region support functions to create charts and filters
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False):
     """
     Function to create select lists.
@@ -259,20 +259,9 @@ def CreateTimeChart(Year: str, BuildingName: str, MeterName: str, ValuesColumnNa
     else:
         return [no_update, {'display': 'none'}]
 
-    # Old Code
-    # else:
-    #     fig = go.Figure()
-    #     fig.update_layout(
-    #         xaxis={"visible": False}, yaxis={"visible": False},
-    #         annotations=[{"text": "No data available for: "+ValuesColumnName,
-    #                       "xref": "paper", "yref": "paper", "showarrow": False,
-    #                       "font": {"size": 28}}])
-    #     return fig
-# endregion
+#endregion
 
-# region Supporting Functions
-
-
+#region Supporting Functions
 def FormatOptions(Items: list):
     optionsList = list()
     for item in Items:
@@ -280,4 +269,4 @@ def FormatOptions(Items: list):
         optionsList.append({'label': label, 'value': str(item)})
     return optionsList
 
-# endregion
+#endregion

@@ -36,11 +36,11 @@ Dash_App.layout = html.Div([
 def display_page(pathname):
 
     if pathname == '/data_overview':
-        return data_overview.createLayout(),navbar.CreateLayout()
+        return data_overview.createLayout(),navbar.CreateLayout(AboutTeam=True)
     elif pathname == '/buildings':
-        return buildings.createLayout(),navbar.CreateLayout()
+        return buildings.createLayout(),navbar.CreateLayout(AboutTeam=True)
     elif pathname == '/forecast':
-        return elec_forecast.createLayout(),navbar.CreateLayout()
+        return elec_forecast.createLayout(),navbar.CreateLayout(AboutTeam=True)
     elif pathname == '/home':
         return home.home_layout(),navbar.CreateLayout(AboutTeam=True)
     else:
