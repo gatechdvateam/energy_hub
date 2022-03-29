@@ -135,3 +135,4 @@ Werkzeug==2.0.3
 yarl==1.7.2
 zipp==3.7.0
 zmq==0.0.0
+gunicorn==20.1.0
