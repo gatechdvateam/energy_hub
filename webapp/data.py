@@ -111,9 +111,9 @@ BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq")
 BadBuildings = list(get_data("/bad_buildings/", "bad_buildings.csv")['building_id'])
 BuildingMetadata = BuildingMetadata[~BuildingMetadata['building_id'].isin(BadBuildings)]
 #Filter out buildings with no size.
-BuildingMetadata = BuildingMetadata.loc[BuildingMetadata['sq_feet'].notnull()]
+BuildingMetadata = BuildingMetadata.loc[BuildingMetadata['sq_meter'].notnull()]
 # create a bucket for building size
-BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_feet'], 3, labels=['Small', 'Medium', 'Large'])
+BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_meter'], 3, labels=['Small', 'Medium', 'Large'])
 #endregion BuildingMetadata
 
 #region Weather Data

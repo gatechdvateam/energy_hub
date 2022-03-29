@@ -209,7 +209,7 @@ def compute_stats(siteID):
     metadata = BuildingMetadata.copy()
 
     # get data where sq feet is not null
-    metadata = metadata.loc[metadata['sq_feet'].notnull()]
+    metadata = metadata.loc[metadata['sq_meter'].notnull()]
 
     # select numeric columns
     numeric_columns = metadata.select_dtypes(include=['number']).columns
