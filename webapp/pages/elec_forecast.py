@@ -42,17 +42,16 @@ def CreateFilters():
         [dbc.Label("Select Primary Usage:"), html.Br(), primary_usage, html.Br()])
 
     # select building size
-    # TO-DO (make size buckets)
     building_size = CreateSelect(
         list(building_meta['size'].unique()), 'FP_BuildingSizeFilter')
     column.children.extend(
         [dbc.Label("Select Building Size:"), html.Br(), building_size, html.Br()])
 
-    # select a building
+    # select a building (testing multiple filtering)
     buildings = CreateSelect(list(building_meta['building_id'].unique()), 'FP_BuildingFilter',
-                             'Bull_lodging_Travis', False, True)
+                             'Bull_lodging_Travis', False, True, multiple=False)
     column.children.extend(
-        [dbc.Label("Select Building:"), html.Br(), buildings, html.Br()])
+        [dbc.Label("Select 3 Buildings to compare:"), html.Br(), buildings, html.Br()])
 
     # select Aggregation Level
     level = CreateSelect(['Month', 'Quarter', 'Week'],
@@ -72,7 +71,8 @@ def CreateFilters():
         min_date_allowed=date(2016, 1, 1),
         max_date_allowed=date(2017, 12, 31),
         start_date=date(2017, 1, 1),
-        end_date=date(2017, 12, 31)
+        end_date=date(2017, 12, 31),
+        style={"background-color": "yellowgreen", "color": "magenta"}
     )
     column.children.extend(
         [dbc.Label("Select Start & End Dates:"), html.Br(), dates, html.Br(), html.Br()])
@@ -108,7 +108,6 @@ filterInputList = {"Values": {
     "NC": Input('ApplyFilters', 'n_clicks')
 }}
 
-
 @callback(
     output=[Output('FP_electricity', 'figure'),
             Output('FP_electricity', 'style'), ],
@@ -117,7 +116,20 @@ def plot_electricity(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'electricity', 'Electricity', \
         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
-
+# limit building choices to max of 3 options
+# @callback(
+#     Output("FP_BuildingFilter", "options"),
+#     Output("warning", "children"),
+#     Input("FP_BuildingFilter", "value"),
+# )
+# def update_multi_options(value):
+#     if len(value) >= 3:
+#         input_warning = html.P(id="warning", children="Limit reached")
+#         options = [
+#             {"label": option["label"], "value": option["value"], "disabled": True}
+#             for option in options
+#         ]
+#     return options, input_warning
 #endregion
 
 
@@ -195,15 +207,19 @@ def FiltersUpdate(TimeZone, Usage, Size):
 # region support functions to create charts and filters
 
 
-def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False):
+def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False, multiple=False):
     """
     Function to create select lists.
     """
     optionsList = None
     if(Format):
         optionsList = FormatOptions(ItemsList)
+    # elif (multiple):
+    #     optionsList = ItemsList
+    #     return dcc.Dropdown(optionsList, DefaultValue, id=Name, clearable=Optional, multi=True)
     else:
         optionsList = ItemsList
+
     return dcc.Dropdown(optionsList, DefaultValue, id=Name, clearable=Optional)
 
 
@@ -235,6 +251,9 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
         if AggLevel == 'Quarter':
             data['Date'] = data['Year'].astype(
                 str) + '-Q' + data.timestamp.dt.quarter.astype(str)
+        elif AggLevel == 'Hour':
+            data['Date'] = data['Year'].astype(
+                str) + '-' + data.timestamp.dt.hour.astype(str)
         elif AggLevel == 'Week':
             data['YearWeek'] = data['Year'].astype(
                 str) + '-' + data.timestamp.dt.strftime('%U')
@@ -267,7 +286,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                       template="plotly", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend']=True
-        fig['data'][0]['name']= 'Building: ' + str(BuildingName).replace("_", " ")
+        fig['data'][0]['name']= 'Building: ' + str(BuildingName).split('_')[-1]
 
         fig.update_layout(legend=dict(
                     yanchor="top",
@@ -275,6 +294,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                     xanchor="left",
                     x=0.01
                     ))
+        fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
         fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
