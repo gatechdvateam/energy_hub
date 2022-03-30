@@ -55,16 +55,16 @@ def CreateFilters():
         [dbc.Label("Select Building:"), html.Br(), buildings, html.Br()])
 
     # select Aggregation Level
-    level = CreateSelect(['Month', 'Quarter', 'Week'],
-                        'BP_AggLevelFilter', 'Month')
+    level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
+                         'BP_AggLevelFilter', 'Month')
     column.children.extend(
-        [dbc.Label("Select Aggregation Level:"), html.Br(), level, html.Br()])
+        [dbc.Label("Select Aggregation Level: **"), html.Br(), level, html.Br()])
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
-                        'BP_AggTypeFilter', 'Sum')
+                         'BP_AggTypeFilter', 'Sum')
     column.children.extend(
-        [dbc.Label("Select Aggregation Level:"), html.Br(), ty_pe, html.Br()])
+        [dbc.Label("Select Aggregation Type: ***"), html.Br(), ty_pe, html.Br()])
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -75,11 +75,18 @@ def CreateFilters():
         end_date=date(2017, 12, 31)
     )
     column.children.extend(
-        [dbc.Label("Select Start & End Dates:"), html.Br(), dates, html.Br(), html.Br()])
+        [dbc.Label("Select Start & End Dates: *"), html.Br(), dates, html.Br(), html.Br()])
 
     # Apply Filter
     column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
+    column.children.append(html.P(children=[
+        html.Br(),
+        '*Date filter will reset if start date is > end date.',
+        html.Br(),
+        '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
+        '***Not supported for aggregation level None.'
+        ],className='text-warning'))
     return column
 
 
@@ -97,10 +104,10 @@ def CreateVisuals():
     hotwater = dcc.Loading(dcc.Graph(id='hotwater'), type='default')
     chilledwater = dcc.Loading(dcc.Graph(id='chilledwater'), type='default')
 
-    column = dbc.Col([electricity, html.Br(),solar, html.Br(),
-                    steam, html.Br(), hotwater,html.Br(),
-                    water, html.Br(), gas, html.Br(),
-                    irrigation, html.Br(), chilledwater], md=10)
+    column = dbc.Col([electricity, html.Br(), solar, html.Br(),
+                      steam, html.Br(), hotwater, html.Br(),
+                      water, html.Br(), gas, html.Br(),
+                      irrigation, html.Br(), chilledwater], md=10)
     return column
 # endregion
 
@@ -123,8 +130,8 @@ filterInputList = {"Values": {
             Output('electricity', 'style'), ],
     inputs=filterInputList)
 def plot_electricity(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'electricity', 'Electricity', \
-        AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'electricity', 'Electricity',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -132,8 +139,8 @@ def plot_electricity(Values):
             Output('water', 'style'), ],
     inputs=filterInputList)
 def plot_water(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'water', 'Water', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'water', 'Water',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -141,17 +148,17 @@ def plot_water(Values):
             Output('gas', 'style'), ],
     inputs=filterInputList)
 def plot_gas(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'gas', 'Gas', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'gas', 'Gas',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
 
 @callback(
     output=[Output('irrigation', 'figure'),
             Output('irrigation', 'style'), ],
     inputs=filterInputList)
 def plot_irrigation(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'irrigation', 'Irrigation', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
-
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'irrigation', 'Irrigation',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -159,8 +166,8 @@ def plot_irrigation(Values):
             Output('solar', 'style'), ],
     inputs=filterInputList)
 def plot_solar(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'solar', 'Solar', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'solar', 'Solar',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -168,8 +175,8 @@ def plot_solar(Values):
             Output('steam', 'style'), ],
     inputs=filterInputList)
 def plot_steam(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'steam', 'Steam', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'steam', 'Steam',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -177,8 +184,8 @@ def plot_steam(Values):
             Output('hotwater', 'style'), ],
     inputs=filterInputList)
 def plot_hotwater(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'hotwater', 'Hot Water', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'hotwater', 'Hot Water',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -186,14 +193,14 @@ def plot_hotwater(Values):
             Output('chilledwater', 'style'), ],
     inputs=filterInputList)
 def plot_chilledwater(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'chilledwater', 'Chilled Water', \
-         AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
-#endregion
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'chilledwater', 'Chilled Water',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+# endregion
 
 
 # region Callbacks to update other filters
 
-#Define Outputs here
+# Define Outputs here
 filtersUpdateOutputs = [Output('BuildingFilter', 'options'),
                         Output('BuildingFilter', 'value'),
                         Output('UsageFilter', 'options'),
@@ -202,7 +209,7 @@ filtersUpdateOutputs = [Output('BuildingFilter', 'options'),
                         Output('BuildingSizeFilter', 'value'),
                         Output('TimezoneFilter', 'options'),
                         Output('TimezoneFilter', 'value')]
-#Define Inputs here
+# Define Inputs here
 filtersUpdateInputs = [Input('TimezoneFilter', 'value'),
                        Input('UsageFilter', 'value'),
                        Input('BuildingSizeFilter', 'value')]
@@ -212,14 +219,14 @@ filtersUpdateInputs = [Input('TimezoneFilter', 'value'),
     output=filtersUpdateOutputs,
     inputs=filtersUpdateInputs, prevent_initial_call=True)
 def FiltersUpdate(TimeZone, Usage, Size):
-    #Get the current context to identify which of the inputs was updated
+    # Get the current context to identify which of the inputs was updated
     ctx = dash.callback_context
-    #Get the name of the item that was updated.
+    # Get the name of the item that was updated.
     FilterID = ctx.triggered[0]['prop_id'].split('.')[0]
-    #Get the list of buildings
+    # Get the list of buildings
     buildings = BuildingMetadata.copy()
-    
-    #Now we filter the buildings list based on the selected options.
+
+    # Now we filter the buildings list based on the selected options.
     if (TimeZone != None) and (len(TimeZone) != 0):
         buildings = buildings[buildings['timezone'] == TimeZone]
     if (Usage != None) and (len(Usage) != 0):
@@ -227,20 +234,20 @@ def FiltersUpdate(TimeZone, Usage, Size):
     if (Size != None) and (len(Size) != 0):
         buildings = buildings[buildings['size'] == Size]
 
-    #Define an empty list that will house all outputs.
+    # Define an empty list that will house all outputs.
     outputs = list()
 
-    #Get available buildings that match the criteria
+    # Get available buildings that match the criteria
     BuildingOptions = list(buildings['building_id'].unique())
-    #Get the first building.
+    # Get the first building.
     Buildingval = BuildingOptions[0]
-    #Format the names of the buildings
+    # Format the names of the buildings
     BuildingOptions = FormatOptions(BuildingOptions)
-    #Add to list of inputs.
+    # Add to list of inputs.
     outputs.extend([BuildingOptions, Buildingval])
 
-    #if the filter was not updated, i.e. the user didn't play with this value
-    #We get the list of available values for all filters below.
+    # if the filter was not updated, i.e. the user didn't play with this value
+    # We get the list of available values for all filters below.
     if FilterID != 'UsageFilter':
         UsageOptions = list(buildings['primary_space_usage'].unique())
         outputs.extend([UsageOptions, no_update])
@@ -260,6 +267,49 @@ def FiltersUpdate(TimeZone, Usage, Size):
         outputs.extend([no_update, no_update])
 
     return outputs
+
+
+filterInputList = {"Values": {
+    "Building": State('BuildingFilter', 'value'),
+    "StartDate": State('DateFilter', 'start_date'),
+    "EndDate": State('DateFilter', 'end_date'),
+    "AggLevel": State('BP_AggLevelFilter', 'value'),
+    "AggType": State('BP_AggTypeFilter', 'value'),
+    "NC": Input('ApplyFilters', 'n_clicks')
+}}
+
+
+@callback(
+    Output('DateFilter', 'start_date'),
+    Output('DateFilter', 'end_date'),
+    Input('DateFilter', 'start_date'),
+    Input('DateFilter', 'end_date'),
+    Input('BP_AggLevelFilter', 'value'),
+    prevent_initial_call=True)
+def RestrictDays(StartDate, EndDate, AggLevel):
+    # Parse Dates
+    Start = datetime.strptime(StartDate, '%Y-%m-%d')
+    End = datetime.strptime(EndDate, '%Y-%m-%d')
+
+    # Create Default Dates
+    DefaultStart = date(2017, 1, 1)
+    DefaultEnd = date(2017, 12, 31)
+
+    # Limit to 7 Days.
+    if AggLevel == "None":
+        DefaultEnd = date(2017, 1, 7)
+        if Start > End:
+            return DefaultStart, DefaultEnd
+        delta = End - Start
+        if delta.days > 10:
+            return DefaultStart, DefaultEnd
+        return no_update, no_update
+
+    # Just verify that end date is not greater than start.
+    else:
+        if Start > End:
+            return DefaultStart, DefaultEnd
+        return no_update, no_update
 # endregion
 
 # region support functions to create charts and filters
@@ -302,30 +352,33 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
         data['Year'] = data.timestamp.dt.year
         data = data.compute()
         # Calculate the group for the agg unit of time
-        if AggLevel == 'Quarter':
-            data['Date'] = data['Year'].astype(
-                str) + '-Q' + data.timestamp.dt.quarter.astype(str)
-        elif AggLevel == 'Week':
-            data['YearWeek'] = data['Year'].astype(
-                str) + '-' + data.timestamp.dt.strftime('%U')
-            data['Date'] = data['YearWeek'].apply(
-                lambda x: datetime.strptime(x + '-1', "%Y-%W-%w"))
+        if AggLevel == 'None':
+            data = data.rename(columns={'timestamp': 'Date'})
         else:
-            data['Day'] = 1
-            data['Month'] = data.timestamp.dt.month
-            data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
+            if AggLevel == 'Quarter':
+                data['Date'] = data['Year'].astype(
+                    str) + '-Q' + data.timestamp.dt.quarter.astype(str)
+            elif AggLevel == 'Week':
+                data['YearWeek'] = data['Year'].astype(
+                    str) + '-' + data.timestamp.dt.strftime('%U')
+                data['Date'] = data['YearWeek'].apply(
+                    lambda x: datetime.strptime(x + '-1', "%Y-%W-%w"))
+            else:
+                data['Day'] = 1
+                data['Month'] = data.timestamp.dt.month
+                data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
 
-        #Group and aggregate
-        data = data[['Year', 'Date', MeterName]].groupby(
-            ['Year', 'Date'], as_index=False)
-        if aggFunction == 'Avg':
-            data = data.mean()
-        elif aggFunction == 'Max':
-            data = data.max()
-        elif aggFunction == 'Min':
-            data = data.min()
-        else:
-            data = data.sum()
+            #Group and aggregate
+            data = data[['Year', 'Date', MeterName]].groupby(
+                ['Year', 'Date'], as_index=False)
+            if aggFunction == 'Avg':
+                data = data.mean()
+            elif aggFunction == 'Max':
+                data = data.max()
+            elif aggFunction == 'Min':
+                data = data.min()
+            else:
+                data = data.sum()
 
         # Rename the agg column
         data = data.rename(columns={MeterName: (
@@ -333,24 +386,25 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
 
         # generate the
         fig = px.line(data, x='Date',
-                      y=ValuesColumnName + ' Consumption',markers=True,
+                      y=ValuesColumnName + ' Consumption', markers=True,
                       template="plotly", line_shape="spline", render_mode="svg")
 
-        fig['data'][0]['showlegend']=True
-        # fig['data'][0]['name']= 'Building: ' + str(BuildingName).replace("_", " ") # Either we show this
-        fig['data'][0]['name']= 'Building: ' + str(BuildingName).split("_")[-1] # or this
+        fig['data'][0]['showlegend'] = True
+        fig['data'][0]['name'] = 'Building: ' + \
+            str(BuildingName).replace("_", " ")  # Either we show this
+        # fig['data'][0]['name']= 'Building: ' + str(BuildingName).split("_")[-1] # or this
 
         fig.update_layout(legend=dict(
-                    yanchor="top",
-                    y=0.99,
-                    xanchor="left",
-                    x=0.01
-                    ))
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        ))
         fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
         fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-        
+
         return [fig, {'display': 'block'}]
     else:
         return [no_update, {'display': 'none'}]
@@ -358,6 +412,8 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
 # endregion
 
 # region Supporting Functions
+
+
 def FormatOptions(Items: list):
     optionsList = list()
     for item in Items:
