@@ -97,8 +97,10 @@ def CreateVisuals():
     hotwater = dcc.Loading(dcc.Graph(id='hotwater'), type='default')
     chilledwater = dcc.Loading(dcc.Graph(id='chilledwater'), type='default')
 
-    column = dbc.Col([electricity, solar, steam, hotwater,
-                     water, gas, irrigation, chilledwater], md=10)
+    column = dbc.Col([electricity, html.Br(),solar, html.Br(),
+                    steam, html.Br(), hotwater,html.Br(),
+                    water, html.Br(), gas, html.Br(),
+                    irrigation, html.Br(), chilledwater], md=10)
     return column
 # endregion
 
@@ -335,7 +337,8 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                       template="plotly", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend']=True
-        fig['data'][0]['name']= 'Building: ' + str(BuildingName).replace("_", " ")
+        # fig['data'][0]['name']= 'Building: ' + str(BuildingName).replace("_", " ") # Either we show this
+        fig['data'][0]['name']= 'Building: ' + str(BuildingName).split("_")[-1] # or this
 
         fig.update_layout(legend=dict(
                     yanchor="top",
@@ -343,6 +346,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                     xanchor="left",
                     x=0.01
                     ))
+        fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
         fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')

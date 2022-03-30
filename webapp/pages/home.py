@@ -159,7 +159,7 @@ def about_us_layout():
 
     site_map = html.Div(html.Div(
         [
-        html.H3('Location of all sites', style={'text-align':'center','font-family': 'serif','font-size': '35px'}),
+        # html.H3('Location of all sites', style={'text-align':'center','font-family': 'serif','font-size': '35px'}),
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
         html.Br(),
         dcc.Loading(dcc.Graph(id='site_map', style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}))
@@ -182,8 +182,8 @@ def home_layout():
     carousel = carousel_layout()
     team = team_layout()
     about_us = about_us_layout()
-    title=html.H2("About the team", style=TEAM_HEADING_STYLE,id='TeamCards')
-    title_aboutus=html.H2("What is Energy Hub", style=TEAM_HEADING_STYLE)
+    title=html.H2("The team", style=TEAM_HEADING_STYLE,id='TeamCards')
+    title_aboutus=html.H2("What is Energy Hub?", style=TEAM_HEADING_STYLE)
 
     return [carousel,html.Br(), html.Hr(), title_aboutus, about_us,
             html.Hr(), title,html.Br(),team]
