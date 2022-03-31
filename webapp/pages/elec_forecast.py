@@ -117,7 +117,9 @@ def CreateVisuals():
     electricity_plot2 = dcc.Loading(dcc.Graph(id='FP_electricity2'), type='default')
     electricity_plot3 = dcc.Loading(dcc.Graph(id='FP_electricity3'), type='default')
 
-    column = dbc.Col([electricity_plot1, electricity_plot2, electricity_plot3], md=10)
+    column = dbc.Col([electricity_plot1, html.Br(),
+                      electricity_plot2, html.Br(),
+                      electricity_plot3], md=10)
 
     
     return column
@@ -353,9 +355,10 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
         # generate the
         fig = px.line(data, x='Date',
                       y=ValuesColumnName + ' Consumption', markers=True,
-                      template="plotly", line_shape="spline", render_mode="svg")
+                      template="simple_white", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend'] = True
+        fig['data'][0]['line']['color']= "yellowgreen"
         #fig['data'][0]['name'] = 'Building: ' + str(BuildingName).replace("_", " ")  # Either we show this
         fig['data'][0]['name']= 'Building: ' + str(BuildingName).split("_")[-1] # or this
 
@@ -365,7 +368,8 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
             xanchor="left",
             x=0.01
         ))
-        fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+        # fig.add_trace(dict(color='green', width=4, dash='dash'))
+        # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
         fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
