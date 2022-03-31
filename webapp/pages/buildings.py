@@ -85,6 +85,7 @@ def CreateFilters():
         '*Date filter will reset if start date is > end date.',
         html.Br(),
         '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
+        html.Br(),
         '***Not supported for aggregation level None.'
         ],className='text-warning'))
     return column
@@ -390,9 +391,10 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                       template="plotly", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend'] = True
-        fig['data'][0]['name'] = 'Building: ' + \
-            str(BuildingName).replace("_", " ")  # Either we show this
-        # fig['data'][0]['name']= 'Building: ' + str(BuildingName).split("_")[-1] # or this
+        #fig['data'][0]['name'] = 'Building: ' + \
+            #str(BuildingName).replace("_", " ")  # Either we show this
+        fig['data'][0]['name']= 'Building: ' + \
+             str(BuildingName).split("_")[-1] # or this
 
         fig.update_layout(legend=dict(
             yanchor="top",
