@@ -102,9 +102,9 @@ def plot_primary_usage(selected_site):
    
     fig = px.bar(primary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
-                    color_discrete_sequence=ColorPalette)
+                    color_discrete_sequence=ColorPalette, template='simple_white')
 
-    fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+    # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
     fig.update_layout(legend=dict(y=-0.4, orientation="h"))
 
     fig.update_layout(
@@ -126,9 +126,9 @@ def plot_secondary_usage(selected_site):
 
     fig = px.bar(secondary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
-                    color_discrete_sequence=ColorPalette)
+                    color_discrete_sequence=ColorPalette, template='simple_white')
 
-    fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+    # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
     fig.update_layout(legend=dict(y=-0.4, orientation="h"))
     fig.update_layout(
         title={
@@ -139,7 +139,6 @@ def plot_secondary_usage(selected_site):
             'yanchor': 'top'})
 
     return fig
-
 
 
 def FormatOptions(Items: list):
