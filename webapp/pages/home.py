@@ -64,7 +64,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Siham is a data scientist working at a major semiconductor company in the San Francisco Bay Area.\
-                    Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
@@ -85,7 +85,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mai is a senior data analyst working for a major company in Atlanta.\
-                    She is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    She is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),html.Br(),
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
@@ -106,7 +106,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mert is a Marine Engineer working for a major cruise line as Energy Optimization & Analytics Manager in Miami.\
-                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
@@ -127,7 +127,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi.\
-                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
@@ -183,7 +183,7 @@ def home_layout():
     team = team_layout()
     about_us = about_us_layout()
     title=html.H2("The team", style=TEAM_HEADING_STYLE,id='TeamCards')
-    title_aboutus=html.H2("What is Energy Hub?", style=TEAM_HEADING_STYLE)
+    title_aboutus=html.H2("Why Energy Hub?", style=TEAM_HEADING_STYLE)
 
     return [carousel,html.Br(), html.Hr(), title_aboutus, about_us,
             html.Hr(), title,html.Br(),team]
