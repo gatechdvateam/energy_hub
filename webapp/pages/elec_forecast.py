@@ -69,7 +69,7 @@ def CreateFilters():
 
     # select Aggregation Level
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
-                        'FP_AggLevelFilter', 'Month')
+                        'FP_AggLevelFilter', 'None')
     column.children.extend(
         [dbc.Label("Select Aggregation Level:"), html.Br(), level, html.Br()])
 
@@ -85,7 +85,7 @@ def CreateFilters():
         min_date_allowed=date(2016, 1, 1),
         max_date_allowed=date(2017, 12, 31),
         start_date=date(2017, 1, 1),
-        end_date=date(2017, 12, 31)
+        end_date=date(2017, 1, 2)
     )
     column.children.extend(
         [dbc.Label("Select Start & End Dates*:"), html.Br(), dates, html.Br(), html.Br()])
