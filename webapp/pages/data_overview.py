@@ -14,7 +14,6 @@ from datetime import datetime
 import plotly.figure_factory as ff
 import warnings
 import numpy as np
-import seaborn as sns
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
 # region Layout Functions
 
