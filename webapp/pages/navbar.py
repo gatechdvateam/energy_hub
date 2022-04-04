@@ -31,17 +31,17 @@ def CreateContainer(AboutTeam=False):
         ),
         dbc.NavItem(dbc.NavLink("Home", href="/home", active=True,
                     class_name='', style=NAVLINKS_STYLE)),
-        dbc.NavItem(dbc.NavLink("Data Overview", active=True,
+        dbc.NavItem(dbc.NavLink("Overview", active=True,
                     href="/data_overview", style=NAVLINKS_STYLE)),
         dbc.NavItem(dbc.NavLink(
-            "Buildings", href="/buildings", style=NAVLINKS_STYLE)),
+            "Energy Profile", href="/buildings", style=NAVLINKS_STYLE)),
         dbc.NavItem(dbc.NavLink(
-            "Electricity Forecast", href="/forecast", style=NAVLINKS_STYLE)),
+            "Forecast", href="/forecast", style=NAVLINKS_STYLE)),
     ])
 
     if AboutTeam:
         conatinerItems.append(dbc.NavItem(dbc.NavLink(
-            "About The Team", href="/home#TeamCards", external_link=True, style=NAVLINKS_STYLE)),)
+            "Team", href="/home#TeamCards", external_link=True, style=NAVLINKS_STYLE)),)
 
     conatinerItems.extend([dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
                            dbc.Collapse(

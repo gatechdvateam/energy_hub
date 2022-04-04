@@ -54,7 +54,7 @@ def createLayout():
                 ]),
 
         ], style={'backgroundColor': '#f9f9f9'}))
-    return [row, html.Br(), key_facts]
+    return [html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
 
 
 def CreateFilters():
