@@ -17,9 +17,23 @@ from datetime import datetime
 def createLayout():
     title = html.H2('ELectricity Forecast and Normalization',
                     style={"text-align": "center"})
-                    
-    row = dbc.Row([CreateFilters(), CreateVisuals()])
-    return [title, row]
+
+    row1 = dbc.Row(CreateFilters())
+    row2 = dbc.Row(CreateVisuals())
+    row3 = dbc.Row(dbc.Col(html.P(children=[
+        html.Br(),
+        '*Date filter will reset if start date is > end date.',
+        html.Br(),
+        '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
+        html.Br(),
+        '***Not supported for aggregation level None.',
+        html.Br(),
+        '****You can only compare 3 buildings.'
+    ], className='text-warning'), md=12))
+
+    return [html.H2("Building Electricty Forecast", className='text-center'), html.Br(), 
+            row1,
+            html.Br(), row2, row3]
 
 
 def CreateFilters():
@@ -28,56 +42,53 @@ def CreateFilters():
     building_meta = BuildingMetadata.copy()
 
     # Create the filters column
-    column = dbc.Col([], md=2)
+    columns = []
 
     # select Timezone/location
     timezone = CreateSelect(
         list(building_meta['timezone'].unique()), 'FP_TimezoneFilter')
-    column.children.extend(
-        [dbc.Label("Select Time Zone:"), html.Br(), timezone, html.Br()])
+    columns.append(
+        dbc.Col([dbc.Label("Time Zone:"), html.Br(), timezone, html.Br()], lg=2))
 
     # select primary usage
     primary_usage = CreateSelect(
         list(building_meta['primary_space_usage'].unique()), 'FP_UsageFilter')
-    column.children.extend(
-        [dbc.Label("Select Primary Usage:"), html.Br(), primary_usage, html.Br()])
+    columns.append(dbc.Col(
+        [dbc.Label("Primary Usage:"), html.Br(), primary_usage, html.Br()], lg=2))
 
     # select building size
     building_size = CreateSelect(
         list(building_meta['size'].unique()), 'FP_BuildingSizeFilter')
-    column.children.extend(
-        [dbc.Label("Select Building Size:"), html.Br(), building_size, html.Br()])
+    columns.append(dbc.Col(
+        [dbc.Label("Building Size:"), html.Br(), building_size, html.Br()], lg=2))
 
     # select a building (testing multiple filtering)
-    column.children.extend(
-        [dbc.Label("Select 3 Buildings to compare****:"), html.Br()])
+    # column.children.extend(
+    #     [dbc.Label("Select 2 Buildings to compare****:"), html.Br()])
 
     buildings = list(building_meta['building_id'].unique())
 
-    building_1 = CreateSelect(buildings, 'FP_BuildingFilter1','Bull_lodging_Travis', False, True)
+    building_1 = CreateSelect(
+        buildings, 'FP_BuildingFilter1', 'Bull_lodging_Travis', False, True)
+    columns.append(dbc.Col(
+        [dbc.Label("Building #1:"), html.Br(), building_1, html.Br()], lg=2))
 
-    column.children.extend(
-        [dbc.Label("Select Building #1:"), html.Br(), building_1, html.Br()])
-
-    building_2 = CreateSelect(buildings, 'FP_BuildingFilter2','Bull_lodging_Travis', False, True)
-    column.children.extend(
-        [dbc.Label("Select Building #2:"), html.Br(), building_2, html.Br()])
-
-    building_3 = CreateSelect(buildings, 'FP_BuildingFilter3','Bull_lodging_Travis', False, True)
-    column.children.extend(
-        [dbc.Label("Select Building #3:"), html.Br(), building_3, html.Br()])
+    building_2 = CreateSelect(
+        buildings, 'FP_BuildingFilter2', 'Rat_office_Colby', False, True)
+    columns.append(dbc.Col(
+        [dbc.Label("Building #2:"), html.Br(), building_2, html.Br()], lg=2))
 
     # select Aggregation Level
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
-                        'FP_AggLevelFilter', 'None')
-    column.children.extend(
-        [dbc.Label("Select Aggregation Level:"), html.Br(), level, html.Br()])
+                         'FP_AggLevelFilter', 'None')
+    columns.append(dbc.Col(
+        [dbc.Label("Aggregation Level:"), html.Br(), level, html.Br()], lg=2))
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
-                        'FP_AggTypeFilter', 'Sum')
-    column.children.extend(
-        [dbc.Label("Select Aggregation Level***:"), html.Br(), ty_pe, html.Br()])
+                         'FP_AggTypeFilter', 'Sum')
+    columns.append(dbc.Col(
+        [dbc.Label("Aggregation Type:"), html.Br(), ty_pe, html.Br()], lg=2))
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -87,25 +98,14 @@ def CreateFilters():
         start_date=date(2017, 1, 1),
         end_date=date(2017, 1, 2)
     )
-    column.children.extend(
-        [dbc.Label("Select Start & End Dates*:"), html.Br(), dates, html.Br(), html.Br()])
+    columns.append(
+        dbc.Col([dbc.Label("Start & End Dates: *:"), html.Br(), dates, html.Br()], lg=2))
 
     # Apply Filter
-    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
-                                        n_clicks=0, className="btn btn-primary"), html.Br()])
+    columns.append(dbc.Col([ html.Br(),html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
+                                        n_clicks=0, className="btn btn-primary"), html.Br()], lg=2))
 
-    column.children.append(html.P(children=[
-        html.Br(),
-        '*Date filter will reset if start date is > end date.',
-        html.Br(),
-        '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
-        html.Br(),
-        '***Not supported for aggregation level None.',
-        html.Br(),
-        '****You can only compare 3 buildings.'
-        ],className='text-warning'))
-
-    return column
+    return columns
 
 
 def CreateVisuals():
@@ -113,16 +113,15 @@ def CreateVisuals():
         This function is responsible for creating the charts area.
     """
     # Create Charts
-    electricity_plot1 = dcc.Loading(dcc.Graph(id='FP_electricity1'), type='default')
-    electricity_plot2 = dcc.Loading(dcc.Graph(id='FP_electricity2'), type='default')
-    electricity_plot3 = dcc.Loading(dcc.Graph(id='FP_electricity3'), type='default')
+    electricity_plot1 = dcc.Loading(
+        dcc.Graph(id='FP_electricity1'), type='default')
+    electricity_plot2 = dcc.Loading(
+        dcc.Graph(id='FP_electricity2'), type='default')
 
-    column = dbc.Col([electricity_plot1, html.Br(),
-                      electricity_plot2, html.Br(),
-                      electricity_plot3], md=10)
+    column1 = dbc.Col(electricity_plot1, md=6)
+    column2 = dbc.Col(electricity_plot2, md=6)
 
-    
-    return column
+    return [column1, column2]
 # endregion
 
 
@@ -132,7 +131,6 @@ def CreateVisuals():
 filterInputList = {"Values": {
     "Building1": State('FP_BuildingFilter1', 'value'),
     "Building2": State('FP_BuildingFilter2', 'value'),
-    "Building3": State('FP_BuildingFilter3', 'value'),
     "StartDate": State('FP_DateFilter', 'start_date'),
     "EndDate": State('FP_DateFilter', 'end_date'),
     "AggLevel": State('FP_AggLevelFilter', 'value'),
@@ -140,61 +138,55 @@ filterInputList = {"Values": {
     "NC": Input('ApplyFilters', 'n_clicks')
 }}
 
+
 @callback(
     output=[Output('FP_electricity1', 'figure'),
             Output('FP_electricity1', 'style'), ],
     inputs=filterInputList)
 def plot1_electricity(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'electricity', 'Electricity', \
-        AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'electricity', 'Electricity',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
 
 @callback(
     output=[Output('FP_electricity2', 'figure'),
             Output('FP_electricity2', 'style'), ],
     inputs=filterInputList)
 def plot2_electricity(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'electricity', 'Electricity', \
-        AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
-
-@callback(
-    output=[Output('FP_electricity3', 'figure'),
-            Output('FP_electricity3', 'style'), ],
-    inputs=filterInputList)
-def plot3_electricity(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building3"], 'electricity', 'Electricity', \
-        AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'electricity', 'Electricity',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
-#Define Outputs here
+# Define Outputs here
 filtersUpdateOutputs = [
-                        Output('FP_BuildingFilter1', 'options'),
-                        Output('FP_BuildingFilter1', 'value'),
-                        Output('FP_BuildingFilter2', 'options'),
-                        Output('FP_BuildingFilter2', 'value'),
-                        Output('FP_BuildingFilter3', 'options'),
-                        Output('FP_BuildingFilter3', 'value'),
-                        Output('FP_UsageFilter', 'options'),
-                        Output('FP_UsageFilter', 'value'),
-                        Output('FP_BuildingSizeFilter', 'options'),
-                        Output('FP_BuildingSizeFilter', 'value'),
-                        Output('FP_TimezoneFilter', 'options'),
-                        Output('FP_TimezoneFilter', 'value')]
-#Define Inputs here
+    Output('FP_BuildingFilter1', 'options'),
+    Output('FP_BuildingFilter1', 'value'),
+    Output('FP_BuildingFilter2', 'options'),
+    Output('FP_BuildingFilter2', 'value'),
+    Output('FP_UsageFilter', 'options'),
+    Output('FP_UsageFilter', 'value'),
+    Output('FP_BuildingSizeFilter', 'options'),
+    Output('FP_BuildingSizeFilter', 'value'),
+    Output('FP_TimezoneFilter', 'options'),
+    Output('FP_TimezoneFilter', 'value')]
+# Define Inputs here
 filtersUpdateInputs = [Input('FP_TimezoneFilter', 'value'),
                        Input('FP_UsageFilter', 'value'),
                        Input('FP_BuildingSizeFilter', 'value')]
+
+
 @callback(
     output=filtersUpdateOutputs,
     inputs=filtersUpdateInputs, prevent_initial_call=True)
 def FiltersUpdate(TimeZone, Usage, Size):
-    #Get the current context to identify which of the inputs was updated
+    # Get the current context to identify which of the inputs was updated
     ctx = dash.callback_context
-    #Get the name of the item that was updated.
+    # Get the name of the item that was updated.
     FilterID = ctx.triggered[0]['prop_id'].split('.')[0]
-    #Get the list of buildings
+    # Get the list of buildings
     buildings = BuildingMetadata.copy()
-    
-    #Now we filter the buildings list based on the selected options.
+
+    # Now we filter the buildings list based on the selected options.
     if (TimeZone != None) and (len(TimeZone) != 0):
         buildings = buildings[buildings['timezone'] == TimeZone]
     if (Usage != None) and (len(Usage) != 0):
@@ -202,20 +194,21 @@ def FiltersUpdate(TimeZone, Usage, Size):
     if (Size != None) and (len(Size) != 0):
         buildings = buildings[buildings['size'] == Size]
 
-    #Define an empty list that will house all outputs.
+    # Define an empty list that will house all outputs.
     outputs = list()
 
-    #Get available buildings that match the criteria
+    # Get available buildings that match the criteria
     BuildingOptions = list(buildings['building_id'].unique())
-    #Get the first building.
+    # Get the first building.
     Buildingval = BuildingOptions[0]
-    #Format the names of the buildings
+    # Format the names of the buildings
     BuildingOptions = FormatOptions(BuildingOptions)
-    #Add to list of inputs.
+    # Add to list of inputs.
+    outputs.extend([BuildingOptions, Buildingval])
     outputs.extend([BuildingOptions, Buildingval])
 
-    #if the filter was not updated, i.e. the user didn't play with this value
-    #We get the list of available values for all filters below.
+    # if the filter was not updated, i.e. the user didn't play with this value
+    # We get the list of available values for all filters below.
     if FilterID != 'FP_UsageFilter':
         UsageOptions = list(buildings['primary_space_usage'].unique())
         outputs.extend([UsageOptions, no_update])
@@ -238,16 +231,7 @@ def FiltersUpdate(TimeZone, Usage, Size):
 # endregion
 
 # region support functions to create charts and filters
-filterInputList = {"Values": {
-    "Building1": State('FP_BuildingFilter1', 'value'),
-    "Building2": State('FP_BuildingFilter2', 'value'),
-    "Building3": State('FP_BuildingFilter3', 'value'),
-    "StartDate": State('FP_DateFilter', 'start_date'),
-    "EndDate": State('FP_DateFilter', 'end_date'),
-    "AggLevel": State('FP_AggLevelFilter', 'value'),
-    "AggType": State('FP_AggTypeFilter', 'value'),
-    "NC": Input('ApplyFilters', 'n_clicks')
-}}
+
 
 @callback(
     Output('FP_DateFilter', 'start_date'),
@@ -282,6 +266,7 @@ def RestrictDays(StartDate, EndDate, AggLevel):
         return no_update, no_update
 # endregion
 
+
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False):
     """
     Function to create select lists.
@@ -294,7 +279,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
     return dcc.Dropdown(optionsList, DefaultValue, id=Name, clearable=Optional)
 
-
+# region Chart
 def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                     ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum'):
     """
@@ -358,9 +343,10 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                       template="simple_white", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend'] = True
-        fig['data'][0]['line']['color']= "yellowgreen"
-        #fig['data'][0]['name'] = 'Building: ' + str(BuildingName).replace("_", " ")  # Either we show this
-        fig['data'][0]['name']= 'Building: ' + str(BuildingName).split("_")[-1] # or this
+        fig['data'][0]['line']['color'] = "yellowgreen"
+        # fig['data'][0]['name'] = 'Building: ' + str(BuildingName).replace("_", " ")  # Either we show this
+        fig['data'][0]['name'] = 'Building: ' + \
+            str(BuildingName).split("_")[-1]  # or this
 
         fig.update_layout(legend=dict(
             yanchor="top",
@@ -381,6 +367,8 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
 # endregion
 
 # region Supporting Functions
+
+
 def FormatOptions(Items: list):
     optionsList = list()
     for item in Items:

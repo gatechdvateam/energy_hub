@@ -14,7 +14,6 @@ from datetime import datetime
 import plotly.figure_factory as ff
 import warnings
 import numpy as np
-import seaborn as sns
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
 # region Layout Functions
 
@@ -55,7 +54,7 @@ def createLayout():
                 ]),
 
         ], style={'backgroundColor': '#f9f9f9'}))
-    return [row, html.Br(), key_facts]
+    return [html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
 
 
 def CreateFilters():
