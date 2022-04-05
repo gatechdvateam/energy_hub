@@ -118,8 +118,13 @@ def CreateVisuals():
     electricity_plot2 = dcc.Loading(
         dcc.Graph(id='FP_electricity2'), type='default')
 
-    column1 = dbc.Col(electricity_plot1, md=6)
-    column2 = dbc.Col(electricity_plot2, md=6)
+    norm_electricity_plot1 = dcc.Loading(
+        dcc.Graph(id='FP_electricity_norm1'), type='default')
+    norm_electricity_plot2 = dcc.Loading(
+        dcc.Graph(id='FP_electricity_norm2'), type='default')
+
+    column1 = dbc.Col([electricity_plot1, norm_electricity_plot1], md=6)
+    column2 = dbc.Col([electricity_plot2, norm_electricity_plot2], md=6)
 
     return [column1, column2]
 # endregion
@@ -138,7 +143,6 @@ filterInputList = {"Values": {
     "NC": Input('ApplyFilters', 'n_clicks')
 }}
 
-
 @callback(
     output=[Output('FP_electricity1', 'figure'),
             Output('FP_electricity1', 'style'), ],
@@ -147,13 +151,28 @@ def plot1_electricity(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'electricity', 'Electricity',
                            AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
-
 @callback(
     output=[Output('FP_electricity2', 'figure'),
             Output('FP_electricity2', 'style'), ],
     inputs=filterInputList)
 def plot2_electricity(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'electricity', 'Electricity',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
+@callback(
+    output=[Output('FP_electricity_norm1', 'figure'),
+            Output('FP_electricity_norm1', 'style'), ],
+    inputs=filterInputList)
+def plot_norm_electricity1(Values):
+    return CreateNormalizedChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'electricity', 'Electricity',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
+@callback(
+    output=[Output('FP_electricity_norm2', 'figure'),
+            Output('FP_electricity_norm2', 'style'), ],
+    inputs=filterInputList)
+def plot_norm_electricity2(Values):
+    return CreateNormalizedChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'electricity', 'Electricity',
                            AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
@@ -366,8 +385,93 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
 
 # endregion
 
-# region Supporting Functions
+# region Chart
+def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: str,
+                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum'):
+    """
+    Function that checks if the meter data is available for a given building and
+    creates a normalized electricity chart for that.
+    """
 
+    # Load the building profile from meta data
+    building_data = BuildingMetadata[BuildingMetadata['building_id']
+                                     == BuildingName].iloc[0]
+    # Check the building has this meter installed.
+    if str(building_data[MeterName]) == 'True':
+
+        StartDate = datetime.strptime(Start, '%Y-%m-%d')
+        EndDate = datetime.strptime(End, '%Y-%m-%d')
+
+        # Get the Data
+        data = get_normalized_date(BuildingName)
+        # Filter by Date
+        data = data[data['timestamp'] >= StartDate]
+        data = data[data['timestamp'] < EndDate]
+
+        # Calculate year, we always filter by that.
+        data['Year'] = data.timestamp.dt.year
+  
+        # Calculate the group for the agg unit of time
+        if AggLevel == 'None':
+            data = data.rename(columns={'timestamp': 'Date'})
+        else:
+            if AggLevel == 'Quarter':
+                data['Date'] = data['Year'].astype(
+                    str) + '-Q' + data.timestamp.dt.quarter.astype(str)
+            elif AggLevel == 'Week':
+                data['YearWeek'] = data['Year'].astype(
+                    str) + '-' + data.timestamp.dt.strftime('%U')
+                data['Date'] = data['YearWeek'].apply(
+                    lambda x: datetime.strptime(x + '-1', "%Y-%W-%w"))
+            else:
+                data['Day'] = 1
+                data['Month'] = data.timestamp.dt.month
+                data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
+
+            #Group and aggregate
+            data = data[['Year', 'Date', "y_norms"]].groupby(
+                ['Year', 'Date'], as_index=False)
+            if aggFunction == 'Avg':
+                data = data.mean()
+            elif aggFunction == 'Max':
+                data = data.max()
+            elif aggFunction == 'Min':
+                data = data.min()
+            else:
+                data = data.sum()
+
+        # Rename the agg column
+        data = data.rename(columns={'y_norms': ( 'Normalized ' + ValuesColumnName +  ' Consumption')})
+
+        # generate the
+        fig = px.line(data, x='Date',
+                      y='Normalized ' + ValuesColumnName +  ' Consumption', markers=True,
+                      template="simple_white", line_shape="spline", render_mode="svg")
+
+        fig['data'][0]['showlegend'] = True
+        fig['data'][0]['line']['color'] = "slateblue"
+        fig['data'][0]['name'] = 'Building: ' + \
+            str(BuildingName).split("_")[-1]
+
+        fig.update_layout(legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        ))
+        # fig.add_trace(dict(color='green', width=4, dash='dash'))
+        # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+        fig.update_yaxes(ticksuffix=MeasurementUnit)
+        fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+        fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+        return [fig, {'display': 'block'}]
+    else:
+        return [no_update, {'display': 'none'}]
+
+# endregion
+
+# region Supporting Functions
 
 def FormatOptions(Items: list):
     optionsList = list()
