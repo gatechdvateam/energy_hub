@@ -26,9 +26,7 @@ def createLayout():
         html.Br(),
         '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
         html.Br(),
-        '***Not supported for aggregation level None.',
-        html.Br(),
-        '****You can only compare 3 buildings.'
+        '***Not supported for aggregation level None.'
     ], className='text-warning'), md=12))
 
     return [html.H2("Building Electricty Forecast", className='text-center'), html.Br(), 
