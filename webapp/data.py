@@ -1,5 +1,6 @@
 from utils.azure_utils import KeyVault, DataLake
 import pandas as pd
+import dask as dd
 
 def get_dask_data(path, filename):
 
@@ -102,6 +103,15 @@ def get_meter_data_for_building(MeterName,BuildingName):
     meterdata = get_dask_data(location, "*.parquet")
     return meterdata
 
+def get_normalized_date(BuildingName):
+    """Returns a dask dataframe with normalized data for a building
+    """
+    path = "PartitionedParqs/norm_output/"
+    filename = "norm_output_" + BuildingName + ".parq"
+ 
+    norm_data = get_data(path,  filename)
+    # ddf = dd.from_pandas(norm_data)
+    return norm_data
 
 # Preload Small Datasets here.
 
@@ -119,3 +129,7 @@ BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_meter'], 3, labels=['Smal
 #region Weather Data
 weatherData = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
 #endregion Weather Data
+
+# test = get_normalized_date("Bear_assembly_Angel")
+
+# print(test)
