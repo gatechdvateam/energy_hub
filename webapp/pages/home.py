@@ -84,8 +84,8 @@ def team_layout():
                         ),
                 html.P(),
                 html.P(
-                    "Mai is a senior data analyst working for a major company in Atlanta.\
-                    She is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
+                    "Mai is a principal analyst working for a major company in Atlanta.\
+                    She is attempting to sew her own wardrobe.",
                     className="card-text", style=TEXT_STYLE,
                 ),html.Br(),
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
