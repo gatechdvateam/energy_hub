@@ -208,13 +208,13 @@ def plot_map(df):
     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
     fig = px.scatter_geo(df,lon='longitude', lat='latitude',
             color='Site',
-            opacity=0.8,
+            opacity=0.7,
             size='Buildings',
             size_max=50,
             # projection="equirectangular", # Changed Map type
             projection="natural earth",
             #Changed Palette
-            color_discrete_sequence=ColorPalette)
+            color_discrete_sequence=px.colors.qualitative.Light24)
 
     #Added a zoom projection_scale
     fig.update_layout(
