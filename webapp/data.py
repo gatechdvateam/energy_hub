@@ -109,9 +109,12 @@ def get_normalized_date(BuildingName):
     path = "PartitionedParqs/norm_output/"
     filename = "norm_output_" + BuildingName + ".parq"
  
-    norm_data = get_data(path,  filename)
-    # ddf = dd.from_pandas(norm_data)
-    return norm_data
+    df = get_data(path,  filename)
+
+    filtered_data = df.loc[df['R2'] > 0.5]
+    bad_norm_buildings = filtered_data.groupby(['building']).nunique()
+    
+    return filtered_data, bad_norm_buildings
 
 # Preload Small Datasets here.
 
