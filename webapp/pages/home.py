@@ -224,7 +224,8 @@ def plot_map(df):
         ))
 
 
-    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
+    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True,  visible=False, resolution=50,
+    showcountries=True, countrycolor="#191970")
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     return fig
