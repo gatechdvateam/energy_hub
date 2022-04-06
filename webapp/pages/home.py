@@ -84,8 +84,8 @@ def team_layout():
                         ),
                 html.P(),
                 html.P(
-                    "Mai is a senior data analyst working for a major company in Atlanta.\
-                    She is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
+                    "Mai is a principal analyst working for a major company in Atlanta.\
+                    She is attempting to sew her own wardrobe.",
                     className="card-text", style=TEXT_STYLE,
                 ),html.Br(),
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
@@ -208,13 +208,13 @@ def plot_map(df):
     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
     fig = px.scatter_geo(df,lon='longitude', lat='latitude',
             color='Site',
-            opacity=0.8,
+            opacity=0.7,
             size='Buildings',
             size_max=50,
             # projection="equirectangular", # Changed Map type
             projection="natural earth",
             #Changed Palette
-            color_discrete_sequence=ColorPalette)
+            color_discrete_sequence=px.colors.qualitative.Light24)
 
     #Added a zoom projection_scale
     fig.update_layout(
@@ -224,7 +224,8 @@ def plot_map(df):
         ))
 
 
-    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
+    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True,  visible=False, resolution=50,
+    showcountries=True, countrycolor="#191970")
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     return fig
