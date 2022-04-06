@@ -21,6 +21,7 @@ Dash_App.layout = html.Div([
     #This Navbar should show on all pages
     html.Div(id='page-header'),
     # This is a container that will contain content from pages in other files.
+    
     html.Div(id='page-content',className='container-fluid'),
     html.Footer([html.Br(),
         html.Div("© 2022 Copyright: Energy Hub Team", id='footer-text', 
@@ -36,15 +37,15 @@ Dash_App.layout = html.Div([
 def display_page(pathname):
 
     if pathname == '/data_overview':
-        return data_overview.createLayout(),navbar.CreateLayout(AboutTeam=True)
+        return data_overview.createLayout(),navbar.CreateLayout()
     elif pathname == '/buildings':
-        return buildings.createLayout(),navbar.CreateLayout(AboutTeam=True)
+        return buildings.createLayout(),navbar.CreateLayout()
     elif pathname == '/forecast':
-        return elec_forecast.createLayout(),navbar.CreateLayout(AboutTeam=True)
+        return elec_forecast.createLayout(),navbar.CreateLayout()
     elif pathname == '/home':
-        return home.home_layout(),navbar.CreateLayout(AboutTeam=True)
+        return home.home_layout(),navbar.CreateLayout()
     else:
-        return home.home_layout(),navbar.CreateLayout(AboutTeam=True)
+        return home.home_layout(),navbar.CreateLayout()
 
 #Runs a server for development
 if __name__ == '__main__':
