@@ -7,9 +7,12 @@ NAVLINKS_STYLE = {
     'text-align': 'center',
     'text-decoration': 'none',
     'color': 'black',
-    'fontSize': '25px',
-    'fontFamily': 'serif',
-    'padding': '5px 35px',
+    'font-size': '25px',
+    'font-family': 'arial, sans serif',
+    'padding-right': '5px 35px',
+    'margin': '0 40px 0 40px',
+    'display': 'inline',
+    'justify-content':'space-between',
 }
 
 
