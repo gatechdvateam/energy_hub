@@ -121,7 +121,7 @@ def team_layout():
         dbc.CardBody(
             [
                 dbc.CardImg(
-                            src="assets/images/team/hassan_cropped.png",
+                            src="assets/images/team/hassan_new.png",
                             className="img-fluid rounded-start",
                         ),
                 html.P(),

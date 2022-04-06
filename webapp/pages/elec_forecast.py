@@ -60,33 +60,30 @@ def CreateFilters():
     columns.append(dbc.Col(
         [dbc.Label("Building Size:"), html.Br(), building_size, html.Br()], lg=2))
 
-    # select a building (testing multiple filtering)
-    # column.children.extend(
-    #     [dbc.Label("Select 2 Buildings to compare****:"), html.Br()])
 
     buildings = list(building_meta['building_id'].unique())
 
     building_1 = CreateSelect(
-        buildings, 'FP_BuildingFilter1', 'Bull_lodging_Travis', False, True)
+        buildings, 'FP_BuildingFilter1', 'Rat_office_Colby', False, True)
     columns.append(dbc.Col(
         [dbc.Label("Building #1:"), html.Br(), building_1, html.Br()], lg=2))
 
     building_2 = CreateSelect(
-        buildings, 'FP_BuildingFilter2', 'Rat_office_Colby', False, True)
+        buildings, 'FP_BuildingFilter2', 'Rat_public_Carole', False, True)
     columns.append(dbc.Col(
         [dbc.Label("Building #2:"), html.Br(), building_2, html.Br()], lg=2))
 
     # select Aggregation Level
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
-                         'FP_AggLevelFilter', 'None')
+                         'FP_AggLevelFilter', 'Month')
     columns.append(dbc.Col(
-        [dbc.Label("Aggregation Level:"), html.Br(), level, html.Br()], lg=2))
+        [dbc.Label("Aggregation Level: **"), html.Br(), level, html.Br()], lg=2))
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'FP_AggTypeFilter', 'Sum')
     columns.append(dbc.Col(
-        [dbc.Label("Aggregation Type:"), html.Br(), ty_pe, html.Br()], lg=2))
+        [dbc.Label("Aggregation Type: ***"), html.Br(), ty_pe, html.Br()], lg=2))
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -94,10 +91,10 @@ def CreateFilters():
         min_date_allowed=date(2016, 1, 1),
         max_date_allowed=date(2017, 12, 31),
         start_date=date(2017, 1, 1),
-        end_date=date(2017, 1, 2)
+        end_date=date(2017, 5, 31)
     )
     columns.append(
-        dbc.Col([dbc.Label("Start & End Dates: *:"), html.Br(), dates, html.Br()], lg=2))
+        dbc.Col([dbc.Label("Start & End Dates: *"), html.Br(), dates, html.Br()], lg=2))
 
     # Apply Filter
     columns.append(dbc.Col([ html.Br(),html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
@@ -111,18 +108,14 @@ def CreateVisuals():
         This function is responsible for creating the charts area.
     """
     # Create Charts
-    electricity_plot1 = dcc.Loading(
-        dcc.Graph(id='FP_electricity1'), type='default')
-    electricity_plot2 = dcc.Loading(
-        dcc.Graph(id='FP_electricity2'), type='default')
-
     norm_electricity_plot1 = dcc.Loading(
         dcc.Graph(id='FP_electricity_norm1'), type='default')
     norm_electricity_plot2 = dcc.Loading(
         dcc.Graph(id='FP_electricity_norm2'), type='default')
 
-    column1 = dbc.Col([electricity_plot1, norm_electricity_plot1], md=6)
-    column2 = dbc.Col([electricity_plot2, norm_electricity_plot2], md=6)
+
+    column1 = dbc.Col(norm_electricity_plot1, md=6)
+    column2 = dbc.Col(norm_electricity_plot2, md=6)
 
     return [column1, column2]
 # endregion
@@ -140,22 +133,6 @@ filterInputList = {"Values": {
     "AggType": State('FP_AggTypeFilter', 'value'),
     "NC": Input('ApplyFilters', 'n_clicks')
 }}
-
-@callback(
-    output=[Output('FP_electricity1', 'figure'),
-            Output('FP_electricity1', 'style'), ],
-    inputs=filterInputList)
-def plot1_electricity(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'electricity', 'Electricity',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
-
-@callback(
-    output=[Output('FP_electricity2', 'figure'),
-            Output('FP_electricity2', 'style'), ],
-    inputs=filterInputList)
-def plot2_electricity(Values):
-    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'electricity', 'Electricity',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 @callback(
     output=[Output('FP_electricity_norm1', 'figure'),
@@ -296,92 +273,6 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
     return dcc.Dropdown(optionsList, DefaultValue, id=Name, clearable=Optional)
 
-# region Chart
-def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
-                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum'):
-    """
-    Function that checks if the meter data is available for a given building and
-    creates a chart for that.
-    """
-
-    # Load the building profile from meta data
-    building_data = BuildingMetadata[BuildingMetadata['building_id']
-                                     == BuildingName].iloc[0]
-    # Check the building has this meter installed.
-    if str(building_data[MeterName]) == 'True':
-
-        StartDate = datetime.strptime(Start, '%Y-%m-%d')
-        EndDate = datetime.strptime(End, '%Y-%m-%d')
-
-        # Get the Data
-        data = get_meter_data_for_building(MeterName, BuildingName)
-        # Filter by Date
-        data = data[data['timestamp'] >= StartDate]
-        data = data[data['timestamp'] < EndDate]
-        # Calculate year, we always filter by that.
-        data['Year'] = data.timestamp.dt.year
-        data = data.compute()
-        # Calculate the group for the agg unit of time
-        if AggLevel == 'None':
-            data = data.rename(columns={'timestamp': 'Date'})
-        else:
-            if AggLevel == 'Quarter':
-                data['Date'] = data['Year'].astype(
-                    str) + '-Q' + data.timestamp.dt.quarter.astype(str)
-            elif AggLevel == 'Week':
-                data['YearWeek'] = data['Year'].astype(
-                    str) + '-' + data.timestamp.dt.strftime('%U')
-                data['Date'] = data['YearWeek'].apply(
-                    lambda x: datetime.strptime(x + '-1', "%Y-%W-%w"))
-            else:
-                data['Day'] = 1
-                data['Month'] = data.timestamp.dt.month
-                data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
-
-            #Group and aggregate
-            data = data[['Year', 'Date', MeterName]].groupby(
-                ['Year', 'Date'], as_index=False)
-            if aggFunction == 'Avg':
-                data = data.mean()
-            elif aggFunction == 'Max':
-                data = data.max()
-            elif aggFunction == 'Min':
-                data = data.min()
-            else:
-                data = data.sum()
-
-        # Rename the agg column
-        data = data.rename(columns={MeterName: (
-            ValuesColumnName + ' Consumption')})
-
-        # generate the
-        fig = px.line(data, x='Date',
-                      y=ValuesColumnName + ' Consumption', markers=True,
-                      template="simple_white", line_shape="spline", render_mode="svg")
-
-        fig['data'][0]['showlegend'] = True
-        fig['data'][0]['line']['color'] = "yellowgreen"
-        # fig['data'][0]['name'] = 'Building: ' + str(BuildingName).replace("_", " ")  # Either we show this
-        fig['data'][0]['name'] = 'Building: ' + \
-            str(BuildingName).split("_")[-1]  # or this
-
-        fig.update_layout(legend=dict(
-            yanchor="top",
-            y=0.99,
-            xanchor="left",
-            x=0.01
-        ))
-        # fig.add_trace(dict(color='green', width=4, dash='dash'))
-        # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
-        fig.update_yaxes(ticksuffix=MeasurementUnit)
-        fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
-        fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-
-        return [fig, {'display': 'block'}]
-    else:
-        return [no_update, {'display': 'none'}]
-
-# endregion
 
 # region Chart
 def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: str,
@@ -401,7 +292,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
         EndDate = datetime.strptime(End, '%Y-%m-%d')
 
         # Get the Data
-        data = get_normalized_date(BuildingName)
+        data  = get_normalized_date(BuildingName)
         # Filter by Date
         data = data[data['timestamp'] >= StartDate]
         data = data[data['timestamp'] < EndDate]
@@ -427,7 +318,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
                 data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
 
             #Group and aggregate
-            data = data[['Year', 'Date', "y_norms"]].groupby(
+            data = data[['Year', 'Date', "y_trues", "y_preds", "y_norms"]].groupby(
                 ['Year', 'Date'], as_index=False)
             if aggFunction == 'Avg':
                 data = data.mean()
@@ -438,21 +329,29 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
             else:
                 data = data.sum()
 
-        # Rename the agg column
-        data = data.rename(columns={'y_norms': ( 'Normalized ' + ValuesColumnName +  ' Consumption')})
+        
+        elec_norm = 'Weather-Normalized ' + ValuesColumnName +  ' Consumption'
+        elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
+        elec_pred = 'Predicted ' + ValuesColumnName + ' Consumption'
 
-        # generate the
+        # Rename the agg columns
+        data = data.rename(columns={'y_norms': elec_norm})
+        data = data.rename(columns={'y_trues': elec_orig})
+        data = data.rename(columns={'y_preds': elec_pred})
+
+        hoverText = 'Building: '  + str(BuildingName).split("_")[-1]
+
         fig = px.line(data, x='Date',
-                      y='Normalized ' + ValuesColumnName +  ' Consumption', markers=True,
+                      y=[elec_orig, elec_pred, elec_norm], markers=True,
                       template="simple_white", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend'] = True
-        fig['data'][0]['line']['color'] = "slateblue"
-        fig['data'][0]['name'] = 'Building: ' + \
-            str(BuildingName).split("_")[-1]
+        # fig['data'][0]['line']['color'] = "slateblue"
+        # fig['data'][0]['name'] = 'Building: ' + \
+        #     str(BuildingName).split("_")[-1]
 
         fig.update_layout(legend=dict(
-            yanchor="top",
+            yanchor="bottom",
             y=0.99,
             xanchor="left",
             x=0.01
