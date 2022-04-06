@@ -356,7 +356,21 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
             xanchor="left",
             x=0.01,
             
-        ),legend_title='Chart for: '+BuildingName.split('_')[-1])
+        ),legend_title='Building: '+BuildingName.split('_')[-1])
+
+        fig.update_layout(
+            legend=dict(
+                title_font_family="Calibri",
+                font=dict(
+                    family="Calibri",
+                    size=16,
+                    color="black"
+                ),
+            bgcolor="whitesmoke",
+            bordercolor="lightBlue",
+            borderwidth=1
+    )
+)
         # fig.add_trace(dict(color='green', width=4, dash='dash'))
         # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
         fig.update_yaxes(ticksuffix=MeasurementUnit)
