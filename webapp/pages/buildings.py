@@ -64,7 +64,7 @@ def CreateFilters():
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'BP_AggTypeFilter', 'Sum')
     column.children.extend(
-        [dbc.Label("Select Aggregation Type: ***"), html.Br(), ty_pe, html.Br()])
+        [dbc.Label("Select Aggregation Type: *** "), html.Br(), ty_pe, html.Br()])
 
     # select Dates
     dates = dcc.DatePickerRange(

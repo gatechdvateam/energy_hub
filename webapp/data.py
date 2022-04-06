@@ -112,9 +112,8 @@ def get_normalized_date(BuildingName):
     df = get_data(path,  filename)
 
     filtered_data = df.loc[df['R2'] > 0.5]
-    bad_norm_buildings = filtered_data.groupby(['building']).nunique()
     
-    return filtered_data, bad_norm_buildings
+    return filtered_data
 
 # Preload Small Datasets here.
 
