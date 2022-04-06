@@ -4,14 +4,12 @@ import dash_bootstrap_components as dbc
 
 # region New Code
 NAVLINKS_STYLE = {
-    'display': 'block',
     'text-align': 'center',
-    'padding': '16px 60px',
     'text-decoration': 'none',
     'color': 'black',
-    'position': 'sticky',
-    'font-size': '25px',
-    'font-family': 'serif'
+    'fontSize': '25px',
+    'fontFamily': 'serif',
+    'padding': '5px 35px',
 }
 
 
@@ -47,14 +45,15 @@ def CreateLayout():
                             "Team", href="/home#TeamCards", external_link=True, style=NAVLINKS_STYLE)),
                     ],
                     id="navbar-collapse",
+                    class_name='',
                     is_open=False,
                     navbar=True,
                 ),
-            ]
+            ],fluid=True
         ),
         color="light",
         dark=False,
-        className='navbar sticky-top',
+        className='navbar-expand-lg sticky-top',
     )
     return navbar
 
