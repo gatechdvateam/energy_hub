@@ -24,9 +24,9 @@ def createLayout():
         html.Br(),
         '*Date filter will reset if start date is > end date.',
         html.Br(),
-        '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
+        '*Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
         html.Br(),
-        '***Not supported for aggregation level None.'
+        '*Not supported for aggregation level None.'
     ], className='text-warning'), md=12))
 
     return [html.H2("Building Electricty Forecast", className='text-center'), html.Br(), 
@@ -314,7 +314,8 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
         EndDate = datetime.strptime(End, '%Y-%m-%d')
 
         # Get the Data
-        data = get_meter_data_for_building(MeterName, BuildingName)
+        data, _ = get_normalized_date(BuildingName)
+
         # Filter by Date
         data = data[data['timestamp'] >= StartDate]
         data = data[data['timestamp'] < EndDate]
@@ -339,7 +340,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                 data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
 
             #Group and aggregate
-            data = data[['Year', 'Date', MeterName]].groupby(
+            data = data[['Year', 'Date', 'y_trues']].groupby(
                 ['Year', 'Date'], as_index=False)
             if aggFunction == 'Avg':
                 data = data.mean()
@@ -351,7 +352,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                 data = data.sum()
 
         # Rename the agg column
-        data = data.rename(columns={MeterName: (
+        data = data.rename(columns={'y_trues': (
             ValuesColumnName + ' Consumption')})
 
         # generate the
@@ -367,8 +368,8 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
 
         fig.update_layout(legend=dict(
             yanchor="top",
-            y=0.99,
-            xanchor="left",
+            y=1,
+            xanchor="right",
             x=0.01
         ))
         # fig.add_trace(dict(color='green', width=4, dash='dash'))
@@ -401,7 +402,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
         EndDate = datetime.strptime(End, '%Y-%m-%d')
 
         # Get the Data
-        data = get_normalized_date(BuildingName)
+        data, _ = get_normalized_date(BuildingName)
         # Filter by Date
         data = data[data['timestamp'] >= StartDate]
         data = data[data['timestamp'] < EndDate]
@@ -441,6 +442,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
         # Rename the agg column
         data = data.rename(columns={'y_norms': ( 'Normalized ' + ValuesColumnName +  ' Consumption')})
 
+        # max_r2 = data.groupby(["norm_output_" + BuildingName], sort=False)['R2'].max()
         # generate the
         fig = px.line(data, x='Date',
                       y='Normalized ' + ValuesColumnName +  ' Consumption', markers=True,
@@ -453,8 +455,8 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, MeterName: st
 
         fig.update_layout(legend=dict(
             yanchor="top",
-            y=0.99,
-            xanchor="left",
+            y=1,
+            xanchor="right",
             x=0.01
         ))
         # fig.add_trace(dict(color='green', width=4, dash='dash'))

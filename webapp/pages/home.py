@@ -121,13 +121,14 @@ def team_layout():
         dbc.CardBody(
             [
                 dbc.CardImg(
-                            src="assets/images/team/hassan_cropped.png",
+                            src="assets/images/team/hassan.png",
                             className="img-fluid rounded-start",
                         ),
                 html.P(),
                 html.P(
                     "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi.\
-                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
+                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis).\
+                    Hassan likes to joke a lot, so never take him seriously!",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
