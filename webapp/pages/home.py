@@ -155,22 +155,21 @@ def about_us_layout():
         - Add the map
 
     """
-    general_info = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-12')
+    general_info = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE)
 
-    site_map = html.Div(html.Div(
+    site_map = html.Div(
         [
         # html.H3('Location of all sites', style={'text-align':'center','font-family': 'serif','font-size': '35px'}),
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
         html.Br(),
-        dcc.Loading(dcc.Graph(id='site_map', style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}))
-    ], className='col-md-12'
-    ), className='row')
+        dcc.Loading(dcc.Graph(id='site_map', ))
+    ])
 
 
     # adding the map and general info to the layout
     layout = dbc.Row([
-            dbc.Col([general_info], md=6),
-            dbc.Col([site_map], md=6),
+            dbc.Col([general_info], lg=6),
+            dbc.Col([site_map], lg=6),
         ],style={'marginTop': '10px'})
     return layout
 
@@ -186,7 +185,9 @@ def home_layout():
     title_aboutus=html.H2("Why Energy Hub?", style=TEAM_HEADING_STYLE)
 
     return [carousel,html.Br(), html.Hr(), title_aboutus, about_us,
-            html.Hr(), title,html.Br(),team]
+            html.Hr(), title,html.Br(),
+            team
+            ]
 
 
 @callback(
