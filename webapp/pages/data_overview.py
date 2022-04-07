@@ -84,7 +84,7 @@ def CreateVisuals():
     secondary_usage = dcc.Loading(dcc.Graph(id='secondary_usage'), type='default')
     cloud_coverage = dcc.Loading(dcc.Graph(figure=plot_cloud_coverage()), type='default')
     wind_direction = dcc.Loading(dcc.Graph(figure=plot_wind_direction()), type='default')
-    weather = dcc.Loading(dcc.Graph(figure=plot_weather()), type='default')
+    # weather = dcc.Loading(dcc.Graph(figure=plot_weather()), type='default')
     
 
     # chart headers
@@ -101,7 +101,7 @@ def CreateVisuals():
     column = dbc.Col([html.Br(),chart1_title, html.Br(), primary_usage, html.Br(),
                                 chart2_title,html.Br(), secondary_usage, html.Br(),
                                 chart3_title, cloud_coverage,
-                                html.Br(), chart4_title, wind_direction, weather], md=10)
+                                html.Br(), chart4_title, wind_direction], md=10)
     return column
 
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False, multiple=True):
@@ -162,11 +162,6 @@ def plot_cloud_coverage():
 
     fig = px.pie(temp1, values=temp_counts1, names=temp_labels1)
 
-    # fig.update_layout(
-    #     title = 'Cloud coverage',
-    #     showlegend = False
-    # )
-
     return fig
 
 
@@ -188,7 +183,7 @@ def plot_wind_direction():
     fig = go.Figure(go.Barpolar(
                 r=a,
                 theta=b,
-                width=bin_size*centers,
+                width=bin_size,
                 opacity=0.8
                 
             ))
@@ -196,47 +191,35 @@ def plot_wind_direction():
 
     return fig
 
-def plot_weather():
+# def plot_weather():
 
-    # get datafarme
-    weather = weatherData.copy()
+#     # get datafarme
+#     weather = weatherData.copy()
 
-    # Wind direction (radial plot)
-    degrees = weather["wind_direction"]
-    bin_size = 20
-    a , b = np.histogram(degrees, bins=np.arange(0, 360+bin_size, bin_size))
-    centers = np.deg2rad(np.ediff1d(b)//2 + b[:-1])
+#     # Wind direction (radial plot)
+#     degrees = weather["wind_direction"]
+#     bin_size = 20
+#     a , b = np.histogram(degrees, bins=np.arange(0, 360+bin_size, bin_size))
+#     centers = np.deg2rad(np.ediff1d(b)//2 + b[:-1])
 
-    fig = make_subplots(rows=1, cols=2, subplot_titles=('Cloud Coverage','Wind Direction'))
+#     # Temporal dataframe with cloud cover counts
+#     temp1 = pd.DataFrame(weather.groupby(["cloud_coverage"]).count().timestamp).rename(columns={"timestamp":"Count"})
+#     temp_labels1 = temp1["Count"].sort_values().index
+#     temp_counts1 = temp1["Count"].sort_values()
 
-    #   # Wind direction plot
-    # fig.add_trace(go.Barpolar(
-    #             r=a,
-    #             theta=b,
-    #             width=bin_size*centers,
-    #             opacity=0.8
-                
-    #         )
-    #         )
+#     fig = make_subplots(rows=1, cols=2, subplot_titles=('Cloud Coverage','Wind Direction'))
 
-    # Temporal dataframe with cloud cover counts
-    temp1 = pd.DataFrame(weather.groupby(["cloud_coverage"]).count().timestamp).rename(columns={"timestamp":"Count"})
-    temp_labels1 = temp1["Count"].sort_values().index
-    temp_counts1 = temp1["Count"].sort_values()
+    # this doesnt work yet
+#     fig.add_traces([go.Barpolar(
+#                 r=a,
+#                 theta=b,
+#                 width=bin_size*centers,
+#                 opacity=0.8),
+#      px.pie(temp1, values=temp_counts1, names=temp_labels1)],
+#                     rows=[1, 1],
+#                     cols=[1, 2]) 
 
-    # fig.add_trace(px.pie(temp1, values=temp_counts1, names=temp_labels1))
-
-    fig.add_traces(
-
-    [go.Scatter(y=[2, 3, 1]),
-
-     go.Scatterpolar(r=[1, 3, 2], theta=[0, 45, 90]),
-
-                    rows=[1, 1],
-
-                    cols=[1, 2]) 
-
-    return fig
+#     return fig
 
 
 def FormatOptions(Items: list):
