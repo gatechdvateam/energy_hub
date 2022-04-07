@@ -43,7 +43,7 @@ def CreateLayout():
                         dbc.NavItem(dbc.NavLink(
                             "Energy Profile", href="/buildings", style=NAVLINKS_STYLE)),
                         dbc.NavItem(dbc.NavLink(
-                            "Forecast", href="/forecast", style=NAVLINKS_STYLE)),
+                            "Energy Modeling", href="/forecast", style=NAVLINKS_STYLE)),
                         dbc.NavItem(dbc.NavLink(
                             "Team", href="/home#TeamCards", external_link=True, style=NAVLINKS_STYLE)),
                     ],
