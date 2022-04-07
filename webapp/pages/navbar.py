@@ -10,9 +10,9 @@ NAVLINKS_STYLE = {
     'font-size': '25px',
     'font-family': 'arial, sans serif',
     'padding-right': '5px 35px',
-    'margin': '0 40px 0 40px',
-    'display': 'inline',
-    'justify-content':'space-between',
+    # 'margin': '0 40px 0 40px',
+    # 'display': 'inline',
+    # 'justify-content':'space-between',
 }
 
 
