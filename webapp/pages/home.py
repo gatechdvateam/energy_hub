@@ -64,7 +64,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Siham is a data scientist working at a major semiconductor company in the San Francisco Bay Area.\
-                    Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
@@ -84,8 +84,8 @@ def team_layout():
                         ),
                 html.P(),
                 html.P(
-                    "Mai is a senior data analyst working for a major company in Atlanta.\
-                    She is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    "Mai is a principal analyst working for a major company in Atlanta.\
+                    She is attempting to sew her own wardrobe.",
                     className="card-text", style=TEXT_STYLE,
                 ),html.Br(),
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
@@ -106,7 +106,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mert is a Marine Engineer working for a major cruise line as Energy Optimization & Analytics Manager in Miami.\
-                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
@@ -121,13 +121,13 @@ def team_layout():
         dbc.CardBody(
             [
                 dbc.CardImg(
-                            src="assets/images/team/hassan_cropped.png",
+                            src="assets/images/team/Hassan.png",
                             className="img-fluid rounded-start",
                         ),
                 html.P(),
                 html.P(
-                    "Hassan is a data analyist and full stack developer working at New York University in Abu Dhabi.\
-                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis.",
+                    "Hassan is a Data Analyst at New York University Abu Dhabi's Public Health Research Center and is a seasoned programmer \
+                        with many years of experience in Microsoft Technologies.",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
@@ -155,22 +155,21 @@ def about_us_layout():
         - Add the map
 
     """
-    general_info = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE, className='col-md-12')
+    general_info = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE)
 
-    site_map = html.Div(html.Div(
+    site_map = html.Div(
         [
-        html.H3('Location of all sites', style={'text-align':'center','font-family': 'serif','font-size': '35px'}),
+        # html.H3('Location of all sites', style={'text-align':'center','font-family': 'serif','font-size': '35px'}),
         html.Div(id='MapInput',children=[],style={'display': 'none'}),
         html.Br(),
-        dcc.Loading(dcc.Graph(id='site_map', style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}))
-    ], className='col-md-12'
-    ), className='row')
+        dcc.Loading(dcc.Graph(id='site_map', ))
+    ])
 
 
     # adding the map and general info to the layout
     layout = dbc.Row([
-            dbc.Col([general_info], md=6),
-            dbc.Col([site_map], md=6),
+            dbc.Col([general_info], lg=6),
+            dbc.Col([site_map], lg=6),
         ],style={'marginTop': '10px'})
     return layout
 
@@ -182,11 +181,13 @@ def home_layout():
     carousel = carousel_layout()
     team = team_layout()
     about_us = about_us_layout()
-    title=html.H2("About the team", style=TEAM_HEADING_STYLE,id='TeamCards')
-    title_aboutus=html.H2("What is Energy Hub", style=TEAM_HEADING_STYLE)
+    title=html.H2("The team", style=TEAM_HEADING_STYLE,id='TeamCards')
+    title_aboutus=html.H2("Why Energy Hub?", style=TEAM_HEADING_STYLE)
 
     return [carousel,html.Br(), html.Hr(), title_aboutus, about_us,
-            html.Hr(), title,html.Br(),team]
+            html.Hr(), title,html.Br(),
+            team
+            ]
 
 
 @callback(
@@ -208,13 +209,13 @@ def plot_map(df):
     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})
     fig = px.scatter_geo(df,lon='longitude', lat='latitude',
             color='Site',
-            opacity=0.8,
+            opacity=0.7,
             size='Buildings',
             size_max=50,
             # projection="equirectangular", # Changed Map type
             projection="natural earth",
             #Changed Palette
-            color_discrete_sequence=ColorPalette)
+            color_discrete_sequence=px.colors.qualitative.Light24)
 
     #Added a zoom projection_scale
     fig.update_layout(
@@ -224,7 +225,8 @@ def plot_map(df):
         ))
 
 
-    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True)
+    fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True,  visible=False, resolution=50,
+    showcountries=True, countrycolor="#191970")
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
     return fig

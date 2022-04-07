@@ -1,170 +1,426 @@
 # import packages
 import calendar
-from dash import Dash, dcc, html, Input, Output, callback, no_update
+import dash
+from dash import Dash, dcc, html, Input, Output, callback, no_update, State
 import plotly.express as px
 import dash_bootstrap_components as dbc
 import pandas as pd
 import dask.dataframe as dd
-from torch import div
 from data import *
 from content import *
 import plotly.graph_objects as go
+from datetime import date
+from datetime import datetime
+# region Layout Functions
+
 
 def createLayout():
-    title = html.H2('Energy consumption: building view', style={"text-align":"center"})
-    col1,col2 = CreateVisuals()
-    row = dbc.Row([CreateFilters(),col1,col2])
-    return [title,row]
+    title = html.H2('Building Energy Profile',
+                    style={"text-align": "center"})
+    row = dbc.Row([CreateFilters(), CreateVisuals()])
+    return [title, row]
+
 
 def CreateFilters():
+
     # make a copy of the data
     building_meta = BuildingMetadata.copy()
-    # get data where sq feet is not null
-    building_meta = building_meta.loc[building_meta['sq_feet'].notnull()]
 
-    # create a bucket for building size
-    building_meta['size'] = pd.cut(building_meta['sq_feet'], 3, labels=['Small', 'Medium', 'Large'])
-
-    # create filter options
-    timezone = CreateSelect(list(building_meta['timezone'].unique()),'LocationFilter','US.Eastern')
-    primary_usage= CreateSelect(list(building_meta['primary_space_usage'].unique()),'UsageFilter','Office')
-    building_size = CreateSelect(list(building_meta['size'].unique()),'BuildingSizeFilter','Small')
-    buildings = CreateSelect(list(building_meta['building_id'].unique()),'BuildingFilter','Bobcat_education_Alissa')
-    year = CreateSelect([2016,2017],'YearFilter',2017)
-    
-    # ,style={'background-color':'#e8e8e8'}
-    column=dbc.Col([],md=2)
-    
-    column.children.append(html.H3(''))
+    # Create the filters column
+    column = dbc.Col([], md=2)
 
     # select Timezone/location
-    column.children.extend([dbc.Label("Select Time Zone:"),html.Br(),dbc.Label(timezone),html.Br()])
+    timezone = CreateSelect(
+        list(building_meta['timezone'].unique()), 'TimezoneFilter')
+    column.children.extend(
+        [dbc.Label("Select Time Zone:"), html.Br(), timezone, html.Br()])
 
     # select primary usage
-    column.children.extend([dbc.Label("Select Primary Usage:"),html.Br(),dbc.Label(primary_usage),html.Br()])
+    primary_usage = CreateSelect(
+        list(building_meta['primary_space_usage'].unique()), 'UsageFilter')
+    column.children.extend(
+        [dbc.Label("Select Primary Usage:"), html.Br(), primary_usage, html.Br()])
 
     # select building size
     # TO-DO (make size buckets)
-    column.children.extend([dbc.Label("Select Building Size:"),html.Br(),dbc.Label(building_size),html.Br()])
+    building_size = CreateSelect(
+        list(building_meta['size'].unique()), 'BuildingSizeFilter')
+    column.children.extend(
+        [dbc.Label("Select Building Size:"), html.Br(), building_size, html.Br()])
 
     # select a building
-    column.children.extend([dbc.Label("Select Building:"),html.Br(),dbc.Label(buildings),html.Br()])
+    buildings = CreateSelect(list(building_meta['building_id'].unique()), 'BuildingFilter',
+                             'Bull_lodging_Travis', False, True)
+    column.children.extend(
+        [dbc.Label("Select Building:"), html.Br(), buildings, html.Br()])
 
-    # select year
-    column.children.extend([dbc.Label("Select Year:"),html.Br(),dbc.Label(year),html.Br()])
+    # select Aggregation Level
+    level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
+                         'BP_AggLevelFilter', 'None')
+    column.children.extend(
+        [dbc.Label("Select Aggregation Level: **"), html.Br(), level, html.Br()])
 
+    # select Aggregation Type
+    ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
+                         'BP_AggTypeFilter', 'Sum')
+    column.children.extend(
+        [dbc.Label("Select Aggregation Type: *** "), html.Br(), ty_pe, html.Br()])
+
+    # select Dates
+    dates = dcc.DatePickerRange(
+        id='DateFilter',
+        min_date_allowed=date(2016, 1, 1),
+        max_date_allowed=date(2017, 12, 31),
+        start_date=date(2017, 1, 1),
+        end_date=date(2017, 1, 2)
+    )
+    column.children.extend(
+        [dbc.Label("Select Start & End Dates: *"), html.Br(), dates, html.Br(), html.Br()])
+
+    # Apply Filter
+    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
+                                        n_clicks=0, className="btn btn-primary"), html.Br()])
+    column.children.append(html.P(children=[
+        html.Br(),
+        '*Date filter will reset if start date is > end date.',
+        html.Br(),
+        '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
+        html.Br(),
+        '***Not supported for aggregation level None.'
+        ],className='text-warning'))
     return column
-    
+
+
 def CreateVisuals():
+    """
+        This function is responsible for creating the charts area.
+    """
+    # Create Charts
+    electricity = dcc.Loading(dcc.Graph(id='electricity'), type='default')
+    water = dcc.Loading(dcc.Graph(id='water'), type='default')
+    solar = dcc.Loading(dcc.Graph(id='solar'), type='default')
+    gas = dcc.Loading(dcc.Graph(id='gas'), type='default')
+    steam = dcc.Loading(dcc.Graph(id='steam'), type='default')
+    irrigation = dcc.Loading(dcc.Graph(id='irrigation'), type='default')
+    hotwater = dcc.Loading(dcc.Graph(id='hotwater'), type='default')
+    chilledwater = dcc.Loading(dcc.Graph(id='chilledwater'), type='default')
 
-    #Create Charts
-    electricity = dcc.Loading(dcc.Graph(id='electricity'),type='default')
-    water = dcc.Loading(dcc.Graph(id='water'),type='default')
-    solar = dcc.Loading(dcc.Graph(id='solar'),type='default')
-    gas = dcc.Loading(dcc.Graph(id='gas'),type='default')
-    steam = dcc.Loading(dcc.Graph(id='steam'),type='default')
-    irrigation = dcc.Loading(dcc.Graph(id='irrigation'),type='default')
-    hotwater = dcc.Loading(dcc.Graph(id='hotwater'),type='default')
-    chilledwater = dcc.Loading(dcc.Graph(id='chilledwater'),type='default')
-    #Create 2 columns.
-    #We will split our visual into sets of 2 columns.
-
-    left = dbc.Col([electricity, solar, steam, hotwater],md=5)
-    right = dbc.Col([water, gas, irrigation, chilledwater],md=5)
+    column = dbc.Col([electricity, html.Br(), solar, html.Br(),
+                      steam, html.Br(), hotwater, html.Br(),
+                      water, html.Br(), gas, html.Br(),
+                      irrigation, html.Br(), chilledwater], md=10)
+    return column
+# endregion
 
 
-    return [left, right]
+# region Callbacks for chart updates
 
-#Output order is important.
-@callback(
-    Output('electricity', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_electricity(Year,Building):
-    return CreateTimeChart(Year,Building,'electricity','Electricity')
+# Define the list of inputs that affects the chart re render one time here rather than repeat.
+filterInputList = {"Values": {
+    "Building": State('BuildingFilter', 'value'),
+    "StartDate": State('DateFilter', 'start_date'),
+    "EndDate": State('DateFilter', 'end_date'),
+    "AggLevel": State('BP_AggLevelFilter', 'value'),
+    "AggType": State('BP_AggTypeFilter', 'value'),
+    "NC": Input('ApplyFilters', 'n_clicks')
+}}
 
-@callback(
-    Output('water', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_water(Year,Building):
-    return CreateTimeChart(Year,Building,'water','Water')
-
-@callback(
-    Output('gas', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_gas(Year,Building):
-    return CreateTimeChart(Year,Building,'gas','Gas')
 
 @callback(
-    Output('irrigation', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_irrigation(Year,Building):
-    return CreateTimeChart(Year,Building,'irrigation','Irrigation')
+    output=[Output('electricity', 'figure'),
+            Output('electricity', 'style'), ],
+    inputs=filterInputList)
+def plot_electricity(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'electricity', 'Electricity',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
 
 @callback(
-    Output('solar', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_solar(Year,Building):
-    return CreateTimeChart(Year,Building,'solar','Solar')
+    output=[Output('water', 'figure'),
+            Output('water', 'style'), ],
+    inputs=filterInputList)
+def plot_water(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'water', 'Water',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
 
 @callback(
-    Output('steam', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_steam(Year,Building):
-    return CreateTimeChart(Year,Building,'steam','Steam')
+    output=[Output('gas', 'figure'),
+            Output('gas', 'style'), ],
+    inputs=filterInputList)
+def plot_gas(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'gas', 'Gas',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
 
 @callback(
-    Output('hotwater', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_hotwater(Year,Building):
-    return CreateTimeChart(Year,Building,'hotwater','Hot Water')
+    output=[Output('irrigation', 'figure'),
+            Output('irrigation', 'style'), ],
+    inputs=filterInputList)
+def plot_irrigation(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'irrigation', 'Irrigation',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
 
 @callback(
-    Output('chilledwater', 'figure'),
-    Input('YearFilter', 'value'),
-    Input('BuildingFilter', 'value'))
-def plot_chilledwater(Year,Building):
-    return CreateTimeChart(Year,Building,'chilledwater','Chilled Water')
+    output=[Output('solar', 'figure'),
+            Output('solar', 'style'), ],
+    inputs=filterInputList)
+def plot_solar(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'solar', 'Solar',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
-def CreateSelect(ItemsList,Name,DefaultValue):
+
+@callback(
+    output=[Output('steam', 'figure'),
+            Output('steam', 'style'), ],
+    inputs=filterInputList)
+def plot_steam(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'steam', 'Steam',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
+
+@callback(
+    output=[Output('hotwater', 'figure'),
+            Output('hotwater', 'style'), ],
+    inputs=filterInputList)
+def plot_hotwater(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'hotwater', 'Hot Water',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+
+
+@callback(
+    output=[Output('chilledwater', 'figure'),
+            Output('chilledwater', 'style'), ],
+    inputs=filterInputList)
+def plot_chilledwater(Values):
+    return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'chilledwater', 'Chilled Water',
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+# endregion
+
+
+# region Callbacks to update other filters
+
+# Define Outputs here
+filtersUpdateOutputs = [Output('BuildingFilter', 'options'),
+                        Output('BuildingFilter', 'value'),
+                        Output('UsageFilter', 'options'),
+                        Output('UsageFilter', 'value'),
+                        Output('BuildingSizeFilter', 'options'),
+                        Output('BuildingSizeFilter', 'value'),
+                        Output('TimezoneFilter', 'options'),
+                        Output('TimezoneFilter', 'value')]
+# Define Inputs here
+filtersUpdateInputs = [Input('TimezoneFilter', 'value'),
+                       Input('UsageFilter', 'value'),
+                       Input('BuildingSizeFilter', 'value')]
+
+
+@callback(
+    output=filtersUpdateOutputs,
+    inputs=filtersUpdateInputs, prevent_initial_call=True)
+def FiltersUpdate(TimeZone, Usage, Size):
+    # Get the current context to identify which of the inputs was updated
+    ctx = dash.callback_context
+    # Get the name of the item that was updated.
+    FilterID = ctx.triggered[0]['prop_id'].split('.')[0]
+    # Get the list of buildings
+    buildings = BuildingMetadata.copy()
+
+    # Now we filter the buildings list based on the selected options.
+    if (TimeZone != None) and (len(TimeZone) != 0):
+        buildings = buildings[buildings['timezone'] == TimeZone]
+    if (Usage != None) and (len(Usage) != 0):
+        buildings = buildings[buildings['primary_space_usage'] == Usage]
+    if (Size != None) and (len(Size) != 0):
+        buildings = buildings[buildings['size'] == Size]
+
+    # Define an empty list that will house all outputs.
+    outputs = list()
+
+    # Get available buildings that match the criteria
+    BuildingOptions = list(buildings['building_id'].unique())
+    # Get the first building.
+    Buildingval = BuildingOptions[0]
+    # Format the names of the buildings
+    BuildingOptions = FormatOptions(BuildingOptions)
+    # Add to list of inputs.
+    outputs.extend([BuildingOptions, Buildingval])
+
+    # if the filter was not updated, i.e. the user didn't play with this value
+    # We get the list of available values for all filters below.
+    if FilterID != 'UsageFilter':
+        UsageOptions = list(buildings['primary_space_usage'].unique())
+        outputs.extend([UsageOptions, no_update])
+    else:
+        outputs.extend([no_update, no_update])
+
+    if FilterID != 'BuildingSizeFilter':
+        SizeOptions = list(buildings['size'].unique())
+        outputs.extend([SizeOptions, no_update])
+    else:
+        outputs.extend([no_update, no_update])
+
+    if FilterID != 'TimezoneFilter':
+        TimezoneOptions = list(buildings['timezone'].unique())
+        outputs.extend([TimezoneOptions, no_update])
+    else:
+        outputs.extend([no_update, no_update])
+
+    return outputs
+
+
+filterInputList = {"Values": {
+    "Building": State('BuildingFilter', 'value'),
+    "StartDate": State('DateFilter', 'start_date'),
+    "EndDate": State('DateFilter', 'end_date'),
+    "AggLevel": State('BP_AggLevelFilter', 'value'),
+    "AggType": State('BP_AggTypeFilter', 'value'),
+    "NC": Input('ApplyFilters', 'n_clicks')
+}}
+
+
+@callback(
+    Output('DateFilter', 'start_date'),
+    Output('DateFilter', 'end_date'),
+    Input('DateFilter', 'start_date'),
+    Input('DateFilter', 'end_date'),
+    Input('BP_AggLevelFilter', 'value'),
+    prevent_initial_call=True)
+def RestrictDays(StartDate, EndDate, AggLevel):
+    # Parse Dates
+    Start = datetime.strptime(StartDate, '%Y-%m-%d')
+    End = datetime.strptime(EndDate, '%Y-%m-%d')
+
+    # Create Default Dates
+    DefaultStart = date(2017, 1, 1)
+    DefaultEnd = date(2017, 12, 31)
+
+    # Limit to 7 Days.
+    if AggLevel == "None":
+        DefaultEnd = date(2017, 1, 7)
+        if Start > End:
+            return DefaultStart, DefaultEnd
+        delta = End - Start
+        if delta.days > 10:
+            return DefaultStart, DefaultEnd
+        return no_update, no_update
+
+    # Just verify that end date is not greater than start.
+    else:
+        if Start > End:
+            return DefaultStart, DefaultEnd
+        return no_update, no_update
+# endregion
+
+# region support functions to create charts and filters
+
+
+def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False):
     """
     Function to create select lists.
     """
-    optionsList = list()
-    for item in ItemsList:
-        optionsList.append({'label':str(item),'value':str(item)})
-    return dbc.Select(id=Name,options=optionsList,value=str(DefaultValue),required=True)
+    optionsList = None
+    if(Format):
+        optionsList = FormatOptions(ItemsList)
+    else:
+        optionsList = ItemsList
+    return dcc.Dropdown(optionsList, DefaultValue, id=Name, clearable=Optional)
 
-def CreateTimeChart(Year:str, BuildingName:str, MeterName:str, ValuesColumnName:str):
+
+def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
+                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum'):
     """
     Function that checks if the meter data is available for a given building and
     creates a chart for that.
     """
-    building_data = BuildingMetadata[BuildingMetadata['building_id']==BuildingName].iloc[0]
-    if str(building_data[MeterName])=='True':
-        data = get_meter_data_for_building(MeterName,BuildingName)
+
+    # Load the building profile from meta data
+    building_data = BuildingMetadata[BuildingMetadata['building_id']
+                                     == BuildingName].iloc[0]
+    # Check the building has this meter installed.
+    if str(building_data[MeterName]) == 'True':
+
+        StartDate = datetime.strptime(Start, '%Y-%m-%d')
+        EndDate = datetime.strptime(End, '%Y-%m-%d')
+
+        # Get the Data
+        data = get_meter_data_for_building(MeterName, BuildingName)
+        # Filter by Date
+        data = data[data['timestamp'] >= StartDate]
+        data = data[data['timestamp'] < EndDate]
+        # Calculate year, we always filter by that.
         data['Year'] = data.timestamp.dt.year
-        data = data[data['Year']==int(Year)]
-        data = data.groupby(data.timestamp.dt.month).sum().compute().reset_index()
-        data = data.rename(columns={'timestamp':'Month', MeterName: (ValuesColumnName + ' Consumption')})
-        data['Month'] = data['Month'].apply(lambda x: calendar.month_abbr[x])
-        fig = px.line(data, x='Month',
-                        y=ValuesColumnName + ' Consumption', markers=True,  template="plotly")
-        fig.update_yaxes(ticksuffix =" kW")
+        data = data.compute()
+        # Calculate the group for the agg unit of time
+        if AggLevel == 'None':
+            data = data.rename(columns={'timestamp': 'Date'})
+        else:
+            if AggLevel == 'Quarter':
+                data['Date'] = data['Year'].astype(
+                    str) + '-Q' + data.timestamp.dt.quarter.astype(str)
+            elif AggLevel == 'Week':
+                data['YearWeek'] = data['Year'].astype(
+                    str) + '-' + data.timestamp.dt.strftime('%U')
+                data['Date'] = data['YearWeek'].apply(
+                    lambda x: datetime.strptime(x + '-1', "%Y-%W-%w"))
+            else:
+                data['Day'] = 1
+                data['Month'] = data.timestamp.dt.month
+                data['Date'] = pd.to_datetime(data[['Year', 'Month', 'Day']])
+
+            #Group and aggregate
+            data = data[['Year', 'Date', MeterName]].groupby(
+                ['Year', 'Date'], as_index=False)
+            if aggFunction == 'Avg':
+                data = data.mean()
+            elif aggFunction == 'Max':
+                data = data.max()
+            elif aggFunction == 'Min':
+                data = data.min()
+            else:
+                data = data.sum()
+
+        # Rename the agg column
+        data = data.rename(columns={MeterName: (
+            ValuesColumnName + ' Consumption')})
+
+        # generate the
+        fig = px.line(data, x='Date',
+                      y=ValuesColumnName + ' Consumption', markers=True,
+                      template="simple_white", line_shape="spline", render_mode="svg")
+
+        fig['data'][0]['showlegend'] = True
+        fig['data'][0]['line']['color']= "yellowgreen"
+        #fig['data'][0]['name'] = 'Building: ' + \
+            #str(BuildingName).replace("_", " ")  # Either we show this
+        fig['data'][0]['name']= 'Building: ' + \
+             str(BuildingName).split("_")[-1] # or this
+
+        fig.update_layout(legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        ))
+        # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+        fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-        return fig
+
+        return [fig, {'display': 'block'}]
     else:
-        fig = go.Figure()
-        fig.update_layout(
-            xaxis =  { "visible": False },yaxis = { "visible": False },
-            annotations = [{ "text": "No data available for: "+ValuesColumnName,
-                    "xref": "paper","yref": "paper","showarrow": False,
-                    "font": {"size": 28}}])
-        return fig
+        return [no_update, {'display': 'none'}]
+
+# endregion
+
+# region Supporting Functions
+
+
+def FormatOptions(Items: list):
+    optionsList = list()
+    for item in Items:
+        label = str(item).replace("_", " ").title()
+        optionsList.append({'label': label, 'value': str(item)})
+    return optionsList
+# endregion

@@ -1,4 +1,6 @@
 from utils.azure_utils import KeyVault, DataLake
+import pandas as pd
+import dask as dd
 
 def get_dask_data(path, filename):
 
@@ -101,7 +103,35 @@ def get_meter_data_for_building(MeterName,BuildingName):
     meterdata = get_dask_data(location, "*.parquet")
     return meterdata
 
+def get_normalized_date(BuildingName):
+    """Returns a dask dataframe with normalized data for a building
+    """
+    path = "PartitionedParqs/norm_output/"
+    filename = "norm_output_" + BuildingName + ".parq"
+ 
+    df = get_data(path,  filename)
+
+    filtered_data = df.loc[df['R2'] > 0.5]
+    
+    return filtered_data
 
 # Preload Small Datasets here.
-BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq").reset_index().copy()
-weatherDate = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
+
+#region BuildingMetadata 
+BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq")
+#Filter on bad data.
+BadBuildings = list(get_data("/bad_buildings/", "bad_buildings.csv")['building_id'])
+BuildingMetadata = BuildingMetadata[~BuildingMetadata['building_id'].isin(BadBuildings)]
+#Filter out buildings with no size.
+BuildingMetadata = BuildingMetadata.loc[BuildingMetadata['sq_meter'].notnull()]
+# create a bucket for building size
+BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_meter'], 3, labels=['Small', 'Medium', 'Large'])
+#endregion BuildingMetadata
+
+#region Weather Data
+weatherData = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
+#endregion Weather Data
+
+# test = get_normalized_date("Bear_assembly_Angel")
+
+# print(test)
