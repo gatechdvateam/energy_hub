@@ -130,8 +130,5 @@ BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_meter'], 3, labels=['Smal
 
 #region Weather Data
 weatherData = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
+# print(weatherData.head())
 #endregion Weather Data
-
-# test = get_normalized_date("Bear_assembly_Angel")
-
-# print(test)

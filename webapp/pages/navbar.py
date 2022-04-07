@@ -7,9 +7,12 @@ NAVLINKS_STYLE = {
     'text-align': 'center',
     'text-decoration': 'none',
     'color': 'black',
-    'fontSize': '25px',
-    'fontFamily': 'serif',
-    'padding': '5px 35px',
+    'font-size': '25px',
+    'font-family': 'arial, sans serif',
+    'padding-right': '5px 35px',
+    # 'margin': '0 40px 0 40px',
+    # 'display': 'inline',
+    # 'justify-content':'space-between',
 }
 
 
@@ -40,7 +43,7 @@ def CreateLayout():
                         dbc.NavItem(dbc.NavLink(
                             "Energy Profile", href="/buildings", style=NAVLINKS_STYLE)),
                         dbc.NavItem(dbc.NavLink(
-                            "Forecast", href="/forecast", style=NAVLINKS_STYLE)),
+                            "Energy Modeling", href="/forecast", style=NAVLINKS_STYLE)),
                         dbc.NavItem(dbc.NavLink(
                             "Team", href="/home#TeamCards", external_link=True, style=NAVLINKS_STYLE)),
                     ],
