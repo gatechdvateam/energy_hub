@@ -50,7 +50,7 @@ def CreateFilters():
 
     # select a building
     buildings = CreateSelect(list(building_meta['building_id'].unique()), 'BuildingFilter',
-                             'Bull_lodging_Travis', False, True)
+                             'Hog_parking_Shannon', False, True)
     column.children.extend(
         [dbc.Label("Select Building:"), html.Br(), buildings, html.Br()])
 
@@ -58,13 +58,13 @@ def CreateFilters():
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
                          'BP_AggLevelFilter', 'None')
     column.children.extend(
-        [dbc.Label("Select Aggregation Level: **"), html.Br(), level, html.Br()])
+        [dbc.Label("Select Aggregation Level:"), html.Br(), level, html.Br()])
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'BP_AggTypeFilter', 'Sum')
     column.children.extend(
-        [dbc.Label("Select Aggregation Type: *** "), html.Br(), ty_pe, html.Br()])
+        [dbc.Label("Select Aggregation Type: *"), html.Br(), ty_pe, html.Br()])
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -75,18 +75,13 @@ def CreateFilters():
         end_date=date(2017, 1, 2)
     )
     column.children.extend(
-        [dbc.Label("Select Start & End Dates: *"), html.Br(), dates, html.Br(), html.Br()])
+        [dbc.Label("Select Start & End Dates:"), html.Br(), dates, html.Br(), html.Br()])
 
     # Apply Filter
     column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
     column.children.append(html.P(children=[
-        html.Br(),
-        '*Date filter will reset if start date is > end date.',
-        html.Br(),
-        '**Filter will also reset when "None" is selected in aggregation level and end date is greater than start date by 10 days.',
-        html.Br(),
-        '***Not supported for aggregation level None.'
+        '*Not supported for aggregation level None.'
         ],className='text-warning'))
     return column
 
@@ -141,7 +136,7 @@ def plot_electricity(Values):
     inputs=filterInputList)
 def plot_water(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'water', 'Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit='L')
 
 
 @callback(
@@ -150,7 +145,7 @@ def plot_water(Values):
     inputs=filterInputList)
 def plot_gas(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'gas', 'Gas',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit='L')
 
 
 @callback(
@@ -159,7 +154,7 @@ def plot_gas(Values):
     inputs=filterInputList)
 def plot_irrigation(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'irrigation', 'Irrigation',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit='L')
 
 
 @callback(
@@ -177,7 +172,7 @@ def plot_solar(Values):
     inputs=filterInputList)
 def plot_steam(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'steam', 'Steam',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit='L')
 
 
 @callback(
@@ -186,7 +181,7 @@ def plot_steam(Values):
     inputs=filterInputList)
 def plot_hotwater(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'hotwater', 'Hot Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit='L')
 
 
 @callback(
@@ -195,7 +190,7 @@ def plot_hotwater(Values):
     inputs=filterInputList)
 def plot_chilledwater(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'chilledwater', 'Chilled Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit='L')
 # endregion
 
 
@@ -279,43 +274,9 @@ filterInputList = {"Values": {
     "NC": Input('ApplyFilters', 'n_clicks')
 }}
 
-
-@callback(
-    Output('DateFilter', 'start_date'),
-    Output('DateFilter', 'end_date'),
-    Input('DateFilter', 'start_date'),
-    Input('DateFilter', 'end_date'),
-    Input('BP_AggLevelFilter', 'value'),
-    prevent_initial_call=True)
-def RestrictDays(StartDate, EndDate, AggLevel):
-    # Parse Dates
-    Start = datetime.strptime(StartDate, '%Y-%m-%d')
-    End = datetime.strptime(EndDate, '%Y-%m-%d')
-
-    # Create Default Dates
-    DefaultStart = date(2017, 1, 1)
-    DefaultEnd = date(2017, 12, 31)
-
-    # Limit to 7 Days.
-    if AggLevel == "None":
-        DefaultEnd = date(2017, 1, 7)
-        if Start > End:
-            return DefaultStart, DefaultEnd
-        delta = End - Start
-        if delta.days > 10:
-            return DefaultStart, DefaultEnd
-        return no_update, no_update
-
-    # Just verify that end date is not greater than start.
-    else:
-        if Start > End:
-            return DefaultStart, DefaultEnd
-        return no_update, no_update
 # endregion
 
 # region support functions to create charts and filters
-
-
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False):
     """
     Function to create select lists.
@@ -415,8 +376,6 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
 # endregion
 
 # region Supporting Functions
-
-
 def FormatOptions(Items: list):
     optionsList = list()
     for item in Items:
