@@ -206,12 +206,19 @@ def plot_weather():
         
    
     fig.update_layout(
-            height=900, 
-            width=1100, 
-            legend_tracegroupgap = 20
+            legend_tracegroupgap = 40,
+            plot_bgcolor="white",
+            width=1400,
+            height=900,
+            legend=dict(
+                font=dict(family="sans-serif", size=12),
+                # bgcolor="white",
+                # bordercolor="black",
+                # borderwidth=2,
+                ),
             )
 
-    fig.update_layout(legend=dict(orientation="h"))
+    fig.update_layout(legend=dict(orientation="v"))
 
     return fig
 
