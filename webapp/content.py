@@ -56,9 +56,42 @@ CONTENT_STYLE = {
 
 
 STATS_CARD =  {
-            'display': 'inline-block',
-            'text-align': 'center',
-            'color':'black',
-            'font-size':'25px'
-           }
+    'display': 'inline-block',
+    'text-align': 'center',
+    'color':'black',
+    'font-size':'25px'
+        }
            
+
+FILTER_STYLE =  {
+    'color':'#17B897',
+    'font-size':'25px',
+    'font-family': 'serif',
+    'font-weight': 'bold',
+    }
+
+WARNING_STYLE =  {
+    'color': '#9F6000',
+    # 'background-color': '#FEEFB3',
+    'font-size':'30px',
+    'font-family': 'serif',
+        }
+           
+
+
+tabs_styles = {
+    'height': '44px'
+}
+tab_style = {
+    'borderBottom': '1px solid #d6d6d6',
+    'padding': '6px',
+    'fontWeight': 'bold'
+}
+
+tab_selected_style = {
+    'borderTop': '1px solid #d6d6d6',
+    'borderBottom': '1px solid #d6d6d6',
+    'backgroundColor': '#119DFF',
+    'color': 'white',
+    'padding': '6px'
+}

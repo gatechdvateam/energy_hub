@@ -42,23 +42,37 @@ def createLayout():
                     ])
                 ])
 
-                ], label='Key Facts'),
+                ], label='Key Facts', style=tab_style, active_label_style=tab_selected_style),
+        # dbc.Tab([
+        #     html.Ul([
+        #         html.Br(),
+        #         html.Li('CSE 6242 Project: Energy Hub Team'),
+        #         html.Li(['GitHub repo: ',
+        #                  html.A('https://github.com/gatechdvateam/project',
+        #                         href='https://github.com/gatechdvateam/project')
+        #                  ])
+        #         ])
+        #     ], label='Project Info'),
+
         dbc.Tab([
             html.Ul([
                 html.Br(),
-                html.Li('CSE 6242 Project: Energy Hub Team'),
-                html.Li(['GitHub repo: ',
-                         html.A('https://github.com/gatechdvateam/project',
-                                href='https://github.com/gatechdvateam/project')
-                         ])
+                html.Li('Electricity'),
+                html.Li('Gas'),
+                html.Li('Steam'),
+                html.Li('Chilled water'),
+                html.Li('Hot water'),
+                html.Li('Solar'),
+                html.Li('Irrigation'),
+
                 ])
-            ], label='Project Info')
+            ], label='Available Meters', style=tab_style, active_tab_style=tab_selected_style)
                 ]),
 
-        ], style={'backgroundColor': '#f9f9f9'}))
+        ], ))
     return [html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
 
-
+# style={'backgroundColor': '#f9f9f9'}
 def CreateFilters():
 
     # make a copy of the data

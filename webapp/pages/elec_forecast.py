@@ -16,25 +16,26 @@ from datetime import datetime
 # region Layout Functions
 def createLayout():
     layout =list()
-    title = html.H2('ELectricity Forecast and Normalization',className='text-center')
+    # title = html.H2('ELectricity Forecast and Normalization',className='text-center')
 
     row1 = dbc.Row(CreateFilters())
     row2 = dbc.Row(CreateForecastVisuals())
     row3 = dbc.Row(CreateNormilizationVisuals())
     row4 = dbc.Row(dbc.Col(html.P(children=[
         html.Br(),
-        '*Not supported for aggregation level None.'
-    ], className='text-warning'), md=12))
+        '⚠️ Not supported for aggregation level None.'
+    ], className='text-warning'), md=12, style=WARNING_STYLE))
 
-    layout.append(title)
+    # layout.append(title)
+    layout.append(html.Br())
     layout.append(html.Br())
     layout.append(row1)
     layout.append(html.Br())
     layout.append(html.H3('Consumption Forecast'))
-    layout.append(html.P('Forecast data is available for one week only.'))
+    layout.append(html.P('Forecast is only available for the last week of December 2017.'))
     layout.append(row2)
     layout.append(html.Br())
-    layout.append(html.H3('Normalized Consumption'))
+    layout.append(html.H3('Weather-Normalized Consumption'))
     layout.append(row3)
     layout.append(html.Br())
     layout.append(row4)
@@ -54,19 +55,19 @@ def CreateFilters():
     timezone = CreateSelect(
         list(building_meta['timezone'].unique()), 'FP_TimezoneFilter')
     columns.append(
-        dbc.Col([dbc.Label("Time Zone:"), html.Br(), timezone, html.Br()], lg=2))
+        dbc.Col([dbc.Label("Time Zone:", style=FILTER_STYLE), html.Br(), timezone, html.Br()], lg=2))
 
     # select primary usage
     primary_usage = CreateSelect(
         list(building_meta['primary_space_usage'].unique()), 'FP_UsageFilter')
     columns.append(dbc.Col(
-        [dbc.Label("Primary Usage:"), html.Br(), primary_usage, html.Br()], lg=2))
+        [dbc.Label("Primary Usage:", style=FILTER_STYLE), html.Br(), primary_usage, html.Br()], lg=2))
 
     # select building size
     building_size = CreateSelect(
         list(building_meta['size'].unique()), 'FP_BuildingSizeFilter')
     columns.append(dbc.Col(
-        [dbc.Label("Building Size:"), html.Br(), building_size, html.Br()], lg=2))
+        [dbc.Label("Building Size:", style=FILTER_STYLE), html.Br(), building_size, html.Br()], lg=2))
 
     #Select Buildings
     buildings = list(building_meta['building_id'].unique())
@@ -74,36 +75,36 @@ def CreateFilters():
     building_1 = CreateSelect(
         buildings, 'FP_BuildingFilter1', 'Bear_education_Maryjane', False, True)
     columns.append(dbc.Col(
-        [dbc.Label("Building #1:"), html.Br(), building_1, html.Br()], lg=2))
+        [dbc.Label("Building #1:", style=FILTER_STYLE), html.Br(), building_1, html.Br()], lg=2))
 
     building_2 = CreateSelect(
         buildings, 'FP_BuildingFilter2', 'Bear_education_Babara', False, True)
     columns.append(dbc.Col(
-        [dbc.Label("Building #2:"), html.Br(), building_2, html.Br()], lg=2))
+        [dbc.Label("Building #2:", style=FILTER_STYLE), html.Br(), building_2, html.Br()], lg=2))
 
     # select Aggregation Level
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
                          'FP_AggLevelFilter', 'None')
     columns.append(dbc.Col(
-        [dbc.Label("Aggregation Level:"), html.Br(), level, html.Br()], lg=2))
+        [dbc.Label("Aggregation Level:", style=FILTER_STYLE), html.Br(), level, html.Br()], lg=2))
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'FP_AggTypeFilter', 'Sum')
     columns.append(dbc.Col(
-        [dbc.Label("Aggregation Type: *"), html.Br(), ty_pe, html.Br()], lg=2))
+        [dbc.Label("Aggregation Type: ⚠️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()], lg=2))
 
     # Sync Axis
     sync = CreateSelect(['Yes','No'],'FP_Sync', 'Yes')
 
     columns.append(dbc.Col(
-        [dbc.Label("Sync Y Axis: "), html.Br(), sync, html.Br()], lg=2))
+        [dbc.Label("Sync Y Axis: ", style=FILTER_STYLE), html.Br(), sync, html.Br()], lg=2))
     
     # Normalized Elements
     normElem = CreateSelect(['Actual','Predicted','Weather Normalized'],'NormElem',MultipleValues=True)
 
     columns.append(dbc.Col(
-        [dbc.Label("Normalized Charts Values: "), html.Br(), normElem, html.Br()], lg=2))
+        [dbc.Label("Normalized Charts Control: ", style=FILTER_STYLE), html.Br(), normElem, html.Br()], lg=2))
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -114,10 +115,10 @@ def CreateFilters():
         end_date=date(2017, 12, 28)
     )
     columns.append(
-        dbc.Col([dbc.Label("Start & End Dates: *"), html.Br(), dates, html.Br()], lg=2))
+        dbc.Col([dbc.Label("Start & End Dates: ⚠️", style=FILTER_STYLE), html.Br(), dates, html.Br()], lg=2))
 
     # Apply Filter
-    columns.append(dbc.Col([html.Br(), html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
+    columns.append(dbc.Col([html.Br(), html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "black", "width": "150px"},
                                                    n_clicks=0, className="btn btn-primary"), html.Br()], lg=2))
 
     return columns
@@ -369,7 +370,7 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
 
     #Form the names for the columns.
     elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
-    elec_forc = 'DL Forecast ' + ValuesColumnName + ' Consumption'
+    elec_forc = 'Forecasted ' + ValuesColumnName + ' Consumption'
     
     # Rename the agg columns
     data = data.rename(columns={'electricity': elec_orig})
@@ -387,9 +388,6 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
                   template="simple_white", line_shape="spline", render_mode="svg")
 
     fig['data'][0]['showlegend'] = True
-
-    # fig['data'][0]['name'] = 'Building: ' + \
-    #     str(BuildingName).split("_")[-1]
 
     fig.update_layout(legend=dict(
         yanchor="bottom",
@@ -412,8 +410,7 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
             borderwidth=1
         )
     )
-    # fig.add_trace(dict(color='green', width=4, dash='dash'))
-    # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+
     fig.update_yaxes(ticksuffix=MeasurementUnit)
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
@@ -505,9 +502,6 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
     for x in fig['data']:
         x['line']['color'] = Calculate_Color(x['name'])
 
-    # fig['data'][0]['name'] = 'Building: ' + \
-    #     str(BuildingName).split("_")[-1]
-
     fig.update_layout(legend=dict(
         yanchor="bottom",
         y=0.99,
@@ -529,8 +523,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
             borderwidth=1
         )
     )
-    # fig.add_trace(dict(color='green', width=4, dash='dash'))
-    # fig.update_layout(plot_bgcolor='#f9f9f9', paper_bgcolor='#f9f9f9')
+
     fig.update_yaxes(ticksuffix=MeasurementUnit)
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
@@ -550,8 +543,8 @@ def FormatOptions(Items: list):
     return optionsList
 
 def Calculate_Color(name: str):
-    color = {'Actual Electricity Consumption': 'blue',
+    color = {'Actual Electricity Consumption': 'steelblue',
              'Predicted Electricity Consumption': 'orange',
-             'Weather-Normalized Electricity Consumption': 'green'}
+             'Weather-Normalized Electricity Consumption': '#17B897'}
     return color[name]
 # endregion
