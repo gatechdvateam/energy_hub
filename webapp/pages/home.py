@@ -155,7 +155,7 @@ def about_us_layout():
         - Add the map
 
     """
-    general_info = html.Div(dcc.Markdown(random_text), style=TEXT_STYLE)
+    general_info = html.Div(dcc.Markdown(INTRO_TEXT), style=TEXT_STYLE)
 
     site_map = html.Div(
         [
@@ -194,15 +194,8 @@ def home_layout():
     Output('site_map', 'figure'),
     Input('MapInput', 'children'))
 def plot_map(df):
-    """_summary_
 
-    Args:
-        df (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    #Copy the DataFrame Before making any change. Don't Make changes on global varibales.
+    # Copy df
     metadata = BuildingMetadata.copy()
     df = metadata[['site_id','longitude','latitude','building_id']]
     df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
@@ -223,7 +216,6 @@ def plot_map(df):
             projection_scale=2.7, #Zoom
             center=dict(lat=40.0, lon=-58.0), #Center Point
         ))
-
 
     fig.update_geos(lataxis_showgrid=True, lonaxis_showgrid=True,  visible=False, resolution=50,
     showcountries=True, countrycolor="#191970")

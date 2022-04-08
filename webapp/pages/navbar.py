@@ -8,7 +8,7 @@ NAVLINKS_STYLE = {
     'text-decoration': 'none',
     'color': 'black',
     'font-size': '25px',
-    'font-family': 'arial, sans serif',
+    'font-family': 'serif',
     'padding-right': '5px 35px',
     # 'margin': '0 40px 0 40px',
     # 'display': 'inline',

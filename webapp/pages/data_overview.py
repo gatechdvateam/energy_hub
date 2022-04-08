@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 from datetime import date
 from datetime import datetime
 import plotly.figure_factory as ff
+from plotly.offline import plot
 import warnings
 import numpy as np
 from plotly.subplots import make_subplots
@@ -82,9 +83,7 @@ def CreateVisuals():
     # Create Charts
     primary_usage = dcc.Loading(dcc.Graph(id='primary_usage'), type='default')
     secondary_usage = dcc.Loading(dcc.Graph(id='secondary_usage'), type='default')
-    cloud_coverage = dcc.Loading(dcc.Graph(figure=plot_cloud_coverage()), type='default')
-    wind_direction = dcc.Loading(dcc.Graph(figure=plot_wind_direction()), type='default')
-    # weather = dcc.Loading(dcc.Graph(figure=plot_weather()), type='default')
+    weather = dcc.Loading(dcc.Graph(figure=plot_weather()), type='default')
     
 
     # chart headers
@@ -92,16 +91,13 @@ def CreateVisuals():
                     style={"text-align": "center"})
     chart2_title = html.H3('Sites overview by secondary space usage',
                     style={"text-align": "center"})
-    chart3_title = html.H3('Cloud coverage',
-                    style={"text-align": "center"})
-    chart4_title = html.H3('Wind direction',
+    chart3_title = html.H3('Weather across all sites in 2016-2017',
                     style={"text-align": "center"})
 
     # Add all to layout
     column = dbc.Col([html.Br(),chart1_title, html.Br(), primary_usage, html.Br(),
                                 chart2_title,html.Br(), secondary_usage, html.Br(),
-                                chart3_title, cloud_coverage,
-                                html.Br(), chart4_title, wind_direction], md=10)
+                                chart3_title, html.Br(), weather], md=10)
     return column
 
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False, multiple=True):
@@ -149,77 +145,75 @@ def plot_secondary_usage(selected_site):
     return fig
 
 
+def plot_weather():
 
-def plot_cloud_coverage():
-
-   # get datafarme
-    weather = weatherData.copy()
-
-    # Temporal dataframe with cloud cover counts
-    temp1 = pd.DataFrame(weather.groupby(["cloud_coverage"]).count().timestamp).rename(columns={"timestamp":"Count"})
-    temp_labels1 = temp1["Count"].sort_values().index
-    temp_counts1 = temp1["Count"].sort_values()
-
-    fig = px.pie(temp1, values=temp_counts1, names=temp_labels1)
-
-    return fig
-
-
-def plot_wind_direction():
-
-   # get datafarme
+    # get datafarme
     weather = weatherData.copy()
 
     # Wind direction (radial plot)
     degrees = weather["wind_direction"]
-    # print(degrees)
-    radians = np.deg2rad(weather["wind_direction"])
     bin_size = 20
     a , b = np.histogram(degrees, bins=np.arange(0, 360+bin_size, bin_size))
     centers = np.deg2rad(np.ediff1d(b)//2 + b[:-1])
-    # print(a, b, radians, degrees, centers)
 
-    # Wind direction plot
-    fig = go.Figure(go.Barpolar(
-                r=a,
+    # Temporal dataframe with cloud cover counts
+    cloud_cov = pd.DataFrame(weather.groupby(["cloud_coverage"]).count().timestamp).rename(columns={"timestamp":"Count"})
+    labels_temp = cloud_cov["Count"].sort_values().index
+    counts = cloud_cov["Count"].sort_values()
+    labels = [str(int(label)) + " Oktas" for label in labels_temp]
+    labels_more_info = []
+    for label in labels:
+        if label == '0 Oktas':
+            labels_more_info.append(label + " (Sky completely clear)")
+        elif label == '4 Oktas':
+            labels_more_info.append(label + " (Sky half cloudy)")
+        elif label == '8 Oktas':
+            labels_more_info.append(label + " (Sky completely cloudy)")
+        elif label == '9 Oktas':
+            labels_more_info.append(label + " (Sky obstructed from view)")
+        else:
+            labels_more_info.append(label)
+
+    
+    sorted_labels = sorted(labels_more_info, key = lambda x: int(x[0]))[::-1]
+    # creating subplots
+    fig = make_subplots(rows=1, cols=2, vertical_spacing=1.0,
+                            subplot_titles=('Cloud Coverage measured in Oktas', "Wind Direction"), 
+                            specs=[[{"type": "pie"}, {"type": "barpolar"}]])
+
+
+    fig.add_trace(go.Pie(
+                values=counts,
+                labels=sorted_labels,
+                domain=dict(x=[0, 1.0]),
+                name="Cloud coverage",
+                hoverinfo="label+percent+name",
+                legendgroup = '1',
+            ), 
+        row=1, col=1)
+
+
+    fig.add_trace(go.Barpolar(
+                 r=a,
                 theta=b,
                 width=bin_size,
-                opacity=0.8
-                
-            ))
+                opacity=0.5,
+                name="Wind Direction",
+                hoverinfo="r+theta+name",
+                legendgroup = '2',
+            ),
+        row=1, col=2)
+        
+   
+    fig.update_layout(
+            height=900, 
+            width=1100, 
+            legend_tracegroupgap = 20
+            )
 
+    fig.update_layout(legend=dict(orientation="h"))
 
     return fig
-
-# def plot_weather():
-
-#     # get datafarme
-#     weather = weatherData.copy()
-
-#     # Wind direction (radial plot)
-#     degrees = weather["wind_direction"]
-#     bin_size = 20
-#     a , b = np.histogram(degrees, bins=np.arange(0, 360+bin_size, bin_size))
-#     centers = np.deg2rad(np.ediff1d(b)//2 + b[:-1])
-
-#     # Temporal dataframe with cloud cover counts
-#     temp1 = pd.DataFrame(weather.groupby(["cloud_coverage"]).count().timestamp).rename(columns={"timestamp":"Count"})
-#     temp_labels1 = temp1["Count"].sort_values().index
-#     temp_counts1 = temp1["Count"].sort_values()
-
-#     fig = make_subplots(rows=1, cols=2, subplot_titles=('Cloud Coverage','Wind Direction'))
-
-    # this doesnt work yet
-#     fig.add_traces([go.Barpolar(
-#                 r=a,
-#                 theta=b,
-#                 width=bin_size*centers,
-#                 opacity=0.8),
-#      px.pie(temp1, values=temp_counts1, names=temp_labels1)],
-#                     rows=[1, 1],
-#                     cols=[1, 2]) 
-
-#     return fig
 
 
 def FormatOptions(Items: list):
