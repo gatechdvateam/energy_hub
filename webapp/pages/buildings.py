@@ -15,7 +15,7 @@ from datetime import datetime
 
 
 def createLayout():
-    title = html.H2('Building Energy Profile',
+    title = html.H2("Buildings\' Energy Profile",
                     style={"text-align": "center"})
     row = dbc.Row([CreateFilters(), CreateVisuals()])
     return [title, row]
@@ -33,38 +33,38 @@ def CreateFilters():
     timezone = CreateSelect(
         list(building_meta['timezone'].unique()), 'TimezoneFilter')
     column.children.extend(
-        [dbc.Label("Select Time Zone:"), html.Br(), timezone, html.Br()])
+        [dbc.Label("Time Zone:", style=FILTER_STYLE), html.Br(), timezone, html.Br()])
 
     # select primary usage
     primary_usage = CreateSelect(
         list(building_meta['primary_space_usage'].unique()), 'UsageFilter')
     column.children.extend(
-        [dbc.Label("Select Primary Usage:"), html.Br(), primary_usage, html.Br()])
+        [dbc.Label("Primary Usage:", style=FILTER_STYLE), html.Br(), primary_usage, html.Br()])
 
     # select building size
     # TO-DO (make size buckets)
     building_size = CreateSelect(
         list(building_meta['size'].unique()), 'BuildingSizeFilter')
     column.children.extend(
-        [dbc.Label("Select Building Size:"), html.Br(), building_size, html.Br()])
+        [dbc.Label("Building Size:", style=FILTER_STYLE), html.Br(), building_size, html.Br()])
 
     # select a building
     buildings = CreateSelect(list(building_meta['building_id'].unique()), 'BuildingFilter',
                              'Hog_parking_Shannon', False, True)
     column.children.extend(
-        [dbc.Label("Select Building:"), html.Br(), buildings, html.Br()])
+        [dbc.Label("Building:", style=FILTER_STYLE), html.Br(), buildings, html.Br()])
 
     # select Aggregation Level
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
                          'BP_AggLevelFilter', 'None')
     column.children.extend(
-        [dbc.Label("Select Aggregation Level:"), html.Br(), level, html.Br()])
+        [dbc.Label("Aggregation Level:", style=FILTER_STYLE), html.Br(), level, html.Br()])
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'BP_AggTypeFilter', 'Sum')
     column.children.extend(
-        [dbc.Label("Select Aggregation Type: *"), html.Br(), ty_pe, html.Br()])
+        [dbc.Label("Aggregation Type: ⚠️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()])
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -75,14 +75,14 @@ def CreateFilters():
         end_date=date(2017, 1, 2)
     )
     column.children.extend(
-        [dbc.Label("Select Start & End Dates:"), html.Br(), dates, html.Br(), html.Br()])
+        [dbc.Label("Start & End Dates:", style=FILTER_STYLE), html.Br(), dates, html.Br(), html.Br()])
 
     # Apply Filter
-    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "yellowgreen", "color": "black", "width": "150px"},
+    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "black", "width": "150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
     column.children.append(html.P(children=[
-        '*Not supported for aggregation level None.'
-        ],className='text-warning'))
+        '⚠️ Not supported for aggregation level None.'
+        ],className='text-warning', style=WARNING_STYLE))
     return column
 
 
@@ -352,11 +352,9 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                       template="simple_white", line_shape="spline", render_mode="svg")
 
         fig['data'][0]['showlegend'] = True
-        fig['data'][0]['line']['color']= "yellowgreen"
-        #fig['data'][0]['name'] = 'Building: ' + \
-            #str(BuildingName).replace("_", " ")  # Either we show this
+        fig['data'][0]['line']['color']= "#17B897"
         fig['data'][0]['name']= 'Building: ' + \
-             str(BuildingName).split("_")[-1] # or this
+             str(BuildingName).split("_")[-1] 
 
         fig.update_layout(legend=dict(
             yanchor="top",
