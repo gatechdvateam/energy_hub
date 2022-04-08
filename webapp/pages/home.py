@@ -39,8 +39,7 @@ def carousel_layout():
                     )
     # adding the carousel to the layout
     layout = dbc.Row([
-        dbc.Col([carousel,html.Br()],md=12,
-        style={'marginTop': '10px'}, className='row')])
+        dbc.Col([carousel],md=12,style={'marginTop': '10px'})], className='row')
 
     return layout
 
@@ -88,6 +87,8 @@ def team_layout():
                     She is attempting to sew her own wardrobe.",
                     className="card-text", style=TEXT_STYLE,
                 ),html.Br(),
+                html.Br(),
+                
                 # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
                 html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
                     href=Mai_linkedInURL),

@@ -10,7 +10,7 @@ cdn_Scripts = []
 
 #Create the Dash_App and request a reference external style sheets and scripts.
 Dash_App = Dash(__name__, suppress_callback_exceptions=True, \
-    external_stylesheets=bootstrap_sheet,external_scripts=cdn_Scripts)
+    external_stylesheets=bootstrap_sheet,external_scripts=cdn_Scripts,title='Energy Hub')
 
 #Required for Azure Deployment
 server = Dash_App.server

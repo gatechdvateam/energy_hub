@@ -13,7 +13,6 @@ def get_dask_data(path, filename):
     Returns:
         _dataset_: _a file.ext_
     """
-  
     # Specify the key vault we need to connect to
     vault = KeyVault(keyVaultName="keyvaultdva2022")
     
@@ -94,7 +93,6 @@ def get_buidling_by_space_usage(metadata, space_usage, selected_site):
 
     return buildings
 
-
 def get_meter_data_for_building(MeterName,BuildingName):
     """
     Returns a dask dataframe from the folder of the partitioned parqs on Azure Storage.
@@ -104,18 +102,26 @@ def get_meter_data_for_building(MeterName,BuildingName):
     return meterdata
 
 def get_normalized_date(BuildingName):
-    """Returns a dask dataframe with normalized data for a building
+    """Returns a dataframe with normalized data for a building
     """
     path = "PartitionedParqs/norm_output/"
     filename = "norm_output_" + BuildingName + ".parq"
  
-    df = get_data(path,  filename)
+    df = get_data(path,  filename)    
+    return df
 
-    filtered_data = df.loc[df['R2'] > 0.5]
-    
-    return filtered_data
-
-# Preload Small Datasets here.
+def get_forecast_for_building(BuildingName:str):
+    """
+    Returns a dask dataframe the contains the original meter data + the forecast.
+    """
+    #Location for forecast
+    location = "forecasting/results"
+    #Get site Name
+    sitename = BuildingName.split('_')[0]
+    #Get the forecast
+    forecaset = get_dask_data(location, sitename+'.parq')
+    forecaset = forecaset[forecaset['building_id']==BuildingName]
+    return forecaset.compute()
 
 #region BuildingMetadata 
 BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq")
@@ -130,5 +136,4 @@ BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_meter'], 3, labels=['Smal
 
 #region Weather Data
 weatherData = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
-# print(weatherData.head())
 #endregion Weather Data
