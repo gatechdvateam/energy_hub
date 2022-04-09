@@ -72,7 +72,7 @@ def createLayout():
 
 
         ], ))
-    return [html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
+    return [html.Br(),html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
 
 # style={'backgroundColor': '#f9f9f9'}
 def CreateFilters():
@@ -87,7 +87,7 @@ def CreateFilters():
     sites = CreateSelect(list(building_meta['site_id'].unique()), 'SitesFilter',
                              ['Bear', 'Fox','Lamb', 'Moose'], True, True)
     column.children.extend(
-        [dbc.Label("Select Sites:"), html.Br(), sites, html.Br()])
+        [dbc.Label("Sites:", style=FILTER_STYLE), html.Br(), sites, html.Br()])
 
     return column
 

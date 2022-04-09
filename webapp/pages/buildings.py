@@ -18,7 +18,7 @@ def createLayout():
     title = html.H2("Buildings\' Energy Profile",
                     style={"text-align": "center"})
     row = dbc.Row([CreateFilters(), CreateVisuals()])
-    return [title, row]
+    return [html.Br(), title, row]
 
 
 def CreateFilters():
@@ -84,7 +84,7 @@ def CreateFilters():
         [dbc.Label("Start & End Dates: ⚠️", style=FILTER_STYLE), html.Br(), dates, html.Br(), html.Br()])
 
     # Apply Filter
-    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "black", "width": "150px"},
+    column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "white", "width": "150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
     column.children.append(html.P(children=[
         html.Br(),
