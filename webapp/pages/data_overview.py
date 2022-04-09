@@ -277,6 +277,8 @@ def plot_temp():
 
     fig.update_layout(
         plot_bgcolor="white",
+        xaxis_title_text='Value', # xaxis label
+        yaxis_title_text='Count', # yaxis label
         bargap=0.2, # gap between bars of adjacent location coordinates
         bargroupgap=0.1 # gap between bars of the same location coordinates
     )
