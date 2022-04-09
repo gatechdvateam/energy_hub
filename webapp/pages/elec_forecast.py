@@ -19,8 +19,8 @@ def createLayout():
     # title = html.H2('ELectricity Forecast and Normalization',className='text-center')
 
     row1 = dbc.Row(CreateFilters())
-    row2 = dbc.Row(CreateForecastVisuals())
-    row3 = dbc.Row(CreateNormilizationVisuals())
+    row2 = dbc.Row(CreateNormilizationVisuals())
+    row3 = dbc.Row(CreateForecastVisuals())
     row4 = dbc.Row(dbc.Col(html.P(children=[
         html.Br(),
         'ℹ️ Not supported for aggregation level None.',
@@ -33,11 +33,11 @@ def createLayout():
     layout.append(html.Br())
     layout.append(row1)
     layout.append(html.Br())
-    layout.append(html.H3('Forecasted Consumption'))
-    layout.append(html.P('Forecast is only available for the last week of December 2017.'))
+    layout.append(html.H3('Weather-Normalized Consumption'))
     layout.append(row2)
     layout.append(html.Br())
-    layout.append(html.H3('Weather-Normalized Consumption'))
+    layout.append(html.H3('Forecasted Consumption'))
+    layout.append(html.P('Forecast is only available for the last week of December 2017.'))
     layout.append(row3)
     layout.append(html.Br())
     layout.append(row4)

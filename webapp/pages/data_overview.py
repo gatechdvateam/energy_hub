@@ -27,7 +27,7 @@ def createLayout():
 
      # adding key facts tabs at the end of the page
     key_facts = html.Div(html.Div([
-        dbc.Tabs([
+        dbc.Tabs(children=[
             dbc.Tab([
                 html.Ul([
                     html.Br(),
@@ -68,7 +68,7 @@ def createLayout():
                          ])
                 ])
             ], label='Project Info', style=tab_style, active_label_style=tab_selected_style),
-                ]),
+                ],  style=tabs_styles),
 
 
         ], ))
@@ -101,6 +101,8 @@ def CreateVisuals():
     secondary_usage = dcc.Loading(dcc.Graph(id='secondary_usage'), type='default')
     weather = dcc.Loading(dcc.Graph(figure=plot_weather()), type='default')
     temp = dcc.Loading(dcc.Graph(figure=plot_temp()), type='default')
+    wind_dir = dcc.Loading(dcc.Graph(figure=plot_wind_direction()), type='default')
+    cloud_cov = dcc.Loading(dcc.Graph(figure=plot_cloud_cov()), type='default')
     
 
     # chart headers
@@ -114,7 +116,9 @@ def CreateVisuals():
     # Add all to layout
     column = dbc.Col([html.Br(),chart1_title, html.Br(), primary_usage, html.Br(),
                                 chart2_title,html.Br(), secondary_usage, html.Br(),
-                                chart3_title, html.Br(), weather, html.Br(), temp], md=10)
+                                chart3_title, html.Br(), temp, html.Br(),
+                                cloud_cov, html.Br(), wind_dir], md=10)
+
     return column
 
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False, multiple=True):
@@ -194,9 +198,9 @@ def plot_weather():
     
     sorted_labels = sorted(labels_more_info, key = lambda x: int(x[0]))[::-1]
     # creating subplots
-    fig = make_subplots(rows=1, cols=2, vertical_spacing=1.0,
+    fig = make_subplots(rows=2, cols=1, vertical_spacing=1.0,
                             subplot_titles=('Cloud Coverage measured in Oktas', "Wind Direction"), 
-                            specs=[[{"type": "pie"}, {"type": "barpolar"}]])
+                            specs=[[{"type": "pie"}], [{"type": "barpolar"}]])
 
 
     fig.add_trace(go.Pie(
@@ -219,13 +223,13 @@ def plot_weather():
                 hoverinfo="r+theta+name",
                 legendgroup = '2',
             ),
-        row=1, col=2)
+        row=2, col=1)
         
    
     fig.update_layout(
             legend_tracegroupgap = 40,
             plot_bgcolor="white",
-            width=1400,
+            width=900,
             height=900,
             legend=dict(
                 font=dict(family="sans-serif", size=12),
@@ -236,7 +240,7 @@ def plot_weather():
             )
 
     fig.update_layout(legend=dict(
-                    # orientation="v",
+                    orientation="v",
                     yanchor="bottom",
                     y=0.99,
                     xanchor="right",
@@ -245,13 +249,156 @@ def plot_weather():
 
     return fig
 
+def plot_cloud_cov():
+
+    # get datafarme
+    weather = weatherData.copy()
+
+    # Temporal dataframe with cloud cover counts
+    cloud_cov = pd.DataFrame(weather.groupby(["cloud_coverage"]).count().timestamp).rename(columns={"timestamp":"Count"})
+    labels_temp = cloud_cov["Count"].sort_values().index
+    counts = cloud_cov["Count"].sort_values()
+    labels = [str(int(label)) + " Oktas" for label in labels_temp]
+    labels_more_info = []
+    for label in labels:
+        if label == '0 Oktas':
+            labels_more_info.append(label + " (Sky completely clear)")
+        elif label == '4 Oktas':
+            labels_more_info.append(label + " (Sky half cloudy)")
+        elif label == '8 Oktas':
+            labels_more_info.append(label + " (Sky completely cloudy)")
+        elif label == '9 Oktas':
+            labels_more_info.append(label + " (Sky obstructed from view)")
+        else:
+            labels_more_info.append(label)
+
+    
+    sorted_labels = sorted(labels_more_info, key = lambda x: int(x[0]))[::-1]
+
+    fig = go.Figure()
+    fig.add_trace(go.Pie(
+                values=counts,
+                labels=sorted_labels,
+                domain=dict(x=[0, 1.0]),
+                name="Cloud coverage",
+                hoverinfo="label+percent+name",
+            ))
+        
+   
+    fig['data'][0]['showlegend'] = True
+
+ 
+    fig.update_layout(
+        legend=dict(
+            title_font_family="Calibri",
+            font=dict(
+                family="Calibri",
+                size=16,
+                color="black"
+            ),
+            bgcolor="white",
+            bordercolor="lightBlue",
+            borderwidth=1
+        )
+    )
+
+    fig.update_layout(legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-.7,
+            xanchor="right",
+            x=1
+        ), legend_title='Cloud Coverage')
+
+
+    fig.update_layout(
+        autosize=False,
+        width=1500,
+        height=600,
+        margin=dict(
+            l=50,
+            r=50,
+            b=100,
+            t=100,
+            pad=4
+        ),
+        # paper_bgcolor="LightSteelBlue",
+    )
+
+    # fig.update_layout(title_text='Cloud Coverage across all sites', title_x=0.5)
+
+
+    return fig
+
+def plot_wind_direction():
+
+    # get datafarme
+    weather = weatherData.copy()
+
+    # Wind direction (radial plot)
+    degrees = weather["wind_direction"]
+    bin_size = 20
+    a , b = np.histogram(degrees, bins=np.arange(0, 360+bin_size, bin_size))
+    centers = np.deg2rad(np.ediff1d(b)//2 + b[:-1])
+
+    fig = go.Figure()
+    fig.add_trace(go.Barpolar(
+                r=a,
+                theta=b,
+                width=bin_size,
+                opacity=0.5,
+                name="Wind Direction",
+                hoverinfo="r+theta+name",
+            ))
+        
+    
+    fig['data'][0]['showlegend'] = True
+
+    fig.update_layout(
+        legend=dict(
+            title_font_family="Calibri",
+            font=dict(
+                family="Calibri",
+                size=16,
+                color="black"
+            ),
+            bgcolor="white",
+            bordercolor="lightBlue",
+            borderwidth=1
+        )
+    )
+
+    fig.update_layout(
+            autosize=False,
+            width=1300,
+            height=600,
+            margin=dict(
+                l=50,
+                r=50,
+                b=100,
+                t=100,
+                pad=4
+            ),
+            # paper_bgcolor="LightSteelBlue",
+        )
+
+    fig.update_layout(legend=dict(
+            orientation="v",
+            yanchor="bottom",
+            y=0.02,
+            xanchor="right",
+            x=1
+        ))
+    # fig.update_layout(title_text='Wind direction across all sites', title_x=0.5)
+
+
+    return fig
+
 
 def plot_temp():
 
     # get datafarme
     weather = weatherData.copy()
-
-    group_labels = ['air_temperature', 'dew_temperature']
 
     # Group data together
     x0 = weather["air_temperature"].dropna()
@@ -277,7 +424,7 @@ def plot_temp():
 
     fig.update_layout(
         plot_bgcolor="white",
-        xaxis_title_text='Value', # xaxis label
+        xaxis_title_text='Temprature (ºC)', # xaxis label
         yaxis_title_text='Count', # yaxis label
         bargap=0.2, # gap between bars of adjacent location coordinates
         bargroupgap=0.1 # gap between bars of the same location coordinates
