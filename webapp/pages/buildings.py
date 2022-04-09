@@ -300,7 +300,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
 
 def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
-                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilo Watt Consumption'):
+                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilowatts Consumption'):
     """
     Function that checks if the meter data is available for a given building and
     creates a chart for that.
@@ -352,10 +352,12 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
             else:
                 data = data.sum()
 
-        if cEmit=='CO2 Emissions':
+        if cEmit=='CO2 Emissions' and MeterName=='electricity':
             yaxis_title ='CO2 Emissions (Metric Tons)'
+        elif MeterName=='electricity':
+            yaxis_title = ValuesColumnName + ' Consumption (Kilowatts)'
         else:
-            yaxis_title = ValuesColumnName + ' Consumption (Kilo Watt)'
+            yaxis_title = ValuesColumnName + ' Consumption'
         #Calculate Carbon Emission
         if cEmit=='CO2 Emissions':
             MeasurementUnit=' mt'

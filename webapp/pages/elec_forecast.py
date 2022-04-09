@@ -25,6 +25,8 @@ def createLayout():
         html.Br(),
         'ℹ️ Not supported for aggregation level None.',
         html.Br(),
+        'ℹ️ Synchronize y-axis min and max values for each pair of charts.',
+        html.Br(),
         '⚠️ Please restrict date filters to 10 days or less when aggregation level None is selected for best performance.'
     ], className='text-warning'), md=12, style=WARNING_STYLE))
 
@@ -100,7 +102,7 @@ def CreateFilters():
     sync = CreateSelect(['Yes','No'],'FP_Sync', 'Yes')
 
     columns.append(dbc.Col(
-        [dbc.Label("Sync Y Axis: ", style=FILTER_STYLE), html.Br(), sync, html.Br()], lg=2))
+        [dbc.Label("Sync y-axis: ℹ️", style=FILTER_STYLE), html.Br(), sync, html.Br()], lg=2))
     
     # Normalized Elements
     normElem = CreateSelect(['Actual','Predicted','Weather Normalized'],'NormElem',MultipleValues=True)
@@ -325,7 +327,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
 # region Charts
 def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnName: str,
-                           MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilo Watt Consumption'):
+                           MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilowatts Consumption'):
     """
     Function that checks if the meter data is available for a given building and
     creates a normalized electricity chart for that.
@@ -387,7 +389,7 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
         elec_orig = 'Actual ' + 'CO2 Emissions'
         elec_forc = 'Forecasted ' + 'CO2 Emissions'
     else:
-        yaxis_title=ValuesColumnName + ' Consumption (Kilo Watt)'
+        yaxis_title=ValuesColumnName + ' Consumption (Kilowatts)'
         elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
         elec_forc = 'Forecasted ' + ValuesColumnName + ' Consumption'
     
@@ -439,7 +441,7 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
     return [fig,MinVal,MaxVal]
 
 
-def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnName: str,cEmit='Kilo Watt Consumption',
+def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnName: str,cEmit='Kilowatts Consumption',
                            MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',Elements=None):
     """
     Function that creates a normalized electricity chart for the building.
@@ -492,7 +494,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
         elec_orig = 'Actual ' + 'CO2 Emissions'
         elec_pred = 'Predicted ' + 'CO2 Emissions'
     else:
-        yaxis_title=ValuesColumnName + ' Consumption (Kilo Watt)'
+        yaxis_title=ValuesColumnName + ' Consumption (Kilowatts)'
         elec_norm = 'Weather-Normalized ' + ValuesColumnName + ' Consumption'
         elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
         elec_pred = 'Predicted ' + ValuesColumnName + ' Consumption'
