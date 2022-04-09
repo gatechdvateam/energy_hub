@@ -23,7 +23,9 @@ def createLayout():
     row3 = dbc.Row(CreateNormilizationVisuals())
     row4 = dbc.Row(dbc.Col(html.P(children=[
         html.Br(),
-        '⚠️ Not supported for aggregation level None.'
+        'ℹ️ Not supported for aggregation level None.',
+        html.Br(),
+        '⚠️ Please restrict date filters to 10 days or less when aggregation level None is selected for best performance.'
     ], className='text-warning'), md=12, style=WARNING_STYLE))
 
     # layout.append(title)
@@ -86,13 +88,13 @@ def CreateFilters():
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
                          'FP_AggLevelFilter', 'None')
     columns.append(dbc.Col(
-        [dbc.Label("Aggregation Level:", style=FILTER_STYLE), html.Br(), level, html.Br()], lg=2))
+        [dbc.Label("Aggregation Level: ⚠️", style=FILTER_STYLE), html.Br(), level, html.Br()], lg=2))
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'FP_AggTypeFilter', 'Sum')
     columns.append(dbc.Col(
-        [dbc.Label("Aggregation Type: ⚠️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()], lg=2))
+        [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()], lg=2))
 
     # Sync Axis
     sync = CreateSelect(['Yes','No'],'FP_Sync', 'Yes')
@@ -104,7 +106,13 @@ def CreateFilters():
     normElem = CreateSelect(['Actual','Predicted','Weather Normalized'],'NormElem',MultipleValues=True)
 
     columns.append(dbc.Col(
-        [dbc.Label("Normalized Charts Control: ", style=FILTER_STYLE), html.Br(), normElem, html.Br()], lg=2))
+        [dbc.Label("Normalized Charts Control: ", style=FILTER_STYLE), html.Br(), normElem, html.Br()], lg=3))
+    
+    # Normalized Elements
+    carbonEmission = CreateSelect(['Carbon Emission','Kilo Watt Consumption'],'FP_carbonEmission')
+
+    columns.append(dbc.Col(
+        [dbc.Label("Carbon Emission: ", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()], lg=2))        
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -112,14 +120,15 @@ def CreateFilters():
         min_date_allowed=date(2016, 1, 1),
         max_date_allowed=date(2017, 12, 31),
         start_date=date(2017, 12, 25),
-        end_date=date(2017, 12, 28)
+        end_date=date(2017, 12, 28),
+        className=''
     )
     columns.append(
         dbc.Col([dbc.Label("Start & End Dates: ⚠️", style=FILTER_STYLE), html.Br(), dates, html.Br()], lg=2))
 
     # Apply Filter
-    columns.append(dbc.Col([html.Br(), html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "black", "width": "150px"},
-                                                   n_clicks=0, className="btn btn-primary"), html.Br()], lg=2))
+    columns.append(dbc.Col([html.Br(),html.Br(), html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "white", "width": "150px"},
+                                                   n_clicks=0, className="btn btn-primary"), html.Br()], lg=1))
 
     return columns
 
@@ -166,70 +175,64 @@ filterInputList = {"Values": {
     "AggType": State('FP_AggTypeFilter', 'value'),
     "Sync": State('FP_Sync', 'value'),
     "NormElem": State('NormElem', 'value'),
+    "carbonEmission": State('FP_carbonEmission', 'value'),
     "NC": Input('ApplyFilters', 'n_clicks'),
 }}
 
 @callback(
     output=[Output('forecast_plot1', 'figure'),
-            Output('forecast_plot1', 'style'),
-            Output('forecast_plot2', 'figure'),
-            Output('forecast_plot2', 'style'), ],
+            Output('forecast_plot2', 'figure'),],
     inputs=filterInputList)
 def plot_forecast(Values):
     #We need to load both datasets in one call here. This is a very special case because we are doing a comparison.
     #In terms for performance this is not the fastest approach but it is the only way we have now.
     List1 = CreateForecastChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'Electricity',
-                                 AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                                 AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],cEmit=Values['carbonEmission'])
                                  
     List2 = CreateForecastChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'Electricity',
-                                 AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
+                                 AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],cEmit=Values['carbonEmission'])
     if Values['Sync'] =='Yes':
         #Get the minimum value from both datasets or 0 if min value >0.
-        Min = min([List1[2],List2[2]])
+        Min = min([List1[1],List2[1]])
         Min = Min - Min*0.02
         #get the maximum value from both dataset.
-        Max = max([List1[3],List2[3]])
+        Max = max([List1[2],List2[2]])
         Max = Max + Max*0.02
         #Update the charts
         List1[0].update_layout(yaxis_range=[Min,Max])
         List2[0].update_layout(yaxis_range=[Min,Max])
 
     #The create normalized chart will return extra varibles which we don't need so we pick the first 2.
-    output = List1[0:2]
-    output.extend(List2[0:2])
-    return output
+    return [List1[0],List2[0]]
 # endregion
 
 
 @callback(
     output=[Output('FP_electricity_norm1', 'figure'),
-            Output('FP_electricity_norm1', 'style'),
             Output('FP_electricity_norm2', 'figure'),
-            Output('FP_electricity_norm2', 'style'), ],
+            ],
     inputs=filterInputList)
 def plot_norm_electricity(Values):
     #We need to load both datasets in one call here. This is a very special case because we are doing a comparison.
     #In terms for performance this is not the fastest approach but it is the only way we have now.
-    List1 = CreateNormalizedChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'Electricity',
+    List1 = CreateNormalizedChart(Values["StartDate"], Values["EndDate"], Values["Building1"], 'Electricity',cEmit=Values['carbonEmission'],
                                  AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],Elements=Values['NormElem'])
                                  
-    List2 = CreateNormalizedChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'Electricity',
+    List2 = CreateNormalizedChart(Values["StartDate"], Values["EndDate"], Values["Building2"], 'Electricity',cEmit=Values['carbonEmission'],
                                  AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],Elements=Values['NormElem'])
     if Values['Sync'] =='Yes':
         #Get the minimum value from both datasets or 0 if min value >0.
-        Min = min([List1[2],List2[2]])
+        Min = min([List1[1],List2[1]])
         Min = Min - Min*0.02
         #get the maximum value from both dataset.
-        Max = max([List1[3],List2[3]])
+        Max = max([List1[2],List2[2]])
         Max = Max + Max*0.02
         #Update the charts
         List1[0].update_layout(yaxis_range=[Min,Max])
         List2[0].update_layout(yaxis_range=[Min,Max])
 
     #The create normalized chart will return extra varibles which we don't need so we pick the first 2.
-    output = List1[0:2]
-    output.extend(List2[0:2])
-    return output
+    return [List1[0],List2[0]]
 # endregion
 
 # region Filters callbacks
@@ -322,19 +325,29 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
 # region Charts
 def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnName: str,
-                           MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum'):
+                           MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilo Watt Consumption'):
     """
     Function that checks if the meter data is available for a given building and
     creates a normalized electricity chart for that.
     """
     StartDate = datetime.strptime(Start, '%Y-%m-%d')
     EndDate = datetime.strptime(End, '%Y-%m-%d')
-
+    
+    
     # Get the Data
-    data = get_forecast_for_building(BuildingName)
+    data=None
+    #Try catch for buildings that has no data.
+    try:
+        data = get_forecast_for_building(BuildingName)
+    except:
+        return [empty_chart(),0,0]
     # Filter by Date
     data = data[data['timestamp'] >= StartDate]
     data = data[data['timestamp'] < EndDate]
+    
+    #Return an empty chart when there is no data.
+    if data.shape[0]==0:
+        return [empty_chart(),0,0]
 
     # Calculate year, we always filter by that.
     data['Year'] = data.timestamp.dt.year
@@ -376,7 +389,13 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
     data = data.rename(columns={'electricity': elec_orig})
     data = data.rename(columns={'predictions': elec_forc})
     yElements=[elec_orig,elec_forc]
-
+    
+    #Calculate Carbon Emission
+    if cEmit=='Carbon Emission':
+        MeasurementUnit=' mt'
+        for y in yElements:
+            data[y] = data[y] * 4.33 *pow(10,-4)
+            
     #Calculate Min across y Elements.
     MinVal = data[yElements].min(axis=1).min()
     #Calculate Max across y Elements.
@@ -415,10 +434,10 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
 
-    return [fig, {'display': 'block'},MinVal,MaxVal]
+    return [fig,MinVal,MaxVal]
 
 
-def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnName: str,
+def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnName: str,cEmit='Kilo Watt Consumption',
                            MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',Elements=None):
     """
     Function that creates a normalized electricity chart for the building.
@@ -486,6 +505,12 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
         if 'Weather Normalized' in Elements:
             yElements.append(elec_norm)
 
+    #Calculate Carbon Emission
+    if cEmit=='Carbon Emission':
+        MeasurementUnit=' mt'
+        for y in yElements:
+            data[y] = data[y] * 4.33 *pow(10,-4)
+
     #Calculate Min across y Elements.
     MinVal = data[yElements].min(axis=1).min()
     #Calculate Max across y Elements.
@@ -528,7 +553,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
 
-    return [fig, {'display': 'block'},MinVal,MaxVal]
+    return [fig,MinVal,MaxVal]
 
 
 # endregion
@@ -547,4 +572,13 @@ def Calculate_Color(name: str):
              'Predicted Electricity Consumption': 'orange',
              'Weather-Normalized Electricity Consumption': '#17B897'}
     return color[name]
+
+def empty_chart():
+    fig = go.Figure()
+    fig.update_layout(
+        xaxis =  { "visible": False },yaxis = { "visible": False },
+        annotations = [{ "text": "No forecase data available for selected parameters.",
+                "xref": "paper","yref": "paper","showarrow": False,
+                "font": {"size": 28}}])
+    return fig
 # endregion
