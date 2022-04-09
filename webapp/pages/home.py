@@ -28,7 +28,7 @@ def carousel_layout():
                             
                             {
                                 "key": "4",
-                                "src": "/assets/images/background/image3_resized.jpeg",
+                                "src": "/assets/images/background/image2_resized.jpeg",
                                 "img_style":{"width":"100%"}
                             },
                         ],
@@ -66,7 +66,6 @@ def team_layout():
                     Siham is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
                     className="card-text", style=TEXT_STYLE,
                 ),
-                # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
                 html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
                     href=Siham_linkedInURL),
             ]
@@ -84,12 +83,10 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mai is a principal analyst working for a major company in Atlanta.\
-                    She is attempting to sew her own wardrobe.",
+                    She is attempting to sew her own wardrobe. She hopes to start her own clothing brand in the future.",
                     className="card-text", style=TEXT_STYLE,
                 ),html.Br(),
-                html.Br(),
                 
-                # html.P(['Find her On:'], id='find-me-on', style=TEXT_STYLE),
                 html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
                     href=Mai_linkedInURL),
             ]
@@ -107,10 +104,9 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mert is a Marine Engineer working for a major cruise line as Energy Optimization & Analytics Manager in Miami.\
-                    He is an avid sports fan (Soccer, American Football, Hockey, and Tennis).",
+                    Mert loves learning new technologies and creating models in his spare time.",
                     className="card-text", style=TEXT_STYLE,
                 ),
-                # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
                 html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
                     href=Mert_linkedInURL),
             ]
@@ -131,7 +127,6 @@ def team_layout():
                         with many years of experience in Microsoft Technologies.",
                     className="card-text", style=TEXT_STYLE,
                 ),
-                # html.P(['Find him On:'], id='find-me-on', style=TEXT_STYLE),
                 html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
                     href=Hassan_linkedInURL),
             ]
