@@ -31,7 +31,7 @@ def createLayout():
     layout.append(html.Br())
     layout.append(row1)
     layout.append(html.Br())
-    layout.append(html.H3('Consumption Forecast'))
+    layout.append(html.H3('Forecasted Consumption'))
     layout.append(html.P('Forecast is only available for the last week of December 2017.'))
     layout.append(row2)
     layout.append(html.Br())
