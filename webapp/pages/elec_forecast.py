@@ -109,7 +109,7 @@ def CreateFilters():
         [dbc.Label("Normalized Charts Control: ", style=FILTER_STYLE), html.Br(), normElem, html.Br()], lg=3))
     
     # Normalized Elements
-    carbonEmission = CreateSelect(['CO2 Emissions','Electricity Consumption'],'FP_carbonEmission')
+    carbonEmission = CreateSelect(['Electricity Consumption','CO2 Emissions'],'FP_carbonEmission',DefaultValue='Electricity Consumption')
 
     columns.append(dbc.Col(
         [dbc.Label("Chart Type: ", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()], lg=2))        
@@ -382,8 +382,16 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
             data = data.sum()
 
     #Form the names for the columns.
-    elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
-    elec_forc = 'Forecasted ' + ValuesColumnName + ' Consumption'
+    if cEmit=='CO2 Emissions':
+        yaxis_title='CO2 Emissions (Metric Tons)'
+        elec_orig = 'Actual ' + 'CO2 Emissions'
+        elec_forc = 'Forecasted ' + 'CO2 Emissions'
+    else:
+        yaxis_title=ValuesColumnName + ' Consumption (Kilo Watt)'
+        elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
+        elec_forc = 'Forecasted ' + ValuesColumnName + ' Consumption'
+    
+
     
     # Rename the agg columns
     data = data.rename(columns={'electricity': elec_orig})
@@ -413,11 +421,6 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
         y=0.99,
         xanchor="left",
         x=0.01,
-
-    ), legend_title='Building: '+BuildingName.split('_')[-1])
-
-    fig.update_layout(
-        legend=dict(
             title_font_family="Calibri",
             font=dict(
                 family="Calibri",
@@ -426,10 +429,9 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
             ),
             bgcolor="whitesmoke",
             bordercolor="lightBlue",
-            borderwidth=1
-        )
-    )
-
+            borderwidth=1,
+    ), legend_title='Building: '+BuildingName.split('_')[-1],yaxis_title=yaxis_title)
+    
     fig.update_yaxes(ticksuffix=MeasurementUnit)
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
@@ -484,9 +486,16 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
             data = data.sum()
 
     #Form the names for the columns.
-    elec_norm = 'Weather-Normalized ' + ValuesColumnName + ' Consumption'
-    elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
-    elec_pred = 'Predicted ' + ValuesColumnName + ' Consumption'
+    if cEmit=='CO2 Emissions':
+        yaxis_title='CO2 Emissions (Metric Tons)'
+        elec_norm = 'Weather-Normalized ' + 'CO2 Emissions'
+        elec_orig = 'Actual ' + 'CO2 Emissions'
+        elec_pred = 'Predicted ' + 'CO2 Emissions'
+    else:
+        yaxis_title=ValuesColumnName + ' Consumption (Kilo Watt)'
+        elec_norm = 'Weather-Normalized ' + ValuesColumnName + ' Consumption'
+        elec_orig = 'Actual ' + ValuesColumnName + ' Consumption'
+        elec_pred = 'Predicted ' + ValuesColumnName + ' Consumption'
     
     # Rename the agg columns
     data = data.rename(columns={'y_norms': elec_norm})
@@ -532,12 +541,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
         y=0.99,
         xanchor="left",
         x=0.01,
-
-    ), legend_title='Building: '+BuildingName.split('_')[-1])
-    
-    fig.update_layout(
-        legend=dict(
-            title_font_family="Calibri",
+        title_font_family="Calibri",
             font=dict(
                 family="Calibri",
                 size=16,
@@ -546,8 +550,8 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
             bgcolor="whitesmoke",
             bordercolor="lightBlue",
             borderwidth=1
-        )
-    )
+    ), legend_title='Building: '+BuildingName.split('_')[-1],yaxis_title=yaxis_title)
+
 
     fig.update_yaxes(ticksuffix=MeasurementUnit)
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
@@ -570,7 +574,10 @@ def FormatOptions(Items: list):
 def Calculate_Color(name: str):
     color = {'Actual Electricity Consumption': 'steelblue',
              'Predicted Electricity Consumption': 'orange',
-             'Weather-Normalized Electricity Consumption': '#17B897'}
+             'Weather-Normalized Electricity Consumption': '#17B897',
+             'Actual CO2 Emissions': 'steelblue',
+             'Predicted CO2 Emissions': 'orange',
+             'Weather-Normalized CO2 Emissions': '#17B897'}
     return color[name]
 
 def empty_chart():
