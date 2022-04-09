@@ -65,7 +65,7 @@ STATS_CARD =  {
 
 FILTER_STYLE =  {
     'color':'#17B897',
-    'font-size':'21px',
+    'font-size':'20px',
     'font-family': 'serif',
     'font-weight': 'bold',
     }
