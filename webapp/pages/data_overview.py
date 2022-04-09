@@ -43,16 +43,6 @@ def createLayout():
                 ])
 
                 ], label='Key Facts', style=tab_style, active_label_style=tab_selected_style),
-        # dbc.Tab([
-        #     html.Ul([
-        #         html.Br(),
-        #         html.Li('CSE 6242 Project: Energy Hub Team'),
-        #         html.Li(['GitHub repo: ',
-        #                  html.A('https://github.com/gatechdvateam/project',
-        #                         href='https://github.com/gatechdvateam/project')
-        #                  ])
-        #         ])
-        #     ], label='Project Info'),
 
         dbc.Tab([
             html.Ul([
@@ -66,8 +56,20 @@ def createLayout():
                 html.Li('Irrigation'),
 
                 ])
-            ], label='Available Meters', style=tab_style, active_tab_style=tab_selected_style)
+            ], label='Available Meters', style=tab_style, active_label_style=tab_selected_style),
+
+        dbc.Tab([
+            html.Ul([
+                html.Br(),
+                html.Li('CSE 6242 Project: Energy Hub Team'),
+                html.Li(['GitHub repo: ',
+                         html.A('https://github.com/gatechdvateam/project',
+                                href='https://github.com/gatechdvateam/project')
+                         ])
+                ])
+            ], label='Project Info', style=tab_style, active_label_style=tab_selected_style),
                 ]),
+
 
         ], ))
     return [html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
@@ -232,7 +234,13 @@ def plot_weather():
                 ),
             )
 
-    fig.update_layout(legend=dict(orientation="v"))
+    fig.update_layout(legend=dict(
+                    # orientation="v",
+                    yanchor="bottom",
+                    y=0.99,
+                    xanchor="right",
+                    x=0.01
+        ))
 
     return fig
 
