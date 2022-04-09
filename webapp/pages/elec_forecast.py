@@ -109,10 +109,10 @@ def CreateFilters():
         [dbc.Label("Normalized Charts Control: ", style=FILTER_STYLE), html.Br(), normElem, html.Br()], lg=3))
     
     # Normalized Elements
-    carbonEmission = CreateSelect(['Carbon Emission','Kilo Watt Consumption'],'FP_carbonEmission')
+    carbonEmission = CreateSelect(['CO2 Emissions','Electricity Consumption'],'FP_carbonEmission')
 
     columns.append(dbc.Col(
-        [dbc.Label("Carbon Emission: ", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()], lg=2))        
+        [dbc.Label("Chart Type: ", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()], lg=2))        
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -391,7 +391,7 @@ def CreateForecastChart(Start: str, End: str, BuildingName: str, ValuesColumnNam
     yElements=[elec_orig,elec_forc]
     
     #Calculate Carbon Emission
-    if cEmit=='Carbon Emission':
+    if cEmit=='CO2 Emissions':
         MeasurementUnit=' mt'
         for y in yElements:
             data[y] = data[y] * 4.33 *pow(10,-4)
@@ -506,7 +506,7 @@ def CreateNormalizedChart(Start: str, End: str, BuildingName: str, ValuesColumnN
             yElements.append(elec_norm)
 
     #Calculate Carbon Emission
-    if cEmit=='Carbon Emission':
+    if cEmit=='CO2 Emissions':
         MeasurementUnit=' mt'
         for y in yElements:
             data[y] = data[y] * 4.33 *pow(10,-4)

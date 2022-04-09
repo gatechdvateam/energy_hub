@@ -67,10 +67,10 @@ def CreateFilters():
         [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()])
     
     # Normalized Elements
-    carbonEmission = CreateSelect(['Carbon Emission','Kilo Watt Consumption'],'BP_carbonEmission')
+    carbonEmission = CreateSelect(['CO2 Emissions','Electricity Consumption'],'BP_carbonEmission')
 
     column.children.extend(
-        [dbc.Label("Carbon Emission: ", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
+        [dbc.Label("Electricity Chart Type:", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -353,7 +353,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
                 data = data.sum()
 
         #Calculate Carbon Emission
-        if cEmit=='Carbon Emission':
+        if cEmit=='CO2 Emissions':
             MeasurementUnit=' mt'
             data[MeterName] = data[MeterName] * 4.33 *pow(10,-4)
                 
