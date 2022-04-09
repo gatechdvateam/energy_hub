@@ -83,7 +83,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mai is a principal analyst working for a major company in Atlanta.\
-                    She is attempting to sew her own wardrobe. She hopes to start her own clothing brand in the future.",
+                    She is attempting to sew her own wardrobe. She hopes to start her own clothing brand in the near future.",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 
