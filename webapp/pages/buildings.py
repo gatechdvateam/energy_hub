@@ -67,7 +67,7 @@ def CreateFilters():
         [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()])
     
     # Normalized Elements
-    carbonEmission = CreateSelect(['CO2 Emissions','Electricity Consumption'],'BP_carbonEmission')
+    carbonEmission = CreateSelect(['Electricity Consumption','CO2 Emissions'],'BP_carbonEmission',DefaultValue='Electricity Consumption')
 
     column.children.extend(
         [dbc.Label("Electricity Chart Type:", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
@@ -352,6 +352,10 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
             else:
                 data = data.sum()
 
+        if cEmit=='CO2 Emissions':
+            yaxis_title ='CO2 Emissions (Metric Tons)'
+        else:
+            yaxis_title = ValuesColumnName + ' Consumption (Kilo Watt)'
         #Calculate Carbon Emission
         if cEmit=='CO2 Emissions':
             MeasurementUnit=' mt'
@@ -381,7 +385,7 @@ def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
         fig.update_yaxes(ticksuffix=MeasurementUnit)
         fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
         fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
-
+        fig.update_layout(yaxis_title=yaxis_title)
         return [fig, {'display': 'block'}]
     else:
         return [no_update, {'display': 'none'}]
