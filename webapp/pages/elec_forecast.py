@@ -577,7 +577,7 @@ def empty_chart():
     fig = go.Figure()
     fig.update_layout(
         xaxis =  { "visible": False },yaxis = { "visible": False },
-        annotations = [{ "text": "No forecase data available for selected parameters.",
+        annotations = [{ "text": "No forecast available for selected building / dates.",
                 "xref": "paper","yref": "paper","showarrow": False,
                 "font": {"size": 28}}])
     return fig
