@@ -100,6 +100,7 @@ def CreateVisuals():
     primary_usage = dcc.Loading(dcc.Graph(id='primary_usage'), type='default')
     secondary_usage = dcc.Loading(dcc.Graph(id='secondary_usage'), type='default')
     weather = dcc.Loading(dcc.Graph(figure=plot_weather()), type='default')
+    temp = dcc.Loading(dcc.Graph(figure=plot_temp()), type='default')
     
 
     # chart headers
@@ -113,7 +114,7 @@ def CreateVisuals():
     # Add all to layout
     column = dbc.Col([html.Br(),chart1_title, html.Br(), primary_usage, html.Br(),
                                 chart2_title,html.Br(), secondary_usage, html.Br(),
-                                chart3_title, html.Br(), weather], md=10)
+                                chart3_title, html.Br(), weather, html.Br(), temp], md=10)
     return column
 
 def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False, multiple=True):
@@ -241,6 +242,47 @@ def plot_weather():
                     xanchor="right",
                     x=0.01
         ))
+
+    return fig
+
+
+def plot_temp():
+
+    # get datafarme
+    weather = weatherData.copy()
+
+    group_labels = ['air_temperature', 'dew_temperature']
+
+    # Group data together
+    x0 = weather["air_temperature"].dropna()
+    x1 = weather["dew_temperature"].dropna()
+    
+    fig = go.Figure()
+    fig.add_trace(go.Histogram(
+        x=x0,
+        histnorm='probability',
+        name='Air Temperature (ºC)', # name used in legend and hover labels
+        nbinsx= 100,
+        marker_color='#EB89B5',
+        opacity=0.75
+    ))
+    fig.add_trace(go.Histogram(
+        x=x1,
+        histnorm='probability',
+        name='Dew Temperature (ºC)',
+        nbinsx= 150,
+        marker_color='#330C73',
+        opacity=0.8
+    ))
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        bargap=0.2, # gap between bars of adjacent location coordinates
+        bargroupgap=0.1 # gap between bars of the same location coordinates
+    )
+
+    fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
+    fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
 
     return fig
 
