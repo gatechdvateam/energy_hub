@@ -104,7 +104,7 @@ def team_layout():
                 html.P(),
                 html.P(
                     "Mert is a Marine Engineer working for a major cruise line as Energy Optimization & Analytics Manager in Miami.\
-                    Mert loves learning new technologies and creating models in his spare time.",
+                         Mert loves learning new technologies and enjoys travelling the world.",
                     className="card-text", style=TEXT_STYLE,
                 ),
                 html.A([html.Img(src='assets/images/linkedInLogo.png', style={'height': '2rem'})],
