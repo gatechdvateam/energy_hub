@@ -28,7 +28,7 @@ def carousel_layout():
                             
                             {
                                 "key": "4",
-                                "src": "/assets/images/background/image2_resized.jpeg",
+                                "src": "/assets/images/background/image3_resized.jpeg",
                                 "img_style":{"width":"100%"}
                             },
                         ],
