@@ -67,7 +67,7 @@ def get_buidling_by_space_usage(metadata, space_usage, selected_site):
     """
 
     # get datafarme
-    buildings = metadata[['site_id','building_id', space_usage]]
+    buildings = metadata[['site_id','building_id', space_usage]].copy()
 
 
     if (selected_site != None) and (len(selected_site)!=0):

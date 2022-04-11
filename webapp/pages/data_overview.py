@@ -282,6 +282,7 @@ def plot_cloud_cov():
                 domain=dict(x=[0, 1.0]),
                 name="Cloud coverage",
                 hoverinfo="label+percent+name",
+                
             ))
         
    
@@ -301,29 +302,29 @@ def plot_cloud_cov():
             borderwidth=1
         )
     )
+    fig.update_layout(height=600)
+    # fig.update_layout(legend=dict(
+    #         orientation="h",
+    #         yanchor="bottom",
+    #         y=-.7,
+    #         xanchor="right",
+    #         x=1
+    #     ), legend_title='Cloud Coverage')
 
-    fig.update_layout(legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=-.7,
-            xanchor="right",
-            x=1
-        ), legend_title='Cloud Coverage')
-
-
-    fig.update_layout(
-        autosize=False,
-        width=1500,
-        height=600,
-        margin=dict(
-            l=50,
-            r=50,
-            b=100,
-            t=100,
-            pad=4
-        ),
-        # paper_bgcolor="LightSteelBlue",
-    )
+    #Don't do this. Prevents Mobile Flex.
+    # fig.update_layout(
+    #     autosize=False,
+    #     width=1500,
+    #     height=600,
+    #     margin=dict(
+    #         l=50,
+    #         r=50,
+    #         b=100,
+    #         t=100,
+    #         pad=4
+    #     ),
+    #     # paper_bgcolor="LightSteelBlue",
+    # )
 
     # fig.update_layout(title_text='Cloud Coverage across all sites', title_x=0.5)
 
@@ -367,20 +368,21 @@ def plot_wind_direction():
             borderwidth=1
         )
     )
-
-    fig.update_layout(
-            autosize=False,
-            width=1300,
-            height=600,
-            margin=dict(
-                l=50,
-                r=50,
-                b=100,
-                t=100,
-                pad=4
-            ),
-            # paper_bgcolor="LightSteelBlue",
-        )
+    fig.update_layout(height=600)
+    #Don't do this. Prevents Mobile Flex.
+    # fig.update_layout(
+    #         autosize=False,
+    #         width=1300,
+    #         height=600,
+    #         margin=dict(
+    #             l=50,
+    #             r=50,
+    #             b=100,
+    #             t=100,
+    #             pad=4
+    #         ),
+    #         # paper_bgcolor="LightSteelBlue",
+    #     )
 
     fig.update_layout(legend=dict(
             orientation="v",
