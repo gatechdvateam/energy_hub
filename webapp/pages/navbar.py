@@ -7,9 +7,9 @@ NAVLINKS_STYLE = {
     'text-align': 'center',
     'text-decoration': 'none',
     'color': 'black',
-    'font-size': '25px',
+    'font-size': '20px',
     'font-family': 'serif',
-    'padding-right': '5px 35px',
+    'padding-right': '20px',
     # 'margin': '0 40px 0 40px',
     # 'display': 'inline',
     # 'justify-content':'space-between',
@@ -25,7 +25,7 @@ def CreateLayout():
                     dbc.Row(
                         [
                             dbc.Col(
-                                html.Img(src='/assets/images/logo/green_energyhub_logo.png', height="50px", width="200px")),
+                                html.Img(src='/assets/images/logo/green_energyhub_logo.png', height="43.75px", width="175px")),
                         ],
                         align="center",
                         className="g-0",
@@ -41,7 +41,7 @@ def CreateLayout():
                         dbc.NavItem(dbc.NavLink(
                             "Electricity Modeling", href="/forecast", style=NAVLINKS_STYLE)),                                                
                         dbc.NavItem(dbc.NavLink(
-                            "Buildings' Energy Profile", href="/buildings", style=NAVLINKS_STYLE)),
+                            "Energy Profile", href="/buildings", style=NAVLINKS_STYLE)),
                         dbc.NavItem(dbc.NavLink("Sites' Overview", active=True,
                                                 href="/data_overview", style=NAVLINKS_STYLE)),                        
                         dbc.NavItem(dbc.NavLink(
