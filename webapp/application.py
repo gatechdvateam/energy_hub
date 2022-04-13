@@ -6,7 +6,7 @@ from pages import data_overview, navbar, home, buildings, elec_forecast
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
 bootstrap_sheet = ['https://bootswatch.com/5/flatly/bootstrap.min.css']
 
-cdn_Scripts = []
+cdn_Scripts = ['https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js']
 
 #Create the Dash_App and request a reference external style sheets and scripts.
 Dash_App = Dash(__name__, suppress_callback_exceptions=True, \

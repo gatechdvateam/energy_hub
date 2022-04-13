@@ -8,38 +8,45 @@ from content import *
 
 def carousel_layout():
     carousel = dbc.Carousel(
-                    items=[
-                            {
-                                "key": "1",
-                                "src": "/assets/images/background/image0_resized.jpeg",
-                                "header": "Welcome to Energy Hub",
-                                "img_style":{"width":"100%"}
-                            },
-                            {
-                                "key": "2",
-                                "src": "/assets/images/background/image1_resized.jpeg",
-                                "img_style":{"width":"100%"}
-                            },
-                            {
-                                "key": "3",
-                                "src": "/assets/images/background/image2_resized.jpeg",
-                                "img_style":{"width":"100%"}
-                            },
-                            
-                            {
-                                "key": "4",
-                                "src": "/assets/images/background/image3_resized.jpeg",
-                                "img_style":{"width":"100%"}
-                            },
-                        ],
-        
-                    variant="dark",
-                    style=TEXT_STYLE,
-                    interval=2000,
-                    )
+        items=[
+            {
+                "key": "1",
+                "src": "/assets/images/background/image0_resized.jpeg",
+                "caption": "Energy Hub, An Innovative Energy Dashboard",
+                "img_style": {"width": "100%"},
+                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+            },
+            {
+                "key": "2",
+                "src": "/assets/images/background/image1_resized.jpeg",
+                "caption": "Predict Demand, Using Deep Learning Models",
+                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                "img_style": {"width": "100%"}
+            },
+            {
+                "key": "3",
+                "src": "/assets/images/background/image2_resized.jpeg",
+                "caption": "Save Earth, Using the Right Tools for Decisions",
+                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                "img_style": {"width": "100%"}
+            },
+
+            {
+                "key": "4",
+                "src": "/assets/images/background/image3_resized.jpeg",
+                "caption": "Find Patterns, With Interactive Visual Dashboards",
+                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                "img_style": {"width": "100%"}
+            },
+        ],
+
+        variant="dark",
+        interval=2000,
+        ride="carousel",
+    )
     # adding the carousel to the layout
     layout = dbc.Row([
-        dbc.Col([carousel],md=12,style={'marginTop': '10px'})], className='row')
+        dbc.Col([carousel], md=12, style={'marginTop': '10px'})], className='row')
 
     return layout
 
