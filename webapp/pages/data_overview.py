@@ -72,9 +72,8 @@ def createLayout():
 
 
         ], ))
-    return [html.Br(),html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
+    return [html.Br(),key_facts,html.Br(),row, ]
 
-# style={'backgroundColor': '#f9f9f9'}
 def CreateFilters():
 
     # make a copy of the data
@@ -233,9 +232,6 @@ def plot_weather():
             height=900,
             legend=dict(
                 font=dict(family="sans-serif", size=12),
-                # bgcolor="white",
-                # bordercolor="black",
-                # borderwidth=2,
                 ),
             )
 
@@ -294,39 +290,15 @@ def plot_cloud_cov():
             title_font_family="Calibri",
             font=dict(
                 family="Calibri",
-                size=16,
+                size=14,
                 color="black"
             ),
-            bgcolor="white",
-            bordercolor="lightBlue",
-            borderwidth=1
+            # orientation="h"
         )
     )
     fig.update_layout(height=600)
-    # fig.update_layout(legend=dict(
-    #         orientation="h",
-    #         yanchor="bottom",
-    #         y=-.7,
-    #         xanchor="right",
-    #         x=1
-    #     ), legend_title='Cloud Coverage')
-
-    #Don't do this. Prevents Mobile Flex.
-    # fig.update_layout(
-    #     autosize=False,
-    #     width=1500,
-    #     height=600,
-    #     margin=dict(
-    #         l=50,
-    #         r=50,
-    #         b=100,
-    #         t=100,
-    #         pad=4
-    #     ),
-    #     # paper_bgcolor="LightSteelBlue",
-    # )
-
-    # fig.update_layout(title_text='Cloud Coverage across all sites', title_x=0.5)
+ 
+    fig.update_layout(title_text='Cloud Coverage across all sites', title_x=0.5)
 
 
     return fig
@@ -360,38 +332,15 @@ def plot_wind_direction():
             title_font_family="Calibri",
             font=dict(
                 family="Calibri",
-                size=16,
+                size=14,
                 color="black"
             ),
-            bgcolor="white",
-            bordercolor="lightBlue",
-            borderwidth=1
+            # orientation="h"
         )
     )
     fig.update_layout(height=600)
-    #Don't do this. Prevents Mobile Flex.
-    # fig.update_layout(
-    #         autosize=False,
-    #         width=1300,
-    #         height=600,
-    #         margin=dict(
-    #             l=50,
-    #             r=50,
-    #             b=100,
-    #             t=100,
-    #             pad=4
-    #         ),
-    #         # paper_bgcolor="LightSteelBlue",
-    #     )
 
-    fig.update_layout(legend=dict(
-            orientation="v",
-            yanchor="bottom",
-            y=0.02,
-            xanchor="right",
-            x=1
-        ))
-    # fig.update_layout(title_text='Wind direction across all sites', title_x=0.5)
+    fig.update_layout(title_text='Wind direction across all sites', title_x=0.5)
 
 
     return fig
@@ -434,6 +383,8 @@ def plot_temp():
 
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+    fig.update_layout(title_text='Air and dew temperature across all sites', title_x=0.5)
 
     return fig
 
