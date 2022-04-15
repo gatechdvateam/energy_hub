@@ -85,7 +85,7 @@ def CreateFilters():
 
     # select a building
     sites = CreateSelect(list(building_meta['site_id'].unique()), 'SitesFilter',
-                             ['Bear', 'Fox','Lamb', 'Moose'], True, True)
+                             ['Rat', 'Bull','Panther', 'Eagle'], True, True)
     column.children.extend(
         [dbc.Label("Sites:", style=FILTER_STYLE), html.Br(), sites, html.Br()])
 
