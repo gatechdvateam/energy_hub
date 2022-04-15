@@ -30,6 +30,11 @@ def createLayout():
     ], className='text-warning'), md=12, style=WARNING_STYLE))
 
     layout.append(html.Br())
+    layout.append(html.H3('Compare the electricity usage of two buildings'))
+    layout.append(html.Br())
+    layout.append(html.P('- You can pick two buildings either from the same region or elsewhere and see how their electricity usage compare.', style=TEXT_STYLE))
+    layout.append(html.P('- You have the ability to see the energy usage at normalized weather conditions to better understand their overall consumption', style=TEXT_STYLE))
+    layout.append(html.Br())
     layout.append(row1)
     layout.append(html.Br())
     layout.append(row2)

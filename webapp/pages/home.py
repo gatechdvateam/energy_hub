@@ -12,30 +12,30 @@ def carousel_layout():
             {
                 "key": "1",
                 "src": "/assets/images/background/image0_resized.jpeg",
-                "caption": "Energy Hub, An Innovative Energy Dashboard",
+                "caption": "Energy Hub: An Innovative Energy Dashboard",
                 "img_style": {"width": "100%"},
-                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                'caption_class_name':'fs-5 fw-bold',
             },
             {
                 "key": "2",
                 "src": "/assets/images/background/image1_resized.jpeg",
-                "caption": "Predict Demand, Using Deep Learning Models",
-                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                "caption": "Forecast mid-term energy demand using deep learning models",
+                'caption_class_name':'fs-5 fw-bold',
                 "img_style": {"width": "100%"}
             },
             {
                 "key": "3",
                 "src": "/assets/images/background/image2_resized.jpeg",
-                "caption": "Save Earth, Using the Right Tools for Decisions",
-                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                "caption": "The little effort of everyone may change into a big one; save the earth.",
+                'caption_class_name':'fs-5 fw-bold',
                 "img_style": {"width": "100%"}
             },
 
             {
                 "key": "4",
                 "src": "/assets/images/background/image3_resized.jpeg",
-                "caption": "Find Patterns, With Interactive Visual Dashboards",
-                'caption_class_name':'fs-6 fw-bold bg-light bg-opacity-50',
+                "caption": "Find out how energy resources are being used using interactive dashboards",
+                'caption_class_name':'fs-5 fw-bold text-white',
                 "img_style": {"width": "100%"}
             },
         ],
