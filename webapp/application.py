@@ -4,7 +4,8 @@ from pages import data_overview, navbar, home, buildings, elec_forecast
 
 
 # cdn_Style_Sheets = ['assets/css/bootstrap.css']
-bootstrap_sheet = ['https://bootswatch.com/5/flatly/bootstrap.min.css']
+bootstrap_sheet = ['https://bootswatch.com/5/flatly/bootstrap.min.css',
+'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css']
 
 cdn_Scripts = ['https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js']
 

@@ -20,20 +20,16 @@ def createLayout():
     row1,row2 = CreateFilters()
     row3 = dbc.Row(CreateNormilizationVisuals())
     row4 = dbc.Row(CreateForecastVisuals())
-    row5 = dbc.Row(dbc.Col(html.P(children=[
-        html.Br(),
-        'ℹ️ Not supported for aggregation level None.',
-        html.Br(),
-        'ℹ️ Synchronize y-axis min and max values for each pair of charts.',
-        html.Br(),
-        '⚠️ Please restrict date filters to 10 days or less when aggregation level None is selected for best performance.'
-    ], className='text-warning'), md=12, style=WARNING_STYLE))
 
     layout.append(html.Br())
-    layout.append(html.H3('Compare the electricity usage of two buildings'))
-    layout.append(html.Br())
-    layout.append(html.P('- You can pick two buildings either from the same region or elsewhere and see how their electricity usage compare.', style=TEXT_STYLE))
-    layout.append(html.P('- You have the ability to see the energy usage at normalized weather conditions to better understand their overall consumption', style=TEXT_STYLE))
+    box = dbc.Row(dbc.Col(
+        [html.H3('Compare the electricity usage of two buildings'),
+         html.Br(),
+            html.P('You can pick two buildings either from the same region or elsewhere and see how their electricity usage compare.', style=TEXT_STYLE),
+            html.P('You have the ability to see the energy usage at normalized weather conditions to better understand their overall consumption', style=TEXT_STYLE)
+         ],
+         style=BOX_STYLE,xl=6),style=BOX_PARENT_STYLE)
+    layout.append(box)
     layout.append(html.Br())
     layout.append(row1)
     layout.append(html.Br())
@@ -46,7 +42,6 @@ def createLayout():
     layout.append(html.P('Forecast is only available for the last week of December 2017.'))
     layout.append(row4)
     layout.append(html.Br())
-    layout.append(row5)
 
     return layout
 
@@ -95,19 +90,24 @@ def CreateFilters():
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
                          'FP_AggLevelFilter', 'None')
     R1columns.append(dbc.Col(
-        [dbc.Label("Aggregation Level: ⚠️", style=FILTER_STYLE), html.Br(), level, html.Br()], xl=2))
+        [dbc.Label("Aggregation Level:", style=FILTER_STYLE), html.Br(), level, html.Br()], xl=2))
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'FP_AggTypeFilter', 'Sum')
     R2columns.append(dbc.Col(
-        [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()], xl=2))
+        [dbc.Label(["Aggregation Type ",html.I(className="bi bi-info-circle-fill me-2"),':'], id="FPTG1", style=FILTER_STYLE),
+         dbc.Popover('Not supported for aggregation level None.',
+                     target="FPTG1", body=True, trigger="hover",),
+         html.Br(), ty_pe, html.Br()], xl=2))
 
     # Sync Axis
     sync = CreateSelect(['Yes','No'],'FP_Sync', 'Yes')
 
     R2columns.append(dbc.Col(
-        [dbc.Label("Sync y-axis: ℹ️", style=FILTER_STYLE), html.Br(), sync, html.Br()], xl=2))
+        [dbc.Label(["Sync y-axis ",html.I(className="bi bi-info-circle-fill me-2"),':'], id="FPTG2", style=FILTER_STYLE),
+         dbc.Popover('Synchronize y-axis min and max values for each pair of charts.',
+                     target="FPTG2", body=True, trigger="hover",), html.Br(), sync, html.Br()], xl=2))
     
     # Normalized Elements
     normElem = CreateSelect(['Actual','Predicted','Weather Normalized'],'NormElem',MultipleValues=True)
@@ -131,7 +131,10 @@ def CreateFilters():
         className=''
     )
     R2columns.append(
-        dbc.Col([dbc.Label("Start & End Dates: ⚠️", style=FILTER_STYLE), html.Br(), dates, html.Br()], xl=2))
+        dbc.Col([dbc.Label(["Start & End Dates ",html.I(className="bi bi-info-circle-fill me-2"),':'], id="FPTG3", style=FILTER_STYLE),
+                 dbc.Popover('Please restrict date filters to 10 days or less when aggregation level None is selected for best performance.',
+                             target="FPTG3", body=True, trigger="hover",),
+                 html.Br(), dates, html.Br()], xl=2))
 
     # Apply Filter
     R2columns.append(dbc.Col([html.Br(),html.Br(), html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "white", "width": "150px"},
@@ -149,8 +152,8 @@ def CreateForecastVisuals():
     forecast_plot2 = dcc.Loading(
         dcc.Graph(id='forecast_plot2'), type='default')
 
-    column1 = dbc.Col(forecast_plot1, md=6)
-    column2 = dbc.Col(forecast_plot2, md=6)
+    column1 = dbc.Col(forecast_plot1, xl=6)
+    column2 = dbc.Col(forecast_plot2, xl=6)
 
     return [column1, column2]
 
@@ -164,8 +167,8 @@ def CreateNormilizationVisuals():
     norm_electricity_plot2 = dcc.Loading(
         dcc.Graph(id='FP_electricity_norm2'), type='default')
 
-    column1 = dbc.Col(norm_electricity_plot1, md=6)
-    column2 = dbc.Col(norm_electricity_plot2, md=6)
+    column1 = dbc.Col(norm_electricity_plot1, xl=6)
+    column2 = dbc.Col(norm_electricity_plot2, xl=6)
 
     return [column1, column2]
 # endregion

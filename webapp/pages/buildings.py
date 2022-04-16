@@ -15,10 +15,10 @@ from datetime import datetime
 
 
 def createLayout():
-    title = html.H2("Buildings\' Energy Profile",
-                    style={"text-align": "center"})
+    title = html.H2("Buildings\' Energy Profile")
+    subtitle = html.P('Select a building and aggregation level to view consumptions', style=TEXT_STYLE)
     row = dbc.Row([CreateFilters(), CreateVisuals()])
-    return [html.Br(), title, row]
+    return [html.Br(), title,subtitle, row]
 
 
 def CreateFilters():
@@ -58,13 +58,15 @@ def CreateFilters():
     level = CreateSelect(['Month', 'Quarter', 'Week', 'None'],
                          'BP_AggLevelFilter', 'Month')
     column.children.extend(
-        [dbc.Label("Aggregation Level: ⚠️", style=FILTER_STYLE), html.Br(), level, html.Br()])
+        [dbc.Label("Aggregation Level:", style=FILTER_STYLE), html.Br(), level, html.Br()])
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
                          'BP_AggTypeFilter', 'Avg')
     column.children.extend(
-        [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()])
+        [dbc.Label(["Aggregation Type ",html.I(className="bi bi-info-circle-fill me-2"),':'], id="BPTG1", style=FILTER_STYLE),
+         dbc.Popover('Not supported for aggregation level None.',target="BPTG1",body=True,trigger="hover",),
+            html.Br(), ty_pe, html.Br()])
     
     # Normalized Elements
     carbonEmission = CreateSelect(['Electricity Consumption','CO2 Emissions'],'BP_carbonEmission',DefaultValue='Electricity Consumption')
@@ -81,17 +83,14 @@ def CreateFilters():
         end_date=date(2017, 12, 31)
     )
     column.children.extend(
-        [dbc.Label("Start & End Dates: ⚠️", style=FILTER_STYLE), html.Br(), dates, html.Br(), html.Br()])
+        [dbc.Label(["Start & End Dates ",html.I(className="bi bi-info-circle-fill me-2"),':'], id="BPTG2", style=FILTER_STYLE),
+         dbc.Popover('Please restrict date filters to 10 days or less when aggregation level None is selected for best performance.',
+         target="BPTG2", body=True, trigger="hover",),
+         html.Br(), dates, html.Br(), html.Br()])
 
     # Apply Filter
     column.children.extend([html.Button('Apply Filters', id='ApplyFilters', style={"background-color": "#17B897", "color": "white", "width": "150px"},
                                         n_clicks=0, className="btn btn-primary"), html.Br()])
-    column.children.append(html.P(children=[
-        html.Br(),
-        'ℹ️ Not supported for aggregation level None.',
-        html.Br(),
-        '⚠️ Please restrict date filters to 10 days or less when aggregation level None is selected for best performance.'
-        ],className='text-warning', style=WARNING_STYLE))
     return column
 
 
