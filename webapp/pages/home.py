@@ -158,6 +158,17 @@ def about_us_layout():
         - Add the map
 
     """
+
+    button = html.Div(
+    [
+        dbc.Button(
+            "Sites Overview",
+            href="/data_overview",
+            color="info",
+        ),
+    ])
+
+    learn_more = html.Div(html.A('Sites Overview', href="/data_overview"))
     general_info = html.Div(dcc.Markdown(INTRO_TEXT), style=TEXT_STYLE)
 
     site_map = html.Div(
@@ -171,7 +182,7 @@ def about_us_layout():
 
     # adding the map and general info to the layout
     layout = dbc.Row([
-            dbc.Col([general_info], lg=6),
+            dbc.Col([general_info, button], lg=6),
             dbc.Col([site_map], lg=6),
         ],style={'marginTop': '10px'})
     return layout
@@ -199,7 +210,7 @@ def home_layout():
 def plot_map(df):
 
     # Copy df
-    metadata = BuildingMetadata.copy()
+    metadata = BuildingMetadataOrig.copy()
     df = metadata[['site_id','longitude','latitude','building_id']]
     df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})

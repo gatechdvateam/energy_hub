@@ -70,7 +70,7 @@ def CreateFilters():
     carbonEmission = CreateSelect(['Electricity Consumption','CO2 Emissions'],'BP_carbonEmission',DefaultValue='Electricity Consumption')
 
     column.children.extend(
-        [dbc.Label("Electricity Chart Type:", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
+        [dbc.Label("Chart Type:", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -155,7 +155,7 @@ def plot_water(Values):
     inputs=filterInputList)
 def plot_gas(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'gas', 'Gas',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -182,7 +182,7 @@ def plot_solar(Values):
     inputs=filterInputList)
 def plot_steam(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'steam', 'Steam',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -191,7 +191,7 @@ def plot_steam(Values):
     inputs=filterInputList)
 def plot_hotwater(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'hotwater', 'Hot Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -200,7 +200,7 @@ def plot_hotwater(Values):
     inputs=filterInputList)
 def plot_chilledwater(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'chilledwater', 'Chilled Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 # endregion
 
 
