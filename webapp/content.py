@@ -53,6 +53,13 @@ CONTENT_STYLE = {
     'padding': '20px 10px'
 }
 
+BOX_STYLE = {
+    'border': '2px black solid',
+}
+BOX_PARENT_STYLE={
+        'paddingLeft': '10px',
+    'paddingRight': '10px'
+}
 
 STATS_CARD =  {
     'display': 'inline-block',

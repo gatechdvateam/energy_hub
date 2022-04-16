@@ -162,7 +162,7 @@ def about_us_layout():
     button = html.Div(
     [
         dbc.Button(
-            "Sites Overview",
+            "Go to Sites Overview",
             href="/data_overview",
             color="info",
         ),
