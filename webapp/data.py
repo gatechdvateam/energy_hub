@@ -125,6 +125,7 @@ def get_forecast_for_building(BuildingName:str):
 
 #region BuildingMetadata 
 BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq")
+BuildingMetadataOrig = get_data("/data_parq/metadata/", "metadata.parq")
 #Filter on bad data.
 BadBuildings = list(get_data("/bad_buildings/", "bad_buildings.csv")['building_id'])
 BuildingMetadata = BuildingMetadata[~BuildingMetadata['building_id'].isin(BadBuildings)]
@@ -136,5 +137,4 @@ BuildingMetadata['size'] = pd.cut(BuildingMetadata['sq_meter'], 3, labels=['Smal
 
 #region Weather Data
 weatherData = get_data("/data_parq/weather/", "weather.parq").reset_index().copy()
-# print(weatherData.head())
 #endregion Weather Data

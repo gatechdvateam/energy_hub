@@ -50,7 +50,7 @@ def CreateFilters():
 
     # select a building
     buildings = CreateSelect(list(building_meta['building_id'].unique()), 'BuildingFilter',
-                             'Hog_parking_Shannon', False, True)
+                             'Bobcat_education_Alissa', False, True)
     column.children.extend(
         [dbc.Label("Building:", style=FILTER_STYLE), html.Br(), buildings, html.Br()])
 
@@ -62,7 +62,7 @@ def CreateFilters():
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
-                         'BP_AggTypeFilter', 'Sum')
+                         'BP_AggTypeFilter', 'Avg')
     column.children.extend(
         [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()])
     
@@ -70,7 +70,7 @@ def CreateFilters():
     carbonEmission = CreateSelect(['Electricity Consumption','CO2 Emissions'],'BP_carbonEmission',DefaultValue='Electricity Consumption')
 
     column.children.extend(
-        [dbc.Label("Electricity Chart Type:", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
+        [dbc.Label("Chart Type:", style=FILTER_STYLE), html.Br(), carbonEmission, html.Br()])   
 
     # select Dates
     dates = dcc.DatePickerRange(
@@ -111,8 +111,9 @@ def CreateVisuals():
 
     column = dbc.Col([electricity, html.Br(), solar, html.Br(),
                       steam, html.Br(), hotwater, html.Br(),
-                      water, html.Br(), gas, html.Br(),
-                      irrigation, html.Br(), chilledwater], md=10)
+                      gas, html.Br(), irrigation, html.Br(),
+                      chilledwater, html.Br(),
+                      water, ], md=10)
     return column
 # endregion
 
@@ -155,7 +156,7 @@ def plot_water(Values):
     inputs=filterInputList)
 def plot_gas(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'gas', 'Gas',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -182,7 +183,7 @@ def plot_solar(Values):
     inputs=filterInputList)
 def plot_steam(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'steam', 'Steam',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -191,7 +192,7 @@ def plot_steam(Values):
     inputs=filterInputList)
 def plot_hotwater(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'hotwater', 'Hot Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 
 
 @callback(
@@ -200,7 +201,7 @@ def plot_hotwater(Values):
     inputs=filterInputList)
 def plot_chilledwater(Values):
     return CreateTimeChart(Values["StartDate"], Values["EndDate"], Values["Building"], 'chilledwater', 'Chilled Water',
-                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'],MeasurementUnit=' L')
+                           AggLevel=Values['AggLevel'], aggFunction=Values['AggType'])
 # endregion
 
 
@@ -300,7 +301,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
 
 def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
-                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilowatts Consumption'):
+                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Avg',cEmit='Kilowatts Consumption'):
     """
     Function that checks if the meter data is available for a given building and
     creates a chart for that.

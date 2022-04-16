@@ -8,38 +8,45 @@ from content import *
 
 def carousel_layout():
     carousel = dbc.Carousel(
-                    items=[
-                            {
-                                "key": "1",
-                                "src": "/assets/images/background/image0_resized.jpeg",
-                                "header": "Welcome to Energy Hub",
-                                "img_style":{"width":"100%"}
-                            },
-                            {
-                                "key": "2",
-                                "src": "/assets/images/background/image1_resized.jpeg",
-                                "img_style":{"width":"100%"}
-                            },
-                            {
-                                "key": "3",
-                                "src": "/assets/images/background/image2_resized.jpeg",
-                                "img_style":{"width":"100%"}
-                            },
-                            
-                            {
-                                "key": "4",
-                                "src": "/assets/images/background/image3_resized.jpeg",
-                                "img_style":{"width":"100%"}
-                            },
-                        ],
-        
-                    variant="dark",
-                    style=TEXT_STYLE,
-                    interval=2000,
-                    )
+        items=[
+            {
+                "key": "1",
+                "src": "/assets/images/background/image0_resized.jpeg",
+                "caption": "Energy Hub: An Innovative Energy Dashboard",
+                "img_style": {"width": "100%"},
+                'caption_class_name':'fs-5 fw-bold',
+            },
+            {
+                "key": "2",
+                "src": "/assets/images/background/image1_resized.jpeg",
+                "caption": "Forecast mid-term energy demand using deep learning models",
+                'caption_class_name':'fs-5 fw-bold',
+                "img_style": {"width": "100%"}
+            },
+            {
+                "key": "3",
+                "src": "/assets/images/background/image2_resized.jpeg",
+                "caption": "The little effort of everyone may change into a big one; save the earth.",
+                'caption_class_name':'fs-5 fw-bold',
+                "img_style": {"width": "100%"}
+            },
+
+            {
+                "key": "4",
+                "src": "/assets/images/background/image3_resized.jpeg",
+                "caption": "Find out how energy resources are being used using interactive dashboards",
+                'caption_class_name':'fs-5 fw-bold text-white',
+                "img_style": {"width": "100%"}
+            },
+        ],
+
+        variant="dark",
+        interval=2000,
+        ride="carousel",
+    )
     # adding the carousel to the layout
     layout = dbc.Row([
-        dbc.Col([carousel],md=12,style={'marginTop': '10px'})], className='row')
+        dbc.Col([carousel], md=12, style={'marginTop': '10px'})], className='row')
 
     return layout
 
@@ -151,6 +158,17 @@ def about_us_layout():
         - Add the map
 
     """
+
+    button = html.Div(
+    [
+        dbc.Button(
+            "Sites Overview",
+            href="/data_overview",
+            color="info",
+        ),
+    ])
+
+    learn_more = html.Div(html.A('Sites Overview', href="/data_overview"))
     general_info = html.Div(dcc.Markdown(INTRO_TEXT), style=TEXT_STYLE)
 
     site_map = html.Div(
@@ -164,7 +182,7 @@ def about_us_layout():
 
     # adding the map and general info to the layout
     layout = dbc.Row([
-            dbc.Col([general_info], lg=6),
+            dbc.Col([general_info, button], lg=6),
             dbc.Col([site_map], lg=6),
         ],style={'marginTop': '10px'})
     return layout
@@ -192,7 +210,7 @@ def home_layout():
 def plot_map(df):
 
     # Copy df
-    metadata = BuildingMetadata.copy()
+    metadata = BuildingMetadataOrig.copy()
     df = metadata[['site_id','longitude','latitude','building_id']]
     df = df.groupby(['site_id','longitude','latitude'],as_index=False).count()
     df = df.rename(columns={'building_id':'Buildings','site_id' : 'Site'})

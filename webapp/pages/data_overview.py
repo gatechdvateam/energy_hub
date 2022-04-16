@@ -72,9 +72,8 @@ def createLayout():
 
 
         ], ))
-    return [html.Br(),html.H2('Sites Overview',className='text-center'),html.Br(),key_facts,html.Br(),row, ]
+    return [html.Br(),key_facts,html.Br(),row, ]
 
-# style={'backgroundColor': '#f9f9f9'}
 def CreateFilters():
 
     # make a copy of the data
@@ -85,7 +84,7 @@ def CreateFilters():
 
     # select a building
     sites = CreateSelect(list(building_meta['site_id'].unique()), 'SitesFilter',
-                             ['Bear', 'Fox','Lamb', 'Moose'], True, True)
+                             ['Rat', 'Bull','Panther', 'Eagle'], True, True)
     column.children.extend(
         [dbc.Label("Sites:", style=FILTER_STYLE), html.Br(), sites, html.Br()])
 
@@ -139,7 +138,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
     Input('SitesFilter', 'value'))
 def plot_primary_usage(selected_site):
  
-    primary_usage = get_buidling_by_space_usage(BuildingMetadata.copy(), 'primary_space_usage', selected_site)
+    primary_usage = get_buidling_by_space_usage(BuildingMetadataOrig.copy(), 'primary_space_usage', selected_site)
    
     fig = px.bar(primary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
@@ -155,7 +154,7 @@ def plot_primary_usage(selected_site):
     Input('SitesFilter', 'value'))
 def plot_secondary_usage(selected_site):
 
-    secondary_usage = get_buidling_by_space_usage(BuildingMetadata.copy(), 'sub_primary_space_usage', selected_site)
+    secondary_usage = get_buidling_by_space_usage(BuildingMetadataOrig.copy(), 'sub_primary_space_usage', selected_site)
 
     fig = px.bar(secondary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
@@ -233,9 +232,6 @@ def plot_weather():
             height=900,
             legend=dict(
                 font=dict(family="sans-serif", size=12),
-                # bgcolor="white",
-                # bordercolor="black",
-                # borderwidth=2,
                 ),
             )
 
@@ -294,39 +290,15 @@ def plot_cloud_cov():
             title_font_family="Calibri",
             font=dict(
                 family="Calibri",
-                size=16,
+                size=14,
                 color="black"
             ),
-            bgcolor="white",
-            bordercolor="lightBlue",
-            borderwidth=1
+            # orientation="h"
         )
     )
     fig.update_layout(height=600)
-    # fig.update_layout(legend=dict(
-    #         orientation="h",
-    #         yanchor="bottom",
-    #         y=-.7,
-    #         xanchor="right",
-    #         x=1
-    #     ), legend_title='Cloud Coverage')
-
-    #Don't do this. Prevents Mobile Flex.
-    # fig.update_layout(
-    #     autosize=False,
-    #     width=1500,
-    #     height=600,
-    #     margin=dict(
-    #         l=50,
-    #         r=50,
-    #         b=100,
-    #         t=100,
-    #         pad=4
-    #     ),
-    #     # paper_bgcolor="LightSteelBlue",
-    # )
-
-    # fig.update_layout(title_text='Cloud Coverage across all sites', title_x=0.5)
+ 
+    fig.update_layout(title_text='Cloud Coverage across all sites', title_x=0.5)
 
 
     return fig
@@ -360,38 +332,15 @@ def plot_wind_direction():
             title_font_family="Calibri",
             font=dict(
                 family="Calibri",
-                size=16,
+                size=14,
                 color="black"
             ),
-            bgcolor="white",
-            bordercolor="lightBlue",
-            borderwidth=1
+            # orientation="h"
         )
     )
     fig.update_layout(height=600)
-    #Don't do this. Prevents Mobile Flex.
-    # fig.update_layout(
-    #         autosize=False,
-    #         width=1300,
-    #         height=600,
-    #         margin=dict(
-    #             l=50,
-    #             r=50,
-    #             b=100,
-    #             t=100,
-    #             pad=4
-    #         ),
-    #         # paper_bgcolor="LightSteelBlue",
-    #     )
 
-    fig.update_layout(legend=dict(
-            orientation="v",
-            yanchor="bottom",
-            y=0.02,
-            xanchor="right",
-            x=1
-        ))
-    # fig.update_layout(title_text='Wind direction across all sites', title_x=0.5)
+    fig.update_layout(title_text='Wind direction across all sites', title_x=0.5)
 
 
     return fig
@@ -434,6 +383,8 @@ def plot_temp():
 
     fig.update_xaxes(showline=True, linewidth=2, linecolor='black')
     fig.update_yaxes(showline=True, linewidth=2, linecolor='black')
+
+    fig.update_layout(title_text='Air and dew temperature across all sites', title_x=0.5)
 
     return fig
 
