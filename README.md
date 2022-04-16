@@ -13,9 +13,32 @@ Energy hub is an energy management platform that combines an interactive dashboa
 
 Global energy consumption is expected to reach `225,000` TWh in 2035. Buildings’ energy usage stands for approximately 40% of the global demand while generating 30% of the CO2 emissions. All of this requires energy management professionals to have the right tools to track energy KPIs for data driven energy optimization, carbon modeling, and budgeting. This holds especially true with world leaders’ commitment to limit global warming effects through the signing of the Paris Climate Accords, which aims to limit global warming to 1.5 degrees Celsius. The goal of this project is to develop an analytical web application for buildings’ energy management. This app presents interactive visualizations to summarize energy KPIs. It is powered by a machine-learning based energy benchmarking solution for energy deviation reporting, as well as deep learning models to provide mid-term energy forecast. 
 
+### :information_source: Description
+
+Our website is made up of 4 main pages. In the home page we introduce the project and the team. Next, in the electricity modeling page we have a unique variety of filters that allows users to choose their aggregation level, chart duration, and which data elements to be shown on the charts among many other novel options. The goal is to allow users to compare electricity consumption of two buildings at a time. The other two pages allow the users to explore the energy usage of every building in the dataset per meter type and see the distribution of the primary/secondary usage for buildings in each site, as well as the average weather over 2016-2017 time period. All the pages are mobile friendly and can be viewed on mobile or tablet.
+
+<p>
+  <img src="webapp/assets/images/building_page.jpg"  width="100px" height="120px"/> 
+</p>
+
+
+<p>
+  <img src="webapp/assets/images/forecast_page.jpg"  width="100px" height="120px"/>
+</p>
+
+<p>
+  <img src="webapp/assets/images/sites_page.jpg"     width="100px" height="120px"/>
+</p>
+
 ### :file_folder: Dataset
 
 Our dataset comes from The Building Data Genome Project 2. This dataset consists of 3,053 energy meters from 1,636 non-residential buildings in 19 sites across North America and Europe (see interactive map). The readings were recorded at one-hour intervals for electricity, chilled water, hot water, steam, irrigation and solar for 2016 and 2017. Buildings’ metadata includes year built, size, primary use, site, and source energy use intensity (EUI). Weather data (temperature, pressure, humidity, etc.) comes from the National Centers for Environmental Information database. Our dataset is approximately 2.6 GB in size, with nearly 53.6 million readings. 
+
+The dataset is stored in Azure Data Lake
+
+<p float="left">
+  <img src="webapp/assets/images/azure.png">
+</p>
 
 ### :movie_camera: Live Demo
 
@@ -33,6 +56,7 @@ You can view a live demo on this URL: https://energyhub.azurewebsites.net/
 
 
 ### :open_file_folder: Resources
+
 * Set up a Azure account
 	* [Azure account](https://docs.microsoft.com/en-us/learn/modules/create-an-azure-account/)
 	
