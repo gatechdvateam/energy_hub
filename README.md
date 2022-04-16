@@ -19,18 +19,18 @@ Global energy consumption is expected to reach `225,000` TWh in 2035. Buildingsâ
 Our website is made up of 4 main pages. In the home page we introduce the project and the team. Next, in the electricity modeling page we have a unique variety of filters that allows users to choose their aggregation level, chart duration, and which data elements to be shown on the charts among many other novel options. The goal is to allow users to compare electricity consumption of two buildings at a time. The other two pages allow the users to explore the energy usage of every building in the dataset per meter type and see the distribution of the primary/secondary usage for buildings in each site, as well as the average weather over 2016-2017 time period. All the pages are mobile friendly and can be viewed on mobile or tablet.
 
 #### Main forecast page
-<p>
-  <img src="webapp/assets/images/forecast_page.png"  width="100px" height="120px"/>
+<p float="left">
+  <img src="webapp/assets/images/forecast_page.png">
 </p>
 
 #### Buildings' overview page
-<p>
-  <img src="webapp/assets/images/building_page.png"  width="100px" height="120px"/> 
+<p float="left">
+  <img src="webapp/assets/images/building_page.png"> 
 </p>
 
 #### Sites overview page
-<p>
-  <img src="webapp/assets/images/sites_overview.png"     width="100px" height="120px"/>
+<p float="left">
+  <img src="webapp/assets/images/sites_overview.png">
 </p>
 
 ### :file_folder: Dataset

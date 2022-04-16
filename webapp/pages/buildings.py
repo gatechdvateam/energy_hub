@@ -15,8 +15,8 @@ from datetime import datetime
 
 
 def createLayout():
-    title = html.H2("Buildings\' Energy Profile")
-    subtitle = html.P('Select a building and aggregation level to view consumptions', style=TEXT_STYLE)
+    title = html.H2("Energy Profile per building")
+    subtitle = html.P('Select a building and an aggregation level to view energy usage per meter', style=TEXT_STYLE)
     row = dbc.Row([CreateFilters(), CreateVisuals()])
     return [html.Br(), title,subtitle, row]
 
