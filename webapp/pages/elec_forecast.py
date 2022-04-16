@@ -22,14 +22,15 @@ def createLayout():
     row4 = dbc.Row(CreateForecastVisuals())
 
     layout.append(html.Br())
-    box = dbc.Row(dbc.Col(
-        [html.H3('Compare the electricity usage of two buildings'),
-         html.Br(),
-            html.P('You can pick two buildings either from the same region or elsewhere and see how their electricity usage compare.', style=TEXT_STYLE),
-            html.P('You have the ability to see the energy usage at normalized weather conditions to better understand their overall consumption', style=TEXT_STYLE)
-         ],
-         style=BOX_STYLE,xl=6),style=BOX_PARENT_STYLE)
-    layout.append(box)
+    # box = dbc.Row(dbc.Col(
+    #     [html.H1('Quick usage:'),
+    #     html.H2('This page allows the user to compare the electricity usage of two buildings', style=TEXT_STYLE),
+    #         html.P('Pick two buildings either from the same region or elsewhere and see how their electricity usage compare.', style=TEXT_STYLE),
+    #         html.P('You have the ability to see the energy usage at normalized weather conditions to better understand their overall consumption', style=TEXT_STYLE),
+    #         html.P('You can compare the mid-term forecasted electricity usage of the selected buildings', style=TEXT_STYLE)
+    #      ],
+    #      style=BOX_STYLE,xl=6),style=BOX_PARENT_STYLE)
+    # layout.append(box)
     layout.append(html.Br())
     layout.append(row1)
     layout.append(html.Br())
