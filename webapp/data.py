@@ -125,6 +125,7 @@ def get_forecast_for_building(BuildingName:str):
 
 #region BuildingMetadata 
 BuildingMetadata = get_data("/data_parq/metadata/", "metadata.parq")
+BuildingMetadataOrig = get_data("/data_parq/metadata/", "metadata.parq")
 #Filter on bad data.
 BadBuildings = list(get_data("/bad_buildings/", "bad_buildings.csv")['building_id'])
 BuildingMetadata = BuildingMetadata[~BuildingMetadata['building_id'].isin(BadBuildings)]

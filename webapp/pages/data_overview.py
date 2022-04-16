@@ -138,7 +138,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
     Input('SitesFilter', 'value'))
 def plot_primary_usage(selected_site):
  
-    primary_usage = get_buidling_by_space_usage(BuildingMetadata.copy(), 'primary_space_usage', selected_site)
+    primary_usage = get_buidling_by_space_usage(BuildingMetadataOrig.copy(), 'primary_space_usage', selected_site)
    
     fig = px.bar(primary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
@@ -154,7 +154,7 @@ def plot_primary_usage(selected_site):
     Input('SitesFilter', 'value'))
 def plot_secondary_usage(selected_site):
 
-    secondary_usage = get_buidling_by_space_usage(BuildingMetadata.copy(), 'sub_primary_space_usage', selected_site)
+    secondary_usage = get_buidling_by_space_usage(BuildingMetadataOrig.copy(), 'sub_primary_space_usage', selected_site)
 
     fig = px.bar(secondary_usage, x='Sites',
                     y='Number of Buildings', color='Space Usage',
