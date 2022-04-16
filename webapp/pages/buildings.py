@@ -62,7 +62,7 @@ def CreateFilters():
 
     # select Aggregation Type
     ty_pe = CreateSelect(['Sum', 'Avg', 'Max', 'Min'],
-                         'BP_AggTypeFilter', 'Sum')
+                         'BP_AggTypeFilter', 'Avg')
     column.children.extend(
         [dbc.Label("Aggregation Type: ℹ️", style=FILTER_STYLE), html.Br(), ty_pe, html.Br()])
     
@@ -111,8 +111,9 @@ def CreateVisuals():
 
     column = dbc.Col([electricity, html.Br(), solar, html.Br(),
                       steam, html.Br(), hotwater, html.Br(),
-                      water, html.Br(), gas, html.Br(),
-                      irrigation, html.Br(), chilledwater], md=10)
+                      gas, html.Br(), irrigation, html.Br(),
+                      chilledwater, html.Br(),
+                      water, ], md=10)
     return column
 # endregion
 
@@ -300,7 +301,7 @@ def CreateSelect(ItemsList, Name, DefaultValue=None, Optional=True, Format=False
 
 
 def CreateTimeChart(Start: str, End: str, BuildingName: str, MeterName: str,
-                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Sum',cEmit='Kilowatts Consumption'):
+                    ValuesColumnName: str, MeasurementUnit: str = " kW", AggLevel: str = 'Month', aggFunction='Avg',cEmit='Kilowatts Consumption'):
     """
     Function that checks if the meter data is available for a given building and
     creates a chart for that.
