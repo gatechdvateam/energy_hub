@@ -1,6 +1,6 @@
 # Energy Hub - Building Energy Management Platform
 
-Energy hub is an energy management platform that combines visual interactive dashboard with deep learning and weather normalization models.
+Energy hub is an energy management platform that combines an interactive dashboard with deep learning and weather normalization models.
 
 ## :bookmark_tabs: Table of Contents
 - [Introduction](#introduction)
