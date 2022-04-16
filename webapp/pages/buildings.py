@@ -50,7 +50,7 @@ def CreateFilters():
 
     # select a building
     buildings = CreateSelect(list(building_meta['building_id'].unique()), 'BuildingFilter',
-                             'Hog_parking_Shannon', False, True)
+                             'Bobcat_education_Alissa', False, True)
     column.children.extend(
         [dbc.Label("Building:", style=FILTER_STYLE), html.Br(), buildings, html.Br()])
 
