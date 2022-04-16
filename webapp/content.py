@@ -54,7 +54,7 @@ CONTENT_STYLE = {
 }
 
 BOX_STYLE = {
-    'border': '2px black solid',
+    'border': '2px',
 }
 BOX_PARENT_STYLE={
         'paddingLeft': '10px',
@@ -78,7 +78,6 @@ FILTER_STYLE =  {
 
 WARNING_STYLE =  {
     'color': '#9F6000',
-    # 'background-color': '#FEEFB3',
     'font-size':'20px',
     'font-family': 'serif',
         }

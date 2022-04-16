@@ -3,10 +3,11 @@
 Energy hub is an energy management platform that combines an interactive dashboard with deep learning and weather normalization models.
 
 ## :bookmark_tabs: Table of Contents
-- [Introduction](#introduction)
-- [Dataset](#dataset)
+- [Introduction](#Introduction)
+- [Description](#Description)
+- [Dataset](#Dataset)
 - [Live Demo](#demo)
-- [Usage](#usage)
+- [Installation and Execution](#Installation)
 - [Resources](#resources)
 
 ### :loudspeaker: Introduction
@@ -17,17 +18,19 @@ Global energy consumption is expected to reach `225,000` TWh in 2035. Buildingsâ
 
 Our website is made up of 4 main pages. In the home page we introduce the project and the team. Next, in the electricity modeling page we have a unique variety of filters that allows users to choose their aggregation level, chart duration, and which data elements to be shown on the charts among many other novel options. The goal is to allow users to compare electricity consumption of two buildings at a time. The other two pages allow the users to explore the energy usage of every building in the dataset per meter type and see the distribution of the primary/secondary usage for buildings in each site, as well as the average weather over 2016-2017 time period. All the pages are mobile friendly and can be viewed on mobile or tablet.
 
+#### Main forecast page
 <p>
-  <img src="webapp/assets/images/building_page.jpg"  width="100px" height="120px"/> 
+  <img src="webapp/assets/images/forecast_page.png"  width="100px" height="120px"/>
 </p>
 
-
+#### Buildings' overview page
 <p>
-  <img src="webapp/assets/images/forecast_page.jpg"  width="100px" height="120px"/>
+  <img src="webapp/assets/images/building_page.png"  width="100px" height="120px"/> 
 </p>
 
+#### Sites overview page
 <p>
-  <img src="webapp/assets/images/sites_page.jpg"     width="100px" height="120px"/>
+  <img src="webapp/assets/images/sites_overview.png"     width="100px" height="120px"/>
 </p>
 
 ### :file_folder: Dataset
@@ -44,13 +47,13 @@ The dataset is stored in Azure Data Lake
 
 You can view a live demo on this URL: https://energyhub.azurewebsites.net/
 
-### :hammer: Usage
+### :hammer: Installation and Execution
 
 1. You need to download the webapp folder to your local machine and install the requirements by opening the folder in Command Line and Running: `pip install -r requirements.txt`
 2. The data for this app is on Azure Data Lake Gen 2. You will need an Azure Account and you will need to create a Data Lake Storage Gen 2, Azure Key Vault, and Azure App Registration. see resources for useful links to get started .
 3. Run the scripts under data_prep for preparing the dataset for modelling and visualization. These will upload data to ADLS.
 4. Run the scripts the normalization and forecast scripts to generate the data files. Also Convert & Partition the cleaned meter readings files to using pandas. Forecast model must be ran for each site one at a time. These will upload model results to ADLS.
-6. Head to the **data.py** file inside the web app folder to edit / update the locations of the files based on the structure you plan to have in your Data Lake.
+6. Head to the `data.py` file inside the web app folder to edit / update the locations of the files based on the structure you plan to have in your Data Lake.
 7. Add Azure Client Secret, Client ID, and Tenant ID to your environment Variables.
 8. Run the app.
 
