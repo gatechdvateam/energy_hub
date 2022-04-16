@@ -25,10 +25,10 @@ You can view a live demo on this URL: https://energyhub.azurewebsites.net/
 
 1. You need to download the webapp folder to your local machine and install the requirements by opening the folder in Command Line and Running: `pip install -r requirements.txt`
 2. The data for this app is on Azure Data Lake Gen 2. You will need an Azure Account and you will need to create a Data Lake Storage Gen 2, Azure Key Vault, and Azure App Registration. see resources for useful links to get started .
-3. Run the scripts under data_prep for preparing the dataset for modelling and visualization. These will uplaod data to ADLS.
+3. Run the scripts under data_prep for preparing the dataset for modelling and visualization. These will upload data to ADLS.
 4. Run the scripts the normalization and forecast scripts to generate the data files. Also Convert & Partition the cleaned meter readings files to using pandas. Forecast model must be ran for each site one at a time. These will upload model results to ADLS.
 6. Head to the **data.py** file inside the web app folder to edit / update the locations of the files based on the structure you plan to have in your Data Lake.
-7. Add Azure Client Secret, Client ID, and Tenant ID to your environemnt Variables.
+7. Add Azure Client Secret, Client ID, and Tenant ID to your environment Variables.
 8. Run the app.
 
 
