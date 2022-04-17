@@ -37,7 +37,7 @@ The dataset is stored in Azure Data Lake. The image and the python file in the b
 1. In the project folder, create a virtual environment using the following steps:
 	* Open GitBash or Command prompt
 	* Run:  `py -m venv .venv`
-	* Run: `source .venv\Scripts\activate
+	* Run: `source .venv\Scripts\activate`
 	* Install requirements:  `pip install -r requirements.txt`
 	
 2. Run the notebooks in the **"data_prep"** folder which will prep the data and upload it to Azure Data Lake Storage
@@ -55,7 +55,7 @@ The dataset is stored in Azure Data Lake. The image and the python file in the b
 
 8. Go to **webapp** folder in your command line
 
-	* Run `code .` to open a vscode code in the folder
+	* Run `code .` to open a vscode code window in the folder
 	* In your command line, run `python application.py`
 	* Dash will open a localhost address for you in the command line, follow the link
 
