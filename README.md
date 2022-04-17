@@ -26,8 +26,8 @@ To simulate real life production system, we opted to do incremental normalizatio
 Temporal Fusion Transformer was used for forecasting electricity consumption for 168 hours. We take advantage PyTorch Forecasting library’s multi group forecasting feature. We build one model per site where sites with limited features or large null values were not modelled, totaling 10 models. Weather information along with building meta information was used to build the forecasting model. See below the Temporal Fusion Transformer and weather normalization architectures
 
 <p float="left">
-  <img src="webapp/assets/images/tft.png", width="200px" height="220px"/>
-  <img src="webapp/assets/images/onlinelearning.svg", width="200px" height="220px"/>
+  <img src="webapp/assets/images/tft.png", width="400px" height="300px"/>
+  <img src="webapp/assets/images/onlinelearning.svg", width="400px" height="300px"/>
 </p>
 
 #### :page_with_curl: Main forecast page
