@@ -23,12 +23,13 @@ Our website is built using Dash Plotly framework and is made up of 4 main pages.
 
 To simulate real life production system, we opted to do incremental normalization. Using RiverML, we converted our dataset into a data stream, where transformation, training, prediction, and updating happen one data point at a time. Model is updated using Stochastic Gradient Descent optimizer. Once the model was established at each time step, we set the weather features to fixed values: an air temperature of 25C, a dew temperature of 25C, wind direction and speed both at zero, and obtained the normalized values.    
 
-Temporal Fusion Transformer was used for forecasting electricity consumption for 168 hours. We take advantage PyTorch Forecasting library’s multi group forecasting feature. We build one model per site where sites with limited features or large null values were not modelled, totaling 10 models. Weather information along with building meta information was used to build the forecasting model.
+Temporal Fusion Transformer was used for forecasting electricity consumption for 168 hours. We take advantage PyTorch Forecasting library’s multi group forecasting feature. We build one model per site where sites with limited features or large null values were not modelled, totaling 10 models. Weather information along with building meta information was used to build the forecasting model. See below the Temporal Fusion Transformer and weather normalization architectures
 
 <p float="left">
-  <img src="webapp/assets/images/tft.png">
-  <img src="webapp/assets/images/onlinelearning.svg">
+  <img src="webapp/assets/images/tft.png", width="200px" height="220px"/>
+  <img src="webapp/assets/images/onlinelearning.svg", width="200px" height="220px"/>
 </p>
+
 #### :page_with_curl: Main forecast page
 
 <p float="left">
