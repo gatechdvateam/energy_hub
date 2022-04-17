@@ -1,12 +1,13 @@
-# Energy Hub - Building Energy Management Platform
+# Energy Hub: Building an Energy Management Platform
 
-Energy hub is an energy management platform that combines an interactive dashboard with deep learning and weather normalization models.
+Energy hub is an energy management platform that combines an interactive dashboard with the state of the art deep learning transformers architecture and online machine learning models for weather normalization purposes
 
 ## :bookmark_tabs: Table of Contents
 - [Introduction](#Introduction)
 - [Description](#Description)
 - [Dataset](#Dataset)
 - [Live Demo](#demo)
+- [Installation Requirements](#requirements)
 - [Installation and Execution](#Installation)
 - [Resources](#resources)
 
@@ -18,17 +19,30 @@ Global energy consumption is expected to reach `225,000` TWh in 2035. Buildings�
  
 Our website is built using Dash Plotly framework and is made up of 4 main pages. In the home page we introduce the project and the team. Next, in the electricity modeling page we have a unique variety of filters that allows users to choose their aggregation level, chart duration, and which data elements to be shown on the charts among many other novel options. The goal is to allow users to compare electricity consumption of two buildings at a time. The other two pages allow the users to explore the energy usage of every building in the dataset per meter type and see the distribution of the primary/secondary usage for buildings in each site, as well as the average weather over 2016-2017 time period. All the pages are mobile friendly and can be viewed on mobile or tablet.
 
-#### Main forecast page
+### :information_source: Modeling
+
+To simulate real life production system, we opted to do incremental normalization. Using RiverML, we converted our dataset into a data stream, where transformation, training, prediction, and updating happen one data point at a time. Model is updated using Stochastic Gradient Descent optimizer. Once the model was established at each time step, we set the weather features to fixed values: an air temperature of 25C, a dew temperature of 25C, wind direction and speed both at zero, and obtained the normalized values.    
+
+Temporal Fusion Transformer was used for forecasting electricity consumption for 168 hours. We take advantage PyTorch Forecasting library’s multi group forecasting feature. We build one model per site where sites with limited features or large null values were not modelled, totaling 10 models. Weather information along with building meta information was used to build the forecasting model.
+
+<p float="left">
+  <img src="webapp/assets/images/tft.png">
+  <img src="webapp/assets/images/onlinelearning.svg">
+</p>
+#### :page_with_curl: Main forecast page
+
 <p float="left">
   <img src="webapp/assets/images/forecast_page.png">
 </p>
 
-#### Buildings' overview page
+#### :page_with_curl: Buildings' overview page
+
 <p float="left">
   <img src="webapp/assets/images/building_page.png"> 
 </p>
 
-#### Sites overview page
+#### :page_with_curl: Sites overview page
+
 <p float="left">
   <img src="webapp/assets/images/sites_overview.png">
 </p>
@@ -37,7 +51,7 @@ Our website is built using Dash Plotly framework and is made up of 4 main pages.
 
 Our dataset comes from The Building Data Genome Project 2, which can be downloaded from [here](https://github.com/buds-lab/building-data-genome-project-2). This dataset consists of 3,053 energy meters from 1,636 non-residential buildings in 19 sites across North America and Europe (see interactive map). The readings were recorded at one-hour intervals for electricity, chilled water, hot water, steam, irrigation and solar for 2016 and 2017. Buildings’ metadata includes year built, size, primary use, site, and source energy use intensity (EUI). Weather data (temperature, pressure, humidity, etc.) comes from the National Centers for Environmental Information database. Our dataset is approximately 2.6 GB in size, with nearly 53.6 million readings. 
 
-The dataset is stored in Azure Data Lake
+The dataset is stored in Azure Data Lake (see image below on how the dataset was stored)
 
 <p float="left">
   <img src="webapp/assets/images/azure.png">
@@ -45,19 +59,40 @@ The dataset is stored in Azure Data Lake
 
 ### :movie_camera: Live Demo
 
-You can view a live demo on this URL: https://energyhub.azurewebsites.net/
+The app is deployed on Azure websites and can be viewed at https://energyhub.azurewebsites.net/
 
-### :hammer: Installation and Execution
+#### :pick: Installation Requirements
 
-1. You need to download the webapp folder to your local machine and install the requirements by opening the folder in Command Line and Running: `pip install -r requirements.txt`
-2. The data for this app is on Azure Data Lake Gen 2. You will need an Azure Account and you will need to create a Data Lake Storage Gen 2, Azure Key Vault, and Azure App Registration. see resources for useful links to get started .
-3. Run the scripts under data_prep for preparing the dataset for modelling and visualization. These will upload data to ADLS.
-4. Run the scripts the normalization and forecast scripts to generate the data files. Also Convert & Partition the cleaned meter readings files to parquet files using pandas. Forecast model must be ran for each site one at a time. These will upload model results to ADLS.
-6. Head to the `data.py` file inside the web app folder to edit / update the locations of the files based on the structure you plan to have in your Data Lake.
-7. Add Azure Client Secret, Client ID, and Tenant ID to your environment Variables.
-8. Open the folder webapp inside any Pythong IDE, and then run  application.py . We reccomend Visual Studio Code, but you can use any other tool.
-9. For your benefit, we have provided the below resources which can help you implement the above steps.
+* Download an IDE. We highly recommend VScode
+* Download `Python-3.9.11` [here](https://www.python.org/ftp/python/3.9.11/python-3.9.11-amd64.exe)
+* Create an Azure account, a Data Lake Storage Gen 2 account, Azure Key vault, and Azure Webapp registration account (see resources)
+* Add Azure Client Secret key, Client ID, and Tenant ID to your environment variables
 
+### :hammer_and_pick: Installation and Execution
+
+1. In the project folder, create a virtual environment using the following steps:
+	* Open GitBash or Command prompt
+	* Run:  `py -m venv .venv`
+	* Run: `source .venv\Scripts\activate
+	* Install requirements:  `pip install -r requirements.txt`
+	
+2. Run the notebooks in the **"data_prep"** folder which will prep the data and upload it to Azure Data Lake Storage
+
+	* execute `meta_weather_clean.ipynb`
+	* execute `meters_clean.ipynb`
+	
+3. Run the notebooks in both **"forecast"** and **"normalization"** folders
+	* Note: Forecast model must be ran for each site one at a time and the model results will upload to Azure storage automatically
+	
+4. Convert & Partition the cleaned meter readings files to parquet files using pandas. The `webapp/partitionParqs.py` will help you do that
+
+6. Update the `data.py`  under **webapp** folder to follow your folder structure in Azure
+
+8. Go to **webapp** folder in your command line
+
+	* Run `code .` to open a vscode code in the folder
+	* In your command line, run `python application.py`
+	* Dash will open a localhost address for you in the command line, follow the link
 
 ### :open_file_folder: Resources
 
